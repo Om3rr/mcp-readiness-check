@@ -1,0 +1,66 @@
+name: 'MCP Readiness Check'
+description: 'Live readiness and context-cost scan of your MCP server on every PR: OAuth discovery, annotations, Origin/CORS, schemas, token budget.'
+author: 'Omer Shacham'
+branding:
+  icon: 'shield'
+  color: 'blue'
+inputs:
+  url:
+    description: 'MCP endpoint to scan (Streamable HTTP), e.g. http://localhost:8787/mcp after starting your server in the job, or your public https URL.'
+    required: true
+  fail-under:
+    description: 'Fail the job if the score is below this (0-100). Set to 0 to never fail.'
+    required: false
+    default: '70'
+  max-context-tokens:
+    description: 'Fail the job if the tools/list payload costs more than this many tokens (about 4 chars per token). 0 disables.'
+    required: false
+    default: '0'
+  token:
+    description: 'Bearer token for servers that require auth (scans tools behind login). Use a test-tenant token from secrets.'
+    required: false
+    default: ''
+  api-key:
+    description: 'MCP Readiness license key (Org plan). Unlocks full findings with fixes, the HTML report and SARIF, and lifts the free daily cap.'
+    required: false
+    default: ''
+  api-url:
+    description: 'Hosted MCP Readiness API used for licensing and metering.'
+    required: false
+    default: 'https://mcp-readiness.example.workers.dev'
+  report-path:
+    description: 'Where to write the HTML report (Org plan).'
+    required: false
+    default: 'mcp-readiness-report.html'
+  sarif-path:
+    description: 'Where to write SARIF for GitHub code scanning (Org plan). Empty disables.'
+    required: false
+    default: ''
+outputs:
+  score:
+    description: 'Readiness score 0-100'
+    value: ${{ steps.scan.outputs.score }}
+  context-tokens:
+    description: 'Approximate tokens the tool list costs every agent turn'
+    value: ${{ steps.scan.outputs.context-tokens }}
+  findings:
+    description: 'Number of fail + warn findings'
+    value: ${{ steps.scan.outputs.findings }}
+  mode:
+    description: 'free, capped or full'
+    value: ${{ steps.scan.outputs.mode }}
+runs:
+  using: 'composite'
+  steps:
+    - id: scan
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/action/run.mjs"
+      env:
+        INPUT_URL: ${{ inputs.url }}
+        INPUT_FAIL_UNDER: ${{ inputs.fail-under }}
+        INPUT_MAX_CONTEXT_TOKENS: ${{ inputs.max-context-tokens }}
+        INPUT_TOKEN: ${{ inputs.token }}
+        INPUT_API_KEY: ${{ inputs.api-key }}
+        INPUT_API_URL: ${{ inputs.api-url }}
+        INPUT_REPORT_PATH: ${{ inputs.report-path }}
+        INPUT_SARIF_PATH: ${{ inputs.sarif-path }}

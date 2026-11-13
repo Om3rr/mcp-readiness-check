@@ -4,7 +4,8 @@
 //   mcp-readiness-check --stdio node server.js [--json] [--html report.html]
 //   mcp-readiness-check --batch servers.txt --out reports/     (one URL per line, "# comments" ok)
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
-import { probeHttp, probeStdio, toMarkdown } from '../src/probe.js';
+import { probeHttp, toMarkdown } from '../src/probe.js';
+import { probeStdio } from '../src/stdio.js';
 import { toHtml, toSummaryHtml } from '../src/html.js';
 const argv = process.argv.slice(2);
 const opt = (f) => { const i = argv.indexOf(f); return i >= 0 ? argv[i + 1] : undefined; };

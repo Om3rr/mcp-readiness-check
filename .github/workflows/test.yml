@@ -8,3 +8,25 @@ jobs:
       - uses: actions/setup-node@v4
         with: { node-version: 22 }
       - run: npm test
+  action-selftest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: node examples/demo-server.mjs & sleep 1
+      - id: mcp
+        uses: ./
+        with:
+          url: http://127.0.0.1:8799/mcp
+          fail-under: '90'
+          max-context-tokens: '2000'
+      - run: test "${{ steps.mcp.outputs.score }}" -ge 90
+  worker-dry-run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npx --yes wrangler@4 deploy --dry-run --outdir /tmp/out
+        working-directory: worker

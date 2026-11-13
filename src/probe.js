@@ -1,10 +1,9 @@
-// Talks to an MCP server over Streamable HTTP or stdio and collects observations.
-import { spawn } from 'node:child_process';
-import { createInterface } from 'node:readline';
+// Talks to an MCP server over Streamable HTTP and collects observations.
+// Runtime-neutral (Node 18+, Cloudflare Workers): uses only fetch. stdio lives in ./stdio.js.
 import { checkTools, checkHttp, checkInit, checkPrompts, score } from './checks.js';
 import { probeOAuth } from './oauth.js';
 
-const INIT = { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'mcp-readiness-check', version: '0.2.0' } };
+export const INIT = { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'mcp-readiness-check', version: '0.2.0' } };
 
 async function parseBody(r) {
   const t = await r.text();
@@ -15,7 +14,7 @@ async function parseBody(r) {
   try { return t ? JSON.parse(t) : null; } catch { return null; }
 }
 
-export async function probeHttp(url, { token } = {}) {
+export async function probeHttp(url, { token, timeoutMs = 15000, fetchImpl = globalThis.fetch } = {}) {
   let id = 0, session = null;
   const send = async (method, params, { auth = true, origin, notify = false } = {}) => {
     const h = { 'content-type': 'application/json', accept: 'application/json, text/event-stream', 'mcp-protocol-version': INIT.protocolVersion };
@@ -23,13 +22,13 @@ export async function probeHttp(url, { token } = {}) {
     if (session) h['mcp-session-id'] = session;
     if (origin) h.origin = origin;
     const body = notify ? { jsonrpc: '2.0', method, params } : { jsonrpc: '2.0', id: ++id, method, params };
-    const r = await fetch(url, { method: 'POST', headers: h, body: JSON.stringify(body) });
+    const r = await fetchImpl(url, { method: 'POST', headers: h, body: JSON.stringify(body), signal: AbortSignal.timeout(timeoutMs) });
     session ??= r.headers.get('mcp-session-id');
     return { r, j: notify ? null : await parseBody(r) };
   };
   const init = await send('initialize', INIT);
   if ((init.r.status === 401 || init.r.status === 403) && !token) {
-    const { findings, oauth } = await probeOAuth(url, init.r);
+    const { findings, oauth } = await probeOAuth(url, init.r, fetchImpl);
     const u = new URL(url);
     if (u.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(u.hostname)) findings.push({ level: 'fail', id: 'http.tls', title: 'Remote server is not using HTTPS', detail: '', fix: '' });
     findings.push({ level: 'info', id: 'auth.scope', title: 'Tools not scanned (needs a token)', detail: 'Re-run with --token to check tools, annotations and transport behaviour after login.', fix: '' });
@@ -65,28 +64,10 @@ export async function probeHttp(url, { token } = {}) {
   return report(init.j.result, tools, [...checkPrompts(prompts), ...checkHttp(obs)]);
 }
 
-export async function probeStdio(cmd, args = []) {
-  const p = spawn(cmd, args, { stdio: ['pipe', 'pipe', 'ignore'] });
-  const waiting = new Map(); let id = 0;
-  createInterface({ input: p.stdout }).on('line', (l) => { try { const m = JSON.parse(l); waiting.get(m.id)?.(m); } catch {} });
-  const rpc = (method, params) => new Promise((ok, no) => {
-    const i = ++id; waiting.set(i, ok);
-    setTimeout(() => no(new Error(`timeout waiting for ${method}`)), 10000).unref();
-    p.stdin.write(JSON.stringify({ jsonrpc: '2.0', id: i, method, params }) + '\n');
-  });
-  try {
-    const init = await rpc('initialize', INIT);
-    p.stdin.write(JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' }) + '\n');
-    const list = await rpc('tools/list', {});
-    const unknown = await rpc('no/such_method', {});
-    const extra = unknown.error?.code === -32601 ? [] : [{ level: 'warn', id: 'rpc.method_not_found', title: 'Unknown methods do not return JSON-RPC -32601', detail: '', fix: '' }];
-    return report(init.result, list.result?.tools || [], extra);
-  } finally { p.kill(); }
-}
-
-function report(init, tools, transport) {
+export function report(init, tools, transport) {
   const findings = [...checkInit(init), ...checkTools(tools), ...transport];
-  return { server: init?.serverInfo, protocolVersion: init?.protocolVersion, toolCount: tools.length, score: score(findings), findings };
+  const contextBytes = JSON.stringify(tools).length;
+  return { server: init?.serverInfo, protocolVersion: init?.protocolVersion, toolCount: tools.length, contextBytes, contextTokens: Math.round(contextBytes / 4), score: score(findings), findings };
 }
 
 export function toMarkdown(r, target) {

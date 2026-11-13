@@ -1,5 +1,33 @@
 # mcp-readiness-check
 
+**Live MCP readiness and context-cost scanning.** It connects to your running MCP server the way Claude, ChatGPT and Cursor do, then scores OAuth discovery, safety annotations, Origin/CORS, schemas, and the tokens your tool list costs on every agent turn. It is built on a scan of 12,900+ live servers from the official MCP registry ([State of public MCP servers, Nov 2026](reports/state-of-mcp-2026-11.pdf)).
+
+## GitHub Action (free tier, 50 runs/day per repo)
+
+```yaml
+- uses: Om3rr/mcp-readiness-check@v1
+  with:
+    url: http://127.0.0.1:8787/mcp   # start your server earlier in the job
+    fail-under: 80
+    max-context-tokens: 8000
+    api-key: ${{ secrets.MCP_READINESS_KEY }}   # optional Org plan: all findings + fixes, HTML report, SARIF
+```
+
+Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
+
+**Badge:** `![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)`
+**Hosted API, web app, payments, `scan_mcp` remote tool:** [worker/](worker/README.md)
+
+| Plan | Price |
+|---|---|
+| Free | Action (top 3 issues, 50 runs/day/repo), badge, 10 web scans/h, this CLI |
+| Action Org | $29/mo |
+| API Indie / Team | $19 / $99 per mo |
+| Report pack | $9 one-off (5 full reports) |
+| Pay-per-scan | $0.10 per scan (100 credits) |
+
+## CLI
+
 A zero-dependency CLI (Node 18+) that scores an MCP server's **production readiness** in about a second and writes a Markdown report you can hand to a team.
 
 ```bash
@@ -23,7 +51,7 @@ npm test
 | **Prompts and sessions** | Poisoning in `prompts/list` metadata; guessable `Mcp-Session-Id`; stack traces or file paths leaking in errors; generic tool names that collide across servers; missing tool titles; old protocol versions |
 | **JSON-RPC hygiene** | `-32601` for unknown methods, no 5xx on unknown tools, `protocolVersion`, `serverInfo`, server `instructions` |
 
-Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not a substitute for an architecture review of auth, data flows and approval gates. That review is the paid offer below.
+Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not a substitute for an architecture review of auth, data flows and approval gates. Full findings with fixes, PDF reports and CI use are on the paid plans above.
 
 ## Examples
 
@@ -33,7 +61,3 @@ Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not
 * **Before/after on our own gateway:** [agent-commerce-mvp v0.3](examples/agent-commerce-v0.3.md) ([HTML](examples/agent-commerce-v0.3.html)) scored **60/100**: it accepted foreign Origins, sent wildcard CORS, and had no annotations on its write tools. After the fixes, [v0.4](examples/agent-commerce-v0.4.md) ([HTML](examples/agent-commerce-v0.4.html)) scores **100/100**.
 
 **Media** (`docs/media`): [CLI run (GIF)](docs/media/cli.gif) / [MP4](docs/media/cli.mp4) · [HTML reports walkthrough (MP4)](docs/media/html-reports-walkthrough.mp4) · screenshots: [scan light](docs/media/public-scan-light.png), [scan dark](docs/media/public-scan-dark.png), [report before](docs/media/report-before-light.png), [report after](docs/media/report-after-light.png)
-
-## Turning it into work (draft, unpublished)
-
-**MCP Readiness Review, fixed fee.** Run the scan, then a principal architect reviews auth (OAuth 2.1 / scoped tokens), tool permission design, approval gates, audit logging, prompt-injection paths and multi-tenancy, and delivers a ranked fix list plus a 60-minute walkthrough. Entry tier for the larger *AI agent / MCP platform architecture review*.
