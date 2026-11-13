@@ -58,7 +58,7 @@ h1{font-size:25pt;line-height:1.1;margin:0 0 6px;letter-spacing:-.02em}h2{font-s
 table{width:100%;border-collapse:collapse;font-size:9.3pt;margin:6px 0}td,th{border-bottom:1px solid var(--line);padding:5px 6px;text-align:left;vertical-align:middle}th{background:#f8fafc}.num{text-align:right;font-weight:600;white-space:nowrap}
 .bar{height:8px;background:#eef2ff;border-radius:4px;position:relative}.bar i{position:absolute;inset:0 auto 0 0;background:var(--acc);border-radius:4px}
 .bars .br{display:grid;grid-template-columns:62px 1fr 52px;align-items:center;gap:6px;font-size:8.8pt;margin:2px 0}.bars i{display:block;height:11px;border-radius:3px}.bars b{text-align:right;font-weight:600}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:14px;page-break-inside:avoid}
 .case{border:1px solid var(--line);border-left:4px solid var(--acc);border-radius:6px;padding:7px 10px;margin:7px 0;page-break-inside:avoid}
 .callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:9px 12px;margin:10px 0}
 ol li,ul li{margin:3px 0}.pb{page-break-before:always}

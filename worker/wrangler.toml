@@ -5,6 +5,9 @@ main = "src/index.js"
 compatibility_date = "2026-11-01"
 workers_dev = true
 
+[triggers]
+crons = ["17 6 * * *"]   # daily monitoring re-scan (06:17 UTC)
+
 [assets]
 directory = "./public"
 binding = "ASSETS"

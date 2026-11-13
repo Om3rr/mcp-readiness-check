@@ -6,6 +6,7 @@ import { checkTarget } from './guard.js';
 import { consume, getLicense, PLANS } from './license.js';
 import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
+import { registerMonitor, runMonitors } from './monitor.js';
 
 const VERSION = '0.3.0';
 const ORDER = { fail: 0, warn: 1, info: 2, pass: 3 };
@@ -21,7 +22,7 @@ async function rateLimit(env, req, bucket, limit) {
   return true;
 }
 
-async function scan(env, target, opts = {}) {
+export async function scan(env, target, opts = {}) {
   const r = await probeHttp(target, { timeoutMs: Number(env.SCAN_TIMEOUT_MS || 12000), token: opts.token });
   r.findings.sort((a, b) => ORDER[a.level] - ORDER[b.level]);
   return r;
@@ -147,6 +148,8 @@ export default {
       // Remote MCP server exposing one paid tool, scan_mcp (pay-per-scan credits via license key).
       if (p === '/mcp' && req.method === 'POST') return mcpEndpoint(req, env, url);
 
+      if (p === '/api/monitor' && req.method === 'POST') return registerMonitor(req, env, bearer(req, url));
+
       if (p === '/api/license') {
         const lic = await getLicense(env, bearer(req, url));
         if (!lic) return json({ error: 'invalid_license' }, 401);
@@ -187,5 +190,8 @@ export default {
     } catch (e) {
       return json({ error: 'scan_failed', detail: String(e?.message || e).slice(0, 200) }, 502);
     }
+  },
+  async scheduled(_event, env, ctx) {
+    ctx.waitUntil(runMonitors(env, scan));
   },
 };

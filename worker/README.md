@@ -12,6 +12,7 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 | `GET /badge.svg?url=…` | Score badge, cached 6 h | public |
 | `POST /api/ci/run {repo}` | GitHub Action metering: `free` (50/day per repo), `capped` or `full` | public / license |
 | `POST /mcp` | Remote MCP server with one tool, `scan_mcp` (1 credit per call) | license |
+| `POST /api/monitor {url, webhook?, remove?}` | Daily re-scan (cron 06:17 UTC). On score, findings or context-cost drift, POSTs `mcp_readiness.drift` to your webhook. Indie 3, Org 5, Team 25 servers | license |
 | `GET /api/license` | Plan, status, remaining | license |
 | `POST /api/subscribe {email}` | Report-magnet email capture (KV `lead:*`) | public, 5/h per IP |
 | `POST /webhooks/stripe` | `checkout.session.completed`, `invoice.paid`, `invoice.payment_failed`, `customer.subscription.deleted` | Stripe signature |
@@ -24,8 +25,8 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 |---|---|---|
 | Free | $0 | Action 50 runs/day per repo (top 3 issues), 10 web scans/h, badge |
 | `org` (Action Org) | $29/mo | 5,000 runs/mo, all findings, HTML report, SARIF |
-| `indie` (API) | $19/mo | 500 hosted scans/mo |
-| `team` (API) | $99/mo | 10,000 hosted scans/mo |
+| `indie` (API) | $19/mo | 500 hosted scans/mo, 3 monitored servers |
+| `team` (API) | $99/mo | 10,000 hosted scans/mo, 25 monitored servers |
 | `pack` | $9 one-off | 5 full reports |
 | `credits` | $10 one-off | 100 pay-per-scan credits ($0.10 each) |
 

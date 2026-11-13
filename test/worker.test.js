@@ -115,3 +115,23 @@ test('mcp endpoint rejects foreign Origin and sends no wildcard CORS', async () 
   const ok = await call(env, '/mcp', { method: 'POST', body: '{"jsonrpc":"2.0","id":1,"method":"ping"}' });
   assert.equal(ok.headers.get('access-control-allow-origin'), null);
 });
+
+test('monitoring: register within plan limit, drift detection, cron posts webhook', async () => {
+  const { drift, runMonitors } = await import('../worker/src/monitor.js');
+  const store = kv(); store.list = async ({ prefix }) => ({ keys: [...store.m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true });
+  const env = { LICENSES: store };
+  const key = await issueLicense(env, { plan: 'indie', source: 't', ref: 'm' });
+  const reg = (b) => call(env, '/api/monitor', { method: 'POST', body: JSON.stringify(b), headers: { authorization: `Bearer ${key}` } });
+  assert.equal((await reg({ url: 'https://a.example/mcp', webhook: 'https://hooks.example/x' })).status, 200);
+  await reg({ url: 'https://b.example/mcp' }); await reg({ url: 'https://c.example/mcp' });
+  assert.equal((await reg({ url: 'https://d.example/mcp' })).status, 402);
+  assert.equal(drift(null, { score: 90, findings: [] }), null);
+  assert.equal(drift({ score: 90, contextTokens: 100, ids: [] }, { score: 90, contextTokens: 120, findings: [] }), null);
+  let n = 0; const scores = [100, 80];
+  const fakeScan = async () => ({ score: scores[Math.min(n, 1)], contextTokens: 10, findings: n ? [{ level: 'warn', id: 'x', title: 'X' }] : [] });
+  const posts = [];
+  await runMonitors(env, fakeScan, async (u, i) => posts.push([u, JSON.parse(i.body)]));
+  n = 1;
+  await runMonitors(env, fakeScan, async (u, i) => posts.push([u, JSON.parse(i.body)]));
+  assert.equal(posts.length, 1); assert.equal(posts[0][0], 'https://hooks.example/x'); assert.equal(posts[0][1].scoreTo, 80);
+});
