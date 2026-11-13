@@ -2,7 +2,7 @@
 
 Steps: tag `v1`, then **Draft a release → Publish this Action to the GitHub Marketplace**. Category: *Code quality* (primary), *Security* (secondary).
 
-**Name:** MCP Readiness Check
+**Name:** MCP Readiness Scan (the name "MCP Readiness Check" is already taken on the Marketplace)
 
 **Short description (≤125 chars):**
 Live readiness + context-cost scan for MCP servers: OAuth discovery, annotations, Origin/CORS, schemas, token budget.

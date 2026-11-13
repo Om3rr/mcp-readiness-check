@@ -1,4 +1,4 @@
-name: 'MCP Readiness Check'
+name: 'MCP Readiness Scan'
 description: 'Live readiness and context-cost scan of your MCP server on every PR: OAuth discovery, annotations, Origin/CORS, schemas, token budget.'
 author: 'Omer Shacham'
 branding:
