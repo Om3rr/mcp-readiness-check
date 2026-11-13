@@ -16,6 +16,10 @@ export async function probeOAuth(url, res, fetchImpl = fetch) {
   add('pass', 'auth.required', 'Unauthenticated requests are rejected with 401');
   if (!www.scheme) add('warn', 'auth.www_authenticate', '401 without a WWW-Authenticate header', 'Clients cannot discover how to authenticate.', 'Return WWW-Authenticate: Bearer resource_metadata="…".');
   else if (!/bearer/i.test(www.scheme)) add('info', 'auth.scheme', `WWW-Authenticate scheme is ${www.scheme}, not Bearer`);
+  if (www.resource_metadata && !/^https?:\/\//i.test(www.resource_metadata)) {
+    add('warn', 'auth.prm_relative', 'resource_metadata is a relative URL', `Got "${www.resource_metadata}". RFC 9728 requires an absolute URL; some clients will not resolve it.`, 'Send the full https:// URL.');
+    try { www.resource_metadata = new URL(www.resource_metadata, u.origin).href; } catch {}
+  }
   const candidates = [www.resource_metadata, `${u.origin}/.well-known/oauth-protected-resource${u.pathname === '/' ? '' : u.pathname}`, `${u.origin}/.well-known/oauth-protected-resource`].filter(Boolean);
   let prm = null, prmUrl = null;
   for (const c of candidates) { prm = await j(c, fetchImpl); if (prm) { prmUrl = c; break; } }

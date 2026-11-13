@@ -91,3 +91,14 @@ test('oauth: a resource_metadata pointer that 404s is a fail', async () => {
   const { findings } = await probeOAuth('https://x.test/mcp', res, fake);
   assert.ok(findings.some((f) => f.id === 'auth.prm_broken' && f.level === 'fail'));
 });
+
+test('oauth: relative resource_metadata is resolved and warned', async () => {
+  const { probeOAuth } = await import('../src/oauth.js');
+  const res = new Response('', { status: 401, headers: { 'www-authenticate': 'Bearer resource_metadata="/.well-known/oauth-protected-resource/mcp"' } });
+  const fake = async (u) => String(u) === 'https://x.test/.well-known/oauth-protected-resource/mcp'
+    ? new Response(JSON.stringify({ resource: 'https://x.test/mcp', authorization_servers: ['https://x.test'] }), { status: 200, headers: { 'content-type': 'application/json' } })
+    : new Response('no', { status: 404 });
+  const { findings } = await probeOAuth('https://x.test/mcp', res, fake);
+  assert.ok(findings.some((f) => f.id === 'auth.prm_relative'));
+  assert.ok(!findings.some((f) => f.id === 'auth.prm_broken'));
+});
