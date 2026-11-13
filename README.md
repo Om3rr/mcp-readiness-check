@@ -10,21 +10,23 @@
     url: http://127.0.0.1:8787/mcp   # start your server earlier in the job
     fail-under: 80
     max-context-tokens: 8000
-    api-key: ${{ secrets.MCP_READINESS_KEY }}   # optional Org plan: all findings + fixes, HTML report, SARIF
+    api-key: ${{ secrets.MCP_READINESS_KEY }}   # optional Pro plan: all findings + fixes, HTML report, SARIF
 ```
 
 Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
 
-**Badge:** `![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)`
+**Badge** (links to the public scan page): `[![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/scan?url=https://your-server/mcp)`
 **Hosted API, web app, payments, `scan_mcp` remote tool:** [worker/](worker/README.md)
 
 | Plan | Price |
 |---|---|
-| Free | Action (top 3 issues, 50 runs/day/repo), badge, 10 web scans/h, this CLI |
-| Action Org | $29/mo |
-| API Indie / Team | $19 / $99 per mo |
-| Report pack | $9 one-off (5 full reports) |
-| Pay-per-scan | $0.10 per scan (100 credits) |
+| Free | Action (top 3 issues, 50 runs/day/repo), badge + public scan page, 10 web scans/h, this CLI |
+| Pro | $19/mo: all findings + fixes, HTML/PDF report, SARIF, hosted API, 3 monitors |
+| Team | $99/mo: 20,000 scans, 25 monitors |
+| Verified badge | $79 one-off (only if it passes) |
+| Report pack / pay-per-scan | $9 for 5 reports · $0.04 per scan |
+
+Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim): `npx toolslim <url> --fix`.
 
 ## CLI
 

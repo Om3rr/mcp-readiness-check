@@ -18,3 +18,8 @@ test('sarif has one result per fail/warn and valid levels', () => {
   assert.equal(s.version, '2.1.0'); assert.equal(s.runs[0].results.length, 4);
   assert.equal(s.runs[0].results[0].level, 'error');
 });
+
+test('toolslim hook appears only for heavy tool lists', () => {
+  assert.match(summaryMarkdown({ ...r, contextTokens: 9100 }, 'u', 'free'), /toolslim/);
+  assert.ok(!summaryMarkdown({ ...r, contextTokens: 300 }, 'u', 'free').includes('toolslim'));
+});

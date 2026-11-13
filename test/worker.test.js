@@ -42,12 +42,12 @@ test('license: issue, consume, quota, monthly reset fields', async () => {
 });
 
 test('stripe webhook issues a license, is idempotent, and /thanks shows it once', async () => {
-  const env = { LICENSES: kv(), STRIPE_WEBHOOK_SECRET: 'whsec_x', STRIPE_PLAN_BY_LINK: '{"plink_pro":"indie"}' };
+  const env = { LICENSES: kv(), STRIPE_WEBHOOK_SECRET: 'whsec_x', STRIPE_PLAN_BY_LINK: '{"plink_pro":"pro"}' };
   const ev = { id: 'evt_9', type: 'checkout.session.completed', data: { object: { id: 'cs_123', payment_link: 'plink_pro', subscription: 'sub_1', customer_details: { email: 'a@b.co' } } } };
   const body = JSON.stringify(ev), t = Math.floor(Date.now() / 1000);
   const sig = `t=${t},v1=${createHmac('sha256', 'whsec_x').update(`${t}.${body}`).digest('hex')}`;
   const r1 = await call(env, '/webhooks/stripe', { method: 'POST', body, headers: { 'stripe-signature': sig } });
-  assert.equal((await r1.json()).issued, 'indie');
+  assert.equal((await r1.json()).issued, 'pro');
   const r2 = await call(env, '/webhooks/stripe', { method: 'POST', body, headers: { 'stripe-signature': sig } });
   assert.equal((await r2.json()).duplicate, true);
   const page = await (await call(env, '/thanks?session_id=cs_123')).text();
@@ -55,7 +55,7 @@ test('stripe webhook issues a license, is idempotent, and /thanks shows it once'
   assert.ok(key);
   assert.equal(((await (await call(env, '/thanks?session_id=cs_123')).text()).match(/mrc_live_/)), null, 'shown once');
   const lic = await (await call(env, '/api/license', { headers: { authorization: `Bearer ${key}` } })).json();
-  assert.equal(lic.plan, 'indie'); assert.equal(lic.remaining, 500);
+  assert.equal(lic.plan, 'pro'); assert.equal(lic.remaining, 2000);
   // cancellation
   const del = JSON.stringify({ id: 'evt_10', type: 'customer.subscription.deleted', data: { object: { id: 'sub_1' } } });
   const sig2 = `t=${t},v1=${createHmac('sha256', 'whsec_x').update(`${t}.${del}`).digest('hex')}`;
@@ -95,7 +95,7 @@ test('ci metering: free daily cap per repo, key gives full mode', async () => {
   const env = { LICENSES: kv(), FREE_ACTION_RUNS_PER_DAY: '2' };
   const run = (h = {}) => call(env, '/api/ci/run', { method: 'POST', body: JSON.stringify({ repo: 'o/r' }), headers: h }).then((r) => r.json());
   assert.equal((await run()).mode, 'free'); assert.equal((await run()).mode, 'free'); assert.equal((await run()).mode, 'capped');
-  const key = await issueLicense(env, { plan: 'org', source: 't', ref: 'x' });
+  const key = await issueLicense(env, { plan: 'pro', source: 't', ref: 'x' });
   assert.equal((await run({ authorization: `Bearer ${key}` })).mode, 'full');
 });
 
@@ -120,7 +120,7 @@ test('monitoring: register within plan limit, drift detection, cron posts webhoo
   const { drift, runMonitors } = await import('../worker/src/monitor.js');
   const store = kv(); store.list = async ({ prefix }) => ({ keys: [...store.m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true });
   const env = { LICENSES: store };
-  const key = await issueLicense(env, { plan: 'indie', source: 't', ref: 'm' });
+  const key = await issueLicense(env, { plan: 'pro', source: 't', ref: 'm' });
   const reg = (b) => call(env, '/api/monitor', { method: 'POST', body: JSON.stringify(b), headers: { authorization: `Bearer ${key}` } });
   assert.equal((await reg({ url: 'https://a.example/mcp', webhook: 'https://hooks.example/x' })).status, 200);
   await reg({ url: 'https://b.example/mcp' }); await reg({ url: 'https://c.example/mcp' });

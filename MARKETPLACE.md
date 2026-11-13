@@ -22,7 +22,9 @@ Live readiness + context-cost scan for MCP servers: OAuth discovery, annotations
 > Built on a scan of 12,900+ live servers from the official MCP registry. 45% of public servers accept requests from any Origin.
 >
 > **Free:** score gate, token budget, top 3 issues, 50 runs/day per repo.
-> **Org ($29/mo):** every finding with its fix, an HTML report artifact, SARIF for code scanning, and scans behind login.
+> **Pro ($19/mo):** every finding with its fix, an HTML report artifact, SARIF for code scanning, scans behind login, and daily drift monitoring.
+>
+> Heavy tool list? Pair it with [ToolSlim](https://github.com/Om3rr/toolslim) to write a slimmer drop-in version and gate the token budget.
 
 **Usage:**
 

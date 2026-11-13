@@ -1,6 +1,6 @@
 {
   "name": "mcp-readiness-check",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "type": "module",
   "description": "Zero-dependency CLI that scores an MCP server's production readiness: tool poisoning, schemas, annotations, Origin/CORS, auth, JSON-RPC hygiene.",

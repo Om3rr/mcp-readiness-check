@@ -5,12 +5,13 @@ export function summaryMarkdown(r, url, mode, meter = {}) {
   const issues = [...r.findings].filter((f) => f.level === 'fail' || f.level === 'warn').sort((a, b) => ORDER[a.level] - ORDER[b.level]);
   const ctx = r.contextTokens != null ? `~${r.contextTokens.toLocaleString('en-US')} tokens per agent turn (${r.toolCount} tools)` : 'n/a (auth required; pass `token`)';
   const lines = [`## MCP readiness: **${r.score}/100**`, '', `| | |`, `|---|---|`, `| Endpoint | \`${url}\` |`, `| Server | ${r.server?.name || '—'} ${r.server?.version || ''} |`, `| Context cost | ${ctx} |`, `| Issues | ${issues.length} (fail ${issues.filter((f) => f.level === 'fail').length}, warn ${issues.filter((f) => f.level === 'warn').length}) |`, ''];
-  if (mode === 'capped') lines.push(`> Free daily cap reached for this repo. The score is still enforced; findings are hidden until tomorrow. An Org key lifts the cap.`);
+  if (mode === 'capped') lines.push(`> Free daily cap reached for this repo. The score is still enforced; findings are hidden until tomorrow. A Pro key lifts the cap.`);
   else {
     const shown = mode === 'full' ? issues : issues.slice(0, 3);
     for (const f of shown) lines.push(`- ${ICON[f.level]} **${f.title}**${mode === 'full' && f.fix ? `<br>Fix: ${f.fix}` : ''}`);
-    if (mode !== 'full' && issues.length > 3) lines.push('', `> ${issues.length - 3} more finding(s), plus fixes, the HTML report and SARIF, are on the Org plan ($29/mo).`);
+    if (mode !== 'full' && issues.length > 3) lines.push('', `> ${issues.length - 3} more finding(s), plus fixes, the HTML report and SARIF, are on Pro ($19/mo).`);
   }
+  if ((r.contextTokens ?? 0) > 5000 || issues.some((f) => f.id === 'tools.description_long' || f.id === 'tools.many')) lines.push('', `> **Trim the tool list:** \`npx toolslim <url> --fix\` writes a slimmer drop-in version ([ToolSlim](https://github.com/Om3rr/toolslim)).`);
   lines.push('', `<sub>mcp-readiness-check · mode: ${mode}${meter.remaining != null ? ` · ${meter.remaining} runs left` : ''} · live protocol scan, no tools with side effects were called</sub>`);
   return lines.join('\n');
 }

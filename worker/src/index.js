@@ -28,6 +28,13 @@ export async function scan(env, target, opts = {}) {
   return r;
 }
 
+// Hook for the ToolSlim "fix" step: when the tool list is heavy, point at the slimmer.
+export function slimHint(r, env = {}) {
+  const heavy = (r.contextTokens ?? 0) > Number(env.TOOLSLIM_THRESHOLD_TOKENS || 5000) || r.findings.some((f) => f.id === 'tools.description_long' || f.id === 'tools.many');
+  if (!heavy) return null;
+  return { tool: 'toolslim', why: `Tool list costs ~${(r.contextTokens ?? 0).toLocaleString('en-US')} tokens per agent turn`, command: 'npx toolslim <your-mcp-url> --fix', url: env.TOOLSLIM_URL || 'https://github.com/Om3rr/toolslim' };
+}
+
 export function limited(r, env) {
   const issues = r.findings.filter((f) => f.level === 'fail' || f.level === 'warn');
   const counts = Object.fromEntries(['fail', 'warn', 'info', 'pass'].map((k) => [k, r.findings.filter((f) => f.level === k).length]));
@@ -36,6 +43,7 @@ export function limited(r, env) {
     top: issues.slice(0, 3).map(({ level, id, title }) => ({ level, id, title })),
     locked: Math.max(0, issues.length - 3),
     upgrade: { fixes: 'Full report includes every finding with its fix, PDF export and CI use.', pricing: `${env.PUBLIC_URL || ''}/#pricing` },
+    ...(slimHint(r, env) ? { fix: slimHint(r, env) } : {}),
   };
 }
 
@@ -94,7 +102,7 @@ export default {
     try {
       if (req.method === 'OPTIONS') return new Response(null, { headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization, content-type', 'access-control-allow-methods': 'GET, POST' } });
       if (p === '/api/health') return json({ ok: true, version: VERSION, payments: { stripe: Boolean(env.STRIPE_WEBHOOK_SECRET), lemonsqueezy: Boolean(env.LEMON_WEBHOOK_SECRET) }, pdf: Boolean(env.CF_BROWSER_TOKEN) });
-      if (p === '/api/pricing') return json({ plans: PLANS, checkout: Object.fromEntries(['org', 'indie', 'team', 'pack', 'credits'].map((k) => [k, env[`CHECKOUT_URL_${k.toUpperCase()}`] || null])) });
+      if (p === '/api/pricing') return json({ plans: PLANS, checkout: Object.fromEntries(['pro', 'team', 'verified', 'pack', 'credits'].map((k) => [k, env[`CHECKOUT_URL_${k.toUpperCase()}`] || null])) });
 
       if (p === '/api/scan' && req.method === 'POST') {
         const body = await req.json().catch(() => ({}));
@@ -140,7 +148,7 @@ export default {
         const k = `ci:${repo}:${new Date().toISOString().slice(0, 10)}`;
         const n = Number((await env.LICENSES.get(k)) || 0);
         const cap = Number(env.FREE_ACTION_RUNS_PER_DAY || 50);
-        if (n >= cap) return json({ mode: 'capped', cap, detail: 'Free daily cap reached for this repo. Score still reported; findings hidden until tomorrow or with an Org key.' });
+        if (n >= cap) return json({ mode: 'capped', cap, detail: 'Free daily cap reached for this repo. Score still reported; findings hidden until tomorrow or with a Pro key.' });
         await env.LICENSES.put(k, String(n + 1), { expirationTtl: 60 * 60 * 26 });
         return json({ mode: 'free', remaining: cap - n - 1, cap });
       }
@@ -185,6 +193,8 @@ export default {
         if (key) await env.LICENSES.delete(`claim:${sid}`);
         return thanksPage(key, env);
       }
+      // Public scan page (badges link here): same page as /, auto-runs ?url=
+      if (p === '/scan' && env.ASSETS) return env.ASSETS.fetch(new Request(new URL('/', url), req));
       if (env.ASSETS) return env.ASSETS.fetch(req);
       return json({ error: 'not_found' }, 404);
     } catch (e) {

@@ -2,11 +2,12 @@
 // Keys are shown to the buyer once; KV stores only their SHA-256 hash.
 export const PLANS = {
   free: { label: 'Free', quota: 0, monthly: false },
-  pack: { label: 'Report pack ($9 one-off)', quota: 5, monthly: false }, // one-off credits
-  org: { label: 'Action Org ($29/mo)', quota: 5000, monthly: true }, // unlimited-feel CI tier
-  indie: { label: 'API Indie ($19/mo)', quota: 500, monthly: true },
-  team: { label: 'API Team ($99/mo)', quota: 10000, monthly: true },
-  credits: { label: 'Pay-per-scan credits (100 x $0.10)', quota: 100, monthly: false },
+  pro: { label: 'Pro ($19/mo)', quota: 2000, monthly: true }, // Action full mode + hosted API + 3 monitors
+  team: { label: 'Team ($99/mo)', quota: 20000, monthly: true }, // org-wide CI + API + 25 monitors
+  verified: { label: 'Verified re-audit ($79 one-off)', quota: 3, monthly: false }, // fresh audit + badge only if it passes
+  pack: { label: 'Report pack ($9 one-off)', quota: 5, monthly: false },
+  credits: { label: 'Pay-per-scan credits (250 x $0.04)', quota: 250, monthly: false },
+  org: { label: 'Org ($29/mo, later)', quota: 5000, monthly: true }, // reserved; not sold at launch
 };
 const hex = (buf) => [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('');
 export const sha256 = async (s) => hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s)));

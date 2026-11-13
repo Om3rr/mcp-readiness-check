@@ -22,12 +22,14 @@ PUBLIC_URL = "https://mcp-readiness.example.workers.dev"
 FREE_SCANS_PER_HOUR = "10"
 SCAN_TIMEOUT_MS = "12000"
 # Payment Links / Lemon Squeezy checkout URLs (public, safe as vars):
-CHECKOUT_URL_ORG = ""
-CHECKOUT_URL_INDIE = ""
+CHECKOUT_URL_PRO = ""
 CHECKOUT_URL_TEAM = ""
+CHECKOUT_URL_VERIFIED = ""
 CHECKOUT_URL_PACK = ""
 CHECKOUT_URL_CREDITS = ""
 FREE_ACTION_RUNS_PER_DAY = "50"
+# Hook into the ToolSlim "fix" step (shown when context cost is high):
+TOOLSLIM_URL = "https://github.com/Om3rr/toolslim"
 # Plan mapping, JSON. Stripe: payment_link id -> plan. Lemon Squeezy: variant id -> plan.
 STRIPE_PLAN_BY_LINK = "{}"
 LEMON_PLAN_BY_VARIANT = "{}"

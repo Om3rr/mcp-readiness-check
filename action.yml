@@ -21,7 +21,7 @@ inputs:
     required: false
     default: ''
   api-key:
-    description: 'MCP Readiness license key (Org plan). Unlocks full findings with fixes, the HTML report and SARIF, and lifts the free daily cap.'
+    description: 'MCP Readiness license key (Pro plan, $19/mo). Unlocks full findings with fixes, the HTML report and SARIF, and lifts the free daily cap.'
     required: false
     default: ''
   api-url:
@@ -29,11 +29,11 @@ inputs:
     required: false
     default: 'https://mcp-readiness.example.workers.dev'
   report-path:
-    description: 'Where to write the HTML report (Org plan).'
+    description: 'Where to write the HTML report (Pro plan).'
     required: false
     default: 'mcp-readiness-report.html'
   sarif-path:
-    description: 'Where to write SARIF for GitHub code scanning (Org plan). Empty disables.'
+    description: 'Where to write SARIF for GitHub code scanning (Pro plan). Empty disables.'
     required: false
     default: ''
 outputs:

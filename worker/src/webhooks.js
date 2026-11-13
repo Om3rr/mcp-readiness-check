@@ -28,7 +28,7 @@ export async function verifyLemon(body, header, secret) {
   return safeEq(header, await hmacHex(secret, body));
 }
 
-// STRIPE_PLAN_BY_LINK = {"plink_123":"org","plink_456":"indie","plink_789":"team","plink_abc":"pack","plink_def":"credits"}
+// STRIPE_PLAN_BY_LINK = {"plink_1":"pro","plink_2":"team","plink_3":"verified","plink_4":"pack","plink_5":"credits"}
 export async function handleStripe(req, env) {
   if (!env.STRIPE_WEBHOOK_SECRET) return json({ error: 'stripe_not_configured' }, 501);
   const body = await req.text();
@@ -66,7 +66,7 @@ async function stripeEvent(ev, o, env) {
   }
 }
 
-// LEMON_PLAN_BY_VARIANT = {"12345":"org","12346":"indie","12347":"team","12348":"pack","12349":"credits"}
+// LEMON_PLAN_BY_VARIANT = {"12345":"pro","12346":"team","12347":"verified","12348":"pack","12349":"credits"}
 export async function handleLemon(req, env) {
   if (!env.LEMON_WEBHOOK_SECRET) return json({ error: 'lemonsqueezy_not_configured' }, 501);
   const body = await req.text();
@@ -80,7 +80,7 @@ export async function handleLemon(req, env) {
     case 'order_created': {
       const variant = String(a.first_order_item?.variant_id ?? '');
       const plan = ev.meta?.custom_data?.plan || map[variant];
-      if (!plan || ['org', 'indie', 'team'].includes(plan)) return json({ ok: true, ignored: 'subscription_order_or_unmapped' });
+      if (!plan || ['org', 'pro', 'team'].includes(plan)) return json({ ok: true, ignored: 'subscription_order_or_unmapped' });
       if (await env.LICENSES.get(`ref:ls_order_${id}`)) return json({ ok: true, duplicate: true });
       const key = await issueLicense(env, { plan, source: 'lemonsqueezy', ref: `ls_order_${id}`, email: a.user_email });
       await linkRef(env, `ls_order_${id}`, key);
