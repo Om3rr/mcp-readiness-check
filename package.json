@@ -1,0 +1,11 @@
+{
+  "name": "mcp-readiness-check",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Zero-dependency CLI that scores an MCP server's production readiness: tool poisoning, schemas, annotations, Origin/CORS, auth, JSON-RPC hygiene.",
+  "bin": { "mcp-readiness-check": "bin/mcp-readiness-check.js" },
+  "scripts": { "test": "node --test test/*.test.js", "check": "node bin/mcp-readiness-check.js" },
+  "engines": { "node": ">=18" },
+  "license": "UNLICENSED"
+}
