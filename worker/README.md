@@ -7,13 +7,15 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 | Route | What it does | Access |
 |---|---|---|
 | `GET /` | Landing page with a scan form, pricing and the report magnet | public |
-| `GET /scan?url=…` | Public scan page that badges link to (auto-runs the scan) | public |
+| `GET /s/<host>/<path>` | Indexable server page (server-rendered, stable URL, title/meta/canonical, JSON-LD). Badges link here. Runs a free scan if the cached one is older than 24 h | public |
+| `GET /scan?url=…` | 301 to the server page | public |
+| `GET /sitemap.xml`, `/robots.txt` | Every scanned server page, for search engines | public |
 | `POST /api/scan {url}` | Free: score, context tokens, top 3 issues. With `Authorization: Bearer <key>`: full findings with fixes (1 unit) | public, 10/h per IP |
 | `GET /api/report?url=…&format=html\|pdf` | Full report | license |
 | `GET /badge.svg?url=…` | Score badge, cached 6 h | public |
 | `POST /api/ci/run {repo}` | GitHub Action metering: `free` (50/day per repo), `capped` or `full` | public / license |
 | `POST /mcp` | Remote MCP server with one tool, `scan_mcp` (1 credit per call) | license |
-| `POST /api/monitor {url, webhook?, remove?}` | Daily re-scan (cron 06:17 UTC). On score, findings or context-cost drift, POSTs `mcp_readiness.drift` to your webhook. Pro 3, Team 25 servers | license |
+| `POST /api/monitor {url, webhook?, remove?}` | Daily re-scan (cron 06:17 UTC). On score, findings or context-cost drift, POSTs `mcp_readiness.drift` to your webhook. Pro 10, Team 200 servers | license |
 | `GET /api/license` | Plan, status, remaining | license |
 | `POST /api/subscribe {email}` | Report-magnet email capture (KV `lead:*`) | public, 5/h per IP |
 | `POST /webhooks/stripe` | `checkout.session.completed`, `invoice.paid`, `invoice.payment_failed`, `customer.subscription.deleted` | Stripe signature |
@@ -24,13 +26,15 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 
 | Plan | Price | Units |
 |---|---|---|
-| Free | $0 | Action 50 runs/day per repo (top 3 issues), 10 web scans/h, badge and public scan page |
-| `pro` | $19/mo | 2,000 runs or scans/mo, all findings with fixes, HTML/PDF report, SARIF, 3 monitors |
-| `team` | $99/mo | 20,000 runs or scans/mo, 25 monitors |
-| `verified` | $79 one-off | fresh audit + 3 re-scans; Verified badge only if it passes |
+| Free | $0 | paste-a-URL scan 10/h with no sign-up, Action 50 runs/day per repo (top 3 issues), badge + indexable server page |
+| `pro` | $19/mo | 2,000 runs or scans/mo, every finding with its fix, ToolSlim rewrite, hosted report, scans behind a test token, 10 monitors |
+| `team` | $99/mo | 20,000 hosted scans/mo, 200 monitors, multiple API keys |
+| `verified` | $79 one-time | fresh re-audit + directory listing; Verified badge only if it passes |
 | `pack` | $9 one-off | 5 full reports |
-| `credits` | $10 one-off | 250 pay-per-scan credits ($0.04 each, API or `scan_mcp`) |
-| `org` | $29/mo | reserved for later; not sold at launch |
+| `credits` | $5 one-off | 100 pay-per-scan credits ($0.05 each, floor $0.03; API or `scan_mcp`) |
+| `org` | $29/mo | added later (SARIF, 5,000 CI runs, seats); not shown at launch |
+
+GitHub Marketplace has no paid plans for Actions, so the Action is free and Pro is billed off-platform: the checkout link (`CHECKOUT_URL_PRO`, a placeholder until Omer picks a provider) is shown on every server page and on the landing page.
 
 The ToolSlim hook works like this: when the tool list costs more than `TOOLSLIM_THRESHOLD_TOKENS` (default 5,000) or descriptions are oversized, `/api/scan` returns `fix: { tool: "toolslim", command, url }`. The landing page and the Action summary show it as the "fix" step.
 

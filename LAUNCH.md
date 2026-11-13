@@ -14,6 +14,6 @@ Everything below is built and tested (`npm test`: 24 passing; CI also runs an Ac
 | 8 | Content magnet: publish `reports/state-of-mcp-2026-11.pdf` (it's also served at `/state-of-mcp-2026-11.html`) with a LinkedIn / r/mcp post | Omer yes | free | — |
 | 9 | Optional: list `scan_mcp` (the remote MCP at `/mcp`) in the official MCP registry and on mcp.so | Omer yes | free | 20 min |
 
-**Prices** (CMO verdict, 13 Nov): Free (daily cap) · **Pro $19/mo** · Team $99/mo · Verified badge $79 one-off · Report pack $9 · pay-per-scan $0.04 (250 credits for $10). Org $29/mo is reserved for later. Marketing and launch are owned by the CMO bot.
+**Prices** (CMO final copy, 13 Nov): Free (daily cap, no sign-up) · **Pro $19/mo** (full findings + ToolSlim rewrite + hosted report), billed off-platform because the Marketplace has no paid Action plans · Verified $79 one-time · Team $99/mo · Report pack $9 · pay-per-scan $0.05, floor $0.03 (100 credits for $5). Org $29/mo comes later. The CMO bot owns marketing and launch.
 
 **Break-even:** $5/mo of Workers plus payment fees, so one Pro subscription covers it.

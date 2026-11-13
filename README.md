@@ -1,6 +1,8 @@
 # mcp-readiness-check
 
-**Live MCP readiness and context-cost scanning.** It connects to your running MCP server the way Claude, ChatGPT and Cursor do, then scores OAuth discovery, safety annotations, Origin/CORS, schemas, and the tokens your tool list costs on every agent turn. It is built on a scan of 12,900+ live servers from the official MCP registry ([State of public MCP servers, Nov 2026](reports/state-of-mcp-2026-11.pdf)).
+## Is your MCP server ready for real agents?
+
+We connect to your live endpoint the way Claude, ChatGPT and Cursor do. Then we score OAuth discovery, safety annotations, Origin/CORS, schemas, and what your tool list costs in tokens on every turn. Paste a public URL, or add the GitHub Action and fail the PR when it isn't ready. It is built on a scan of 12,900+ live servers from the official MCP registry ([State of public MCP servers, Nov 2026](reports/state-of-mcp-2026-11.pdf)).
 
 ## GitHub Action (free tier, 50 runs/day per repo)
 
@@ -10,23 +12,24 @@
     url: http://127.0.0.1:8787/mcp   # start your server earlier in the job
     fail-under: 80
     max-context-tokens: 8000
-    api-key: ${{ secrets.MCP_READINESS_KEY }}   # optional Pro plan: all findings + fixes, HTML report, SARIF
+    api-key: ${{ secrets.MCP_READINESS_KEY }}   # Pro: every finding with its fix, hosted report
 ```
 
 Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
 
-**Badge** (links to the public scan page): `[![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/scan?url=https://your-server/mcp)`
+**Badge** (links to your server's public page): `[![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/s/your-server/mcp)`
 **Hosted API, web app, payments, `scan_mcp` remote tool:** [worker/](worker/README.md)
 
 | Plan | Price |
 |---|---|
-| Free | Action (top 3 issues, 50 runs/day/repo), badge + public scan page, 10 web scans/h, this CLI |
-| Pro | $19/mo: all findings + fixes, HTML/PDF report, SARIF, hosted API, 3 monitors |
-| Team | $99/mo: 20,000 scans, 25 monitors |
-| Verified badge | $79 one-off (only if it passes) |
-| Report pack / pay-per-scan | $9 for 5 reports · $0.04 per scan |
+| Free | Paste-a-URL scan (no sign-up), Action (score + token-budget gates, top 3 issues, 50 runs/day/repo), README badge, this CLI |
+| Pro | $19/mo, billed off-platform: every finding with its fix, ToolSlim slim tools.json, baseline growth gate, hosted report, scans behind a test token, 10 monitors |
+| Team | $99/mo: 20,000 hosted scans, 200 monitors |
+| Verified | $79 one-time, badge only if the server passes |
+| Report pack / pay-per-scan | $9 for 5 reports · $0.05 per scan (100 credits for $5) |
+| Org | $29/mo, added later |
 
-Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim): `npx toolslim <url> --fix`.
+Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim). Its free lossless optimizer cut Notion's official server from 17,477 to 5,213 tokens per call (70.2%, 13 Nov 2026): `npx toolslim <url> --fix`.
 
 ## CLI
 

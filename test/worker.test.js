@@ -123,11 +123,12 @@ test('monitoring: register within plan limit, drift detection, cron posts webhoo
   const key = await issueLicense(env, { plan: 'pro', source: 't', ref: 'm' });
   const reg = (b) => call(env, '/api/monitor', { method: 'POST', body: JSON.stringify(b), headers: { authorization: `Bearer ${key}` } });
   assert.equal((await reg({ url: 'https://a.example/mcp', webhook: 'https://hooks.example/x' })).status, 200);
-  await reg({ url: 'https://b.example/mcp' }); await reg({ url: 'https://c.example/mcp' });
-  assert.equal((await reg({ url: 'https://d.example/mcp' })).status, 402);
+  for (let i = 1; i < 10; i++) await reg({ url: `https://m${i}.example/mcp` });
+  assert.equal((await reg({ url: 'https://over.example/mcp' })).status, 402);
   assert.equal(drift(null, { score: 90, findings: [] }), null);
   assert.equal(drift({ score: 90, contextTokens: 100, ids: [] }, { score: 90, contextTokens: 120, findings: [] }), null);
   let n = 0; const scores = [100, 80];
+  for (const k of [...store.m.keys()].filter((k) => k.startsWith('mon:'))) { const l = JSON.parse(store.m.get(k)); store.m.set(k, JSON.stringify(l.slice(0, 1))); }
   const fakeScan = async () => ({ score: scores[Math.min(n, 1)], contextTokens: 10, findings: n ? [{ level: 'warn', id: 'x', title: 'X' }] : [] });
   const posts = [];
   await runMonitors(env, fakeScan, async (u, i) => posts.push([u, JSON.parse(i.body)]));

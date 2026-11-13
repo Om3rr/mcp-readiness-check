@@ -3,7 +3,7 @@
 import { checkTarget } from './guard.js';
 import { getLicense } from './license.js';
 
-const LIMIT = { pro: 3, team: 25, org: 5 };
+const LIMIT = { pro: 10, team: 200, org: 10 };
 const json = (o, status = 200) => new Response(JSON.stringify(o, null, 1), { status, headers: { 'content-type': 'application/json' } });
 
 export async function registerMonitor(req, env, key) {

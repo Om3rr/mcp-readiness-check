@@ -9,9 +9,11 @@ Live readiness + context-cost scan for MCP servers: OAuth discovery, annotations
 
 **Long description:**
 
-> Your MCP server passes its unit tests. Will it work for real agents?
+> **Is your MCP server ready for real agents?**
 >
-> MCP Readiness Check connects to your **running** server the way Claude, ChatGPT and Cursor do, and fails the PR when it isn't ready:
+> We connect to your live endpoint the way Claude, ChatGPT and Cursor do. Then we score OAuth discovery, safety annotations, Origin/CORS, schemas, and what your tool list costs in tokens on every turn. Start your server in CI, point the Action at localhost, and fail the job under your score or over your token budget. The README badge links to the public report.
+>
+> What it checks:
 >
 > - **OAuth discovery:** a 401 with `WWW-Authenticate`, RFC 9728 protected-resource metadata, broken or relative `resource_metadata` pointers, RFC 8414, PKCE S256, DCR
 > - **Safety annotations:** `readOnlyHint` / `destructiveHint` on every tool, and write tools that are missing them
@@ -22,9 +24,9 @@ Live readiness + context-cost scan for MCP servers: OAuth discovery, annotations
 > Built on a scan of 12,900+ live servers from the official MCP registry. 45% of public servers accept requests from any Origin.
 >
 > **Free:** score gate, token budget, top 3 issues, 50 runs/day per repo.
-> **Pro ($19/mo):** every finding with its fix, an HTML report artifact, SARIF for code scanning, scans behind login, and daily drift monitoring.
+> **The Action is free.** Pro ($19/mo, billed on our site, not through the Marketplace) adds every finding with its fix, a ToolSlim slim tools.json, a baseline growth gate, a hosted report URL, scans behind a test token, and 10 monitored endpoints. Payment never changes the score.
 >
-> Heavy tool list? Pair it with [ToolSlim](https://github.com/Om3rr/toolslim) to write a slimmer drop-in version and gate the token budget.
+> Heavy tool list? [ToolSlim](https://github.com/Om3rr/toolslim)'s free lossless optimizer cut Notion's official server from 17,477 to 5,213 tokens per call (70.2%, 13 Nov 2026, at 1,000 calls/day and $3 per 1M input tokens with no cache).
 
 **Usage:**
 
