@@ -5,7 +5,8 @@ const POISON = [
   [/ignore (all |any )?(previous|prior|above) (instructions|messages)/i, 'tells the model to ignore previous instructions'],
   [/<\s*(important|system|secret|instructions?)\s*>/i, 'contains hidden-instruction tags like <IMPORTANT>'],
   [/(do not|don't|never) (tell|inform|mention|show)( this to)? (the )?user/i, 'asks the model to hide something from the user'],
-  [/(read|cat|open|send|upload|include).{0,40}(\.ssh|id_rsa|\.env|credentials|api[_ ]?key|password|token)/i, 'references secrets or credential files'],
+  [/\b(read|cat|open|load|send|upload|include|attach)\b[^.\n]{0,40}(~\/\.ssh|\.ssh\/|id_rsa|id_ed25519|\.env\b|\.aws\/|\.npmrc|\.netrc|credentials\.json|mcp\.json)/i, 'references secrets or credential files'],
+  [/\b(send|upload|forward|post|pass|include|exfiltrate)\b[^.\n]{0,30}\b(the user'?s|all|any|their)\b[^.\n]{0,20}\b(passwords?|tokens?|api[_ ]?keys?|secrets?|private keys?|seed phrases?)\b[^.\n]{0,30}\b(to|into|as)\b/i, 'asks the model to forward user secrets'],
   [/[\u200B-\u200F\u2060-\u2064\uFEFF\u202A-\u202E]/, 'contains invisible or bidi-control unicode'],
   [/[A-Za-z0-9+/]{120,}={0,2}/, 'contains a long base64-like blob'],
 ];

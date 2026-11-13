@@ -1,0 +1,23 @@
+{
+ "total": 4622,
+ "ok": 4346,
+ "unreach": 276,
+ "public": 2438,
+ "oauth": 1908,
+ "perfect": "60%",
+ "pub_origin": "46%",
+ "pub_cors": "22%",
+ "pub_longdesc": "10%",
+ "pub_noannot": "24%",
+ "pub_risky": "5%",
+ "pub_untyped": "3%",
+ "pub_32601": "15%",
+ "pub_many": "5%",
+ "pub_poison": 20,
+ "oa_wwwauth": "6%",
+ "oa_prm": "10%",
+ "oa_legacy": 8,
+ "median_tools": 7,
+ "max_tools": 453,
+ "maxdesc": 18021
+}
