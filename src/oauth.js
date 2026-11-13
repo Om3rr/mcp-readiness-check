@@ -19,6 +19,7 @@ export async function probeOAuth(url, res, fetchImpl = fetch) {
   const candidates = [www.resource_metadata, `${u.origin}/.well-known/oauth-protected-resource${u.pathname === '/' ? '' : u.pathname}`, `${u.origin}/.well-known/oauth-protected-resource`].filter(Boolean);
   let prm = null, prmUrl = null;
   for (const c of candidates) { prm = await j(c, fetchImpl); if (prm) { prmUrl = c; break; } }
+  if (www.resource_metadata && prmUrl !== www.resource_metadata) add('fail', 'auth.prm_broken', 'The 401 points at protected-resource metadata that does not load', `resource_metadata="${www.resource_metadata}" did not return JSON.`, 'Serve RFC 9728 JSON at that exact URL (resource, authorization_servers), or fix the pointer.');
   if (!www.resource_metadata) add('info', 'auth.resource_metadata_hint', 'WWW-Authenticate has no resource_metadata pointer', 'The 2025-06-18 spec has servers point clients at RFC 9728 metadata from the 401.', 'Add resource_metadata="https://…/.well-known/oauth-protected-resource".');
   let as;
   if (!prm) {

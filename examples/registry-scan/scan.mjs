@@ -1,5 +1,5 @@
 import { readFileSync, writeFileSync } from 'node:fs';
-import { probeHttp } from '/workspace/mcp-readiness-check/src/probe.js';
+import { probeHttp } from '../../src/probe.js';
 const all = JSON.parse(readFileSync(process.env.IN||'remotes.json', 'utf8'));
 // deterministic sample: dedupe by host, take up to N
 const seen = new Set(); const list = [];
