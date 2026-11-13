@@ -36,6 +36,18 @@ inputs:
     description: 'Where to write SARIF for GitHub code scanning (Pro plan). Empty disables.'
     required: false
     default: ''
+  json-path:
+    description: 'Where to write the JSON report, including the raw tools/list (input for ToolSlim). Empty disables.'
+    required: false
+    default: ''
+  fix:
+    description: 'Run the ToolSlim fix step after the scan: off | safe | standard | aggressive (standard and aggressive need Pro).'
+    required: false
+    default: 'off'
+  fix-out:
+    description: 'Where the fix step writes the slimmer drop-in tools.json.'
+    required: false
+    default: 'tools.slim.json'
 outputs:
   score:
     description: 'Readiness score 0-100'
@@ -64,3 +76,18 @@ runs:
         INPUT_API_URL: ${{ inputs.api-url }}
         INPUT_REPORT_PATH: ${{ inputs.report-path }}
         INPUT_SARIF_PATH: ${{ inputs.sarif-path }}
+        INPUT_JSON_PATH: ${{ inputs.json-path || (inputs.fix != 'off' && format('{0}/mcp-readiness.json', runner.temp)) || '' }}
+    - id: fix
+      if: inputs.fix != 'off'
+      shell: bash
+      run: |
+        npx -y toolslim@0 --report "$REPORT" --fix --level "$LEVEL" --out "$OUT" \
+          ${MAXTOK:+--max-total-tokens "$MAXTOK"} --md "$RUNNER_TEMP/toolslim.md" --fail-on none || echo "::warning::ToolSlim fix step failed; the scan result stands."
+        cat "$RUNNER_TEMP/toolslim.md" >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+      env:
+        REPORT: ${{ inputs.json-path || format('{0}/mcp-readiness.json', runner.temp) }}
+        LEVEL: ${{ inputs.fix }}
+        OUT: ${{ inputs.fix-out }}
+        MAXTOK: ${{ inputs.max-context-tokens != '0' && inputs.max-context-tokens || '' }}
+        MCP_READINESS_LICENSE: ${{ inputs.api-key }}
+        MCP_READINESS_API_URL: ${{ inputs.api-url }}

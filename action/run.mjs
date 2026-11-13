@@ -1,7 +1,7 @@
 // GitHub Action entry point. Scans locally (works for localhost servers started in the job),
 // then asks the hosted API whether this run is free, capped or full (licensed).
 import { appendFileSync, writeFileSync } from 'node:fs';
-import { probeHttp } from '../src/probe.js';
+import { probeHttp, withTools } from '../src/probe.js';
 import { toHtml } from '../src/html.js';
 import { toSarif, summaryMarkdown } from './format.mjs';
 
@@ -38,6 +38,8 @@ const mode = m.mode === 'full' ? 'full' : m.mode === 'capped' ? 'capped' : 'free
 const issues = r.findings.filter((f) => f.level === 'fail' || f.level === 'warn');
 
 summary(summaryMarkdown(r, url, mode, m));
+// JSON report with the raw tool list, for the ToolSlim fix step (or your own tooling).
+if (I('JSON_PATH')) writeFileSync(I('JSON_PATH'), JSON.stringify(withTools(r, url), null, 1));
 if (mode === 'full') {
   writeFileSync(I('REPORT_PATH', 'mcp-readiness-report.html'), toHtml(r, url));
   if (I('SARIF_PATH')) writeFileSync(I('SARIF_PATH'), JSON.stringify(toSarif(r, url), null, 1));

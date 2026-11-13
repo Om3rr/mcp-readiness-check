@@ -31,6 +31,19 @@ Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLA
 
 Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim). Its free lossless optimizer cut Notion's official server from 17,477 to 5,213 tokens per call (70.2%, 13 Nov 2026): `npx toolslim <url> --fix`.
 
+### Fix step: ToolSlim, in the same Action
+
+```yaml
+- uses: Om3rr/mcp-readiness-check@v1
+  with:
+    url: http://127.0.0.1:8787/mcp
+    fix: safe                 # off | safe (free, lossless) | standard | aggressive (Pro)
+    fix-out: tools.slim.json
+    api-key: ${{ secrets.MCP_READINESS_KEY }}
+```
+
+The CLI's `--json` (and `--json-out FILE`, or the Action's `json-path`) includes `target` and the raw `tools` list, so `toolslim --report scan.json` never re-connects. One license key covers both tools: ToolSlim checks it with `GET /api/license`. See [ToolSlim INTEGRATION.md](https://github.com/Om3rr/toolslim/blob/main/INTEGRATION.md).
+
 ## CLI
 
 A zero-dependency CLI (Node 18+) that scores an MCP server's **production readiness** in about a second and writes a Markdown report you can hand to a team.

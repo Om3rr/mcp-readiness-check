@@ -22,7 +22,8 @@ PUBLIC_URL = "https://mcp-readiness.example.workers.dev"
 FREE_SCANS_PER_HOUR = "10"
 SCAN_TIMEOUT_MS = "12000"
 # Payment Links / Lemon Squeezy checkout URLs (public, safe as vars):
-CHECKOUT_URL_PRO = ""
+# PLACEHOLDER stub until Omer picks Stripe or Lemon Squeezy. Pro is billed off-platform (no paid Marketplace plans for Actions).
+CHECKOUT_URL_PRO = "https://buy.example.com/mcp-readiness-pro"
 CHECKOUT_URL_TEAM = ""
 CHECKOUT_URL_VERIFIED = ""
 CHECKOUT_URL_PACK = ""

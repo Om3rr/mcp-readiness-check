@@ -1,6 +1,6 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MCP Readiness: live readiness and context-cost scanning for MCP servers</title>
-<meta name="description" content="Scan a live MCP server in seconds: OAuth discovery, tool annotations, Origin/CORS, schemas and token budget. GitHub Action, README badge and API. Built on a scan of 12,900+ live servers.">
+<title>MCP Readiness Check — Live MCP Server Scoring and CI Gates</title>
+<meta name="description" content="Probe a live MCP server for OAuth discovery, annotations, Origin/CORS and tool-list token cost. Free paste-a-URL scan, README badge and GitHub Action. Pro writes a slimmer tool list. Based on a 13 Nov 2026 scan of 12,926 official-registry servers.">
 <style>
 :root{--bg:#0b1020;--card:#121a33;--ink:#e6e9f5;--mut:#9aa3c0;--acc:#7c9cff;--ok:#3fb950;--warn:#d29922;--bad:#e5534b;--line:#24305a}
 *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
@@ -18,67 +18,73 @@ table{width:100%;border-collapse:collapse}td,th{padding:10px;border-bottom:1px s
 code{font-size:12px;word-break:break-all}footer{padding:30px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}
 @media(max-width:800px){.g3,.g2{grid-template-columns:1fr}.hero h1{font-size:32px}form.scan{flex-direction:column}}
 </style></head><body><div class="wrap">
-<nav><b>MCP Readiness</b><div><a href="#action">GitHub Action</a><a href="#fix">ToolSlim</a><a href="#why">Why live</a><a href="#pricing">Pricing</a><a href="/state-of-mcp-2026-11.html">State of MCP report</a></div></nav>
+<nav><b>MCP Readiness</b><div><a href="#action">GitHub Action</a><a href="#fix">ToolSlim</a><a href="#faq">FAQ</a><a href="#pricing">Pricing</a><a href="/state-of-mcp-2026-11.html">State of MCP report</a></div></nav>
 
 <div class="hero">
 <h1>Is your MCP server ready for real agents?</h1>
-<p>We connect to your <b>live</b> server the way Claude, ChatGPT and Cursor do. Then we score OAuth discovery, safety annotations, Origin/CORS, schemas and how many tokens your tool list costs on every agent turn.</p>
-<form class="scan" id="scan"><input id="u" type="url" required placeholder="https://your-server.example.com/mcp" autocomplete="off"><button>Scan free</button></form>
-<div class="small">Public https endpoints only. We never call your tools with side effects. Free scans show the score and top 3 issues.</div>
+<p>We connect to your live endpoint the way Claude, ChatGPT and Cursor do. Then we score OAuth discovery, safety annotations, Origin/CORS, schemas, and what your tool list costs in tokens on every turn. Paste a public URL, or add the GitHub Action and fail the PR when it isn't ready.</p>
+<form class="scan" id="scan"><input id="u" type="url" required placeholder="https://your-server.example.com/mcp" autocomplete="off"><button>Scan a public URL free</button></form>
+<div class="small">No sign-up. Public https endpoints only on the web form. We send initialize and tools/list, and never call your tools with side effects. Free scans show the score, the token cost, and the top 3 issues. · <a href="#action">Add the GitHub Action</a></div>
 <div id="result"></div>
 </div>
 
 <section><div class="grid g3">
-<div class="card kpi"><b>12,926</b><span class="small">live MCP servers scanned from the official registry (Nov 2026)</span></div>
+<div class="card kpi"><b>12,926</b><span class="small">live MCP servers reached from the official registry (13 Nov 2026)</span></div>
 <div class="card kpi"><b>45%</b><span class="small">of public servers accept requests from any web Origin, a spec MUST they miss</span></div>
 <div class="card kpi"><b>27,638</b><span class="small">characters in the longest single tool description we found, paid on every turn</span></div>
 </div><p class="small" style="text-align:center;margin-top:10px">From our free <a href="/state-of-mcp-2026-11.html">State of public MCP servers, Nov 2026</a> report.</p></section>
 
-<section id="action"><h2>Gate every PR on MCP readiness</h2>
-<p class="small">Start your server in the job, then point the Action at it. Free for every repo, with a daily cap. Fails the build below your score or above your token budget.</p>
+<section id="action"><h2>A badge and a PR gate from one Action</h2>
+<p class="small">Start your server in CI, point the Action at localhost, and fail the job under your score or over your token budget. The README badge links to the public report. Pro unlocks every finding with its fix, a hosted report URL, scans behind a test token, and a baseline gate when the tool list grows. The Action itself is free.</p>
 <div class="grid g2"><pre>- uses: Om3rr/mcp-readiness-check@v1
   with:
     url: http://127.0.0.1:8787/mcp
-    fail-under: 80            # score 0-100
-    max-context-tokens: 8000  # token budget for tools/list
-    api-key: ${{ secrets.MCP_READINESS_KEY }}  # optional, Org plan</pre>
-<div><h3>README badge</h3><p class="small">Show your live score, linked to your public scan page. It updates at most every 6 hours.</p>
-<pre>[![MCP readiness](https://YOUR-DOMAIN/badge.svg?url=https://your-server/mcp)](https://YOUR-DOMAIN/scan?url=https://your-server/mcp)</pre>
-<h3>Pay-per-scan for agents</h3><p class="small">Add our remote MCP server and let your agent call <code>scan_mcp</code>. It costs $0.04 per scan.</p>
+    fail-under: 80
+    max-context-tokens: 8000
+    api-key: ${{ secrets.MCP_READINESS_KEY }}  # Pro</pre>
+<div><h3>README badge</h3><p class="small">Your live score, linked to your server's public report page. It refreshes at most every 6 hours.</p>
+<pre>[![MCP readiness](https://YOUR-DOMAIN/badge.svg?url=https://your-server/mcp)](https://YOUR-DOMAIN/s/your-server/mcp)</pre>
+<h3>Pay-per-scan for agents</h3><p class="small">Add our remote MCP server and let your agent call <code>scan_mcp</code>. $0.05 per scan.</p>
 <pre>https://YOUR-DOMAIN/mcp   (Authorization: Bearer mrc_live_…)</pre></div></div></section>
 
-<section id="why"><h2>Live readiness, not another config linter</h2>
-<table><tr><th></th><th>MCP Readiness</th><th>Config / source scanners<br><span class="small">e.g. snyk/agent-scan</span></th><th>Repo auditors<br><span class="small">e.g. checkmcp.dev</span></th></tr>
-<tr><td>What is inspected</td><td>The <b>running endpoint</b>, over the wire</td><td>Client configs and tool descriptions on your machine</td><td>Repositories, graded against a checklist</td></tr>
-<tr><td>OAuth discovery (RFC 9728, broken <code>resource_metadata</code>, PKCE, DCR)</td><td>✓ live</td><td>not the focus</td><td>varies</td></tr>
-<tr><td>Context cost: tokens per turn, oversized descriptions</td><td>✓ measured from the real tools/list</td><td>not the focus</td><td>varies</td></tr>
-<tr><td>Origin / CORS / JSON-RPC conformance</td><td>✓ probed</td><td>not the focus</td><td>varies</td></tr>
-<tr><td>Tool poisoning patterns</td><td>✓</td><td>✓ (their focus)</td><td>✓</td></tr>
-<tr><td>Works on localhost in CI</td><td>✓ Action scans in your runner</td><td>✓</td><td>varies</td></tr></table>
-<p class="small">Competitor columns summarise each tool's main focus as of Nov 2026. Check their docs for current features. Use them together. Config scanners protect your developers' machines. We protect the agents that connect to <i>your</i> server.</p></section>
+<section id="why"><div class="grid g3">
+<div class="card"><h3>Live protocol, not another config linter</h3><p class="small">We probe the running server: RFC 9728 / PKCE discovery, Origin validation, wildcard CORS, annotations, and JSON-RPC hygiene. Config scanners such as Snyk Agent Scan protect developer machines. We protect the agents that connect to your server.</p></div>
+<div class="card" id="fix"><h3>Context cost, priced — and on Pro, slimmed</h3><p class="small">Every tools/list is resent with every model call. We measure that bill in tokens and dollars, and Pro writes a drop-in slimmer tool list (<a href="https://github.com/Om3rr/toolslim">ToolSlim</a>). On Notion's official server, a 13 Nov 2026 read-only run measured 17,477 tokens per call and cut 70.2% at the lossless level.</p></div>
+<div class="card"><h3>A badge and a PR gate from one Action</h3><p class="small">Fail the job under your score or over your token budget, in your own runner, including localhost. Show the badge, and keep it from drifting.</p></div>
+</div>
+<h2 style="margin-top:28px">How it works</h2>
+<ol class="small">
+<li><b>Paste a URL or add the Action.</b> Point us at a public https MCP endpoint, or start the server in the GitHub Actions runner and scan http://127.0.0.1.</li>
+<li><b>We probe the surface agents see.</b> initialize, tools/list, an unknown method, a foreign Origin, a CORS preflight, and OAuth discovery. No side-effect tool calls.</li>
+<li><b>You get a score and a token bill.</b> A 0–100 readiness score, the approximate tokens tools/list costs every turn, and the top issues. Pro adds the full report, the slim tools.json, and the CI growth gate.</li>
+<li><b>Ship with a badge, keep it from drifting.</b> Drop the README badge. On Pro and Team, re-scan on a schedule and get a webhook if the score or token budget moves.</li>
+</ol></section>
 
 <section id="pricing"><h2>Pricing</h2><p class="small">Cancel anytime. Payment never changes a score.</p>
 <div class="grid g3">
-<div class="card plan"><h3>Free</h3><div class="price">$0</div><ul><li>GitHub Action: score gate and token budget</li><li>Top 3 issues per run, 50 runs/day per repo</li><li>README badge and public scan page</li><li>10 web scans/hour</li><li>Open CLI</li></ul><a class="btn ghost" href="#action">Add the Action</a></div>
-<div class="card plan hl"><h3>Pro</h3><div class="price">$19<span class="small">/mo</span></div><ul><li>Action without the daily cap (2,000 runs/mo)</li><li>Every finding with its fix</li><li>HTML report artifact and SARIF for code scanning</li><li>Hosted API with JSON, HTML and PDF reports</li><li>3 monitored servers with daily drift alerts</li><li>Scans behind login (test token)</li></ul><a class="btn" data-plan="pro" href="#">Get Pro</a></div>
-<div class="card plan"><h3>Team</h3><div class="price">$99<span class="small">/mo</span></div><ul><li>Org-wide CI and API (20,000 scans/mo)</li><li>25 monitored servers and webhooks</li><li>Everything in Pro</li><li>Priority email support</li></ul><a class="btn ghost" data-plan="team" href="#">Get Team</a></div>
+<div class="card plan"><h3>Free</h3><div class="price">$0</div><ul><li>Paste-a-URL scan (10/hour), no sign-up</li><li>GitHub Action with score and token-budget gates (50 runs/day per repo)</li><li>Top 3 issues</li><li>README badge and a public page per server</li><li>Open CLI</li></ul><a class="btn ghost" href="#action">Add the GitHub Action</a></div>
+<div class="card plan hl"><h3>Pro</h3><div class="price">$19<span class="small">/mo</span></div><ul><li>Everything in Free, higher CI cap</li><li>Every finding with its fix</li><li>ToolSlim slim tools.json (safe, standard, aggressive)</li><li>Baseline growth gate</li><li>Hosted report URL</li><li>Scans behind a test token</li><li>10 monitored endpoints with a drift webhook</li></ul><a class="btn" data-plan="pro" href="#">Get Pro</a></div>
+<div class="card plan"><h3>Team</h3><div class="price">$99<span class="small">/mo</span></div><ul><li>Everything in Pro</li><li>20,000 hosted scans/mo</li><li>200 monitored servers</li><li>Multiple API keys</li><li>Priority probing</li></ul><a class="btn ghost" data-plan="team" href="#">Get Team</a></div>
 </div>
 <div class="grid g3" style="margin-top:16px">
-<div class="card plan"><h3>Verified badge: $79 one-off</h3><p class="small">A fresh audit with up to 3 re-scans while you fix. The "Verified" badge is issued only if the server passes.</p><a class="btn ghost" data-plan="verified" href="#">Get verified</a></div>
-<div class="card plan"><h3>Report pack: $9</h3><p class="small">5 full HTML and PDF reports. No subscription. Good for a launch checklist or a vendor review.</p><a class="btn ghost" data-plan="pack" href="#">Buy 5 reports</a></div>
-<div class="card plan"><h3>Pay-per-scan: $0.04</h3><p class="small">250 credits for $10, used by the API or by agents through <code>scan_mcp</code>. Credits never expire.</p><a class="btn ghost" data-plan="credits" href="#">Buy 250 credits</a></div>
+<div class="card plan"><h3>Verified: $79 one-time</h3><p class="small">A fresh independent re-audit, featured directory listing, and a Verified badge only if the server passes.</p><a class="btn ghost" data-plan="verified" href="#">Get verified</a></div>
+<div class="card plan"><h3>Report pack: $9</h3><p class="small">Five full HTML and PDF reports, no subscription.</p><a class="btn ghost" data-plan="pack" href="#">Buy 5 reports</a></div>
+<div class="card plan"><h3>Credits: $0.05 per scan</h3><p class="small">100 credits for $5, used by the API or by an agent via the <code>scan_mcp</code> tool. Credits do not expire.</p><a class="btn ghost" data-plan="credits" href="#">Buy 100 credits</a></div>
 </div></section>
 
-<section id="fix"><div class="card"><h2>Found context bloat? Fix it with ToolSlim</h2>
-<p class="small">Our sister tool <a href="https://github.com/Om3rr/toolslim">ToolSlim</a> measures what your tool list costs per call and writes a slimmer drop-in version. Names and argument shapes stay the same. Scan with MCP Readiness, then slim with ToolSlim and gate the budget in CI.</p>
-<pre>npx toolslim https://your-server/mcp --fix</pre></div></section>
+<section id="faq"><h2>FAQ</h2>
+<div class="card"><h3>Is this a security audit?</h3><p class="small">No. It is an automated surface scan of what any client sees before login. It is a triage signal, not a substitute for a review of auth, data flows, and approval gates.</p>
+<h3>How is this different from CheckMCP, Snyk Agent Scan, or MCPWatch?</h3><p class="small">CheckMCP is the closest hosted comp; we compete on a larger live official-registry corpus, a localhost CI Action, and a Pro tool-list rewrite. Snyk Agent Scan checks configs and skills on developer machines. MCPWatch grades repository source against OWASP-style checks. Use them together when they overlap.</p>
+<h3>Why pay if the public scan is free?</h3><p class="small">Free shows the score, the token cost, and the top 3 issues. Pro unlocks every finding with a fix, the slimmer tools.json, private or OAuth-gated scans, a hosted report, and a CI gate on growth. Payment never changes the score.</p>
+<h3>Can I scan localhost or a server behind login?</h3><p class="small">The GitHub Action runs in your runner and can scan localhost. Pro accepts a test-tenant token for tools behind login. The public web form only accepts public https URLs.</p>
+<h3>How do you measure tokens, and what does the 70% Notion figure mean?</h3><p class="small">Token counts are estimates. ToolSlim's zero-dependency estimator came out 1–9% above o200k_base on a 14-server set, 13 Nov 2026. The 70.2% cut (17,477 to 5,213 tokens) is the lossless safe rewrite of Notion's official server on that date, at the stated price assumption of 1,000 calls/day and $3 per 1M input tokens with no cache. Other servers in the same demo saved much less at the lossless level (for example Chrome DevTools 9%, Playwright 12%). Treat the dollar figures as a budget scenario, not a bill.</p></div></section>
 
 <section id="report"><div class="card"><h2>Free: State of public MCP servers, Nov 2026</h2>
 <p class="small">What 12,926 live servers get right, what they skip, and what it costs agents. Includes a checklist for server owners.</p>
 <form id="sub" style="display:flex;gap:8px;flex-wrap:wrap"><input id="em" type="email" placeholder="you@company.com (optional)" style="flex:1;min-width:220px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0e1530;color:var(--ink)"><button>Get the report</button></form>
 <div class="small" id="subnote">Or just <a href="/state-of-mcp-2026-11.html">read it</a>. The email is only for the next edition.</div></div></section>
 
-<footer>MCP Readiness · scanner: <a href="https://github.com/Om3rr/mcp-readiness-check">mcp-readiness-check</a> · Scores are automated surface checks, not a security audit. · Contact: [email]</footer>
+<footer>MCP Readiness · scanner: <a href="https://github.com/Om3rr/mcp-readiness-check">mcp-readiness-check</a> · Scores are automated surface checks, not a security audit. Payment never changes a score. · Contact: [email]</footer>
 </div>
 <script>
 const $=(s)=>document.querySelector(s);const esc=(s)=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
@@ -89,10 +95,10 @@ $('#scan').onsubmit=async(e)=>{e.preventDefault();const out=$('#result');out.inn
   out.innerHTML=`<div class="card"><div style="display:flex;gap:18px;align-items:center"><div style="font-size:44px;font-weight:800;color:${col(j.score)}">${j.score}</div><div><b>${esc(j.server||j.url)}</b><div class="small">${j.authRequired?'Login required: OAuth discovery checked':`${j.toolCount} tools · ~${(j.contextTokens||0).toLocaleString()} tokens per agent turn`}</div></div></div>
   ${j.top.map(f=>`<div class="f"><span class="lv" style="color:${f.level==='fail'?'var(--bad)':'var(--warn)'}">${f.level}</span>${esc(f.title)}</div>`).join('')||'<div class="f">No issues found. Nice.</div>'}
   ${j.locked?`<p class="small">${j.locked} more issue(s) and every fix are in the full report. <a href="#pricing">Unlock</a></p>`:''}
-  ${j.fix?`<p class="small">⚡ ${esc(j.fix.why)}. Slim it: <code>${esc(j.fix.command)}</code> (<a href="${esc(j.fix.url)}">ToolSlim</a>)</p>`:''}
-  <p class="small">Badge: <code>[![MCP readiness](${location.origin}/badge.svg?url=${encodeURIComponent(j.url)})](${location.origin}/scan?url=${encodeURIComponent(j.url)})</code></p></div>`}
+  ${j.fix?`<p class="small">⚡ ${esc(j.fix.why)}. Pro writes the slimmer tool list; the lossless step is free: <code>${esc(j.fix.command)}</code> (<a href="${esc(j.fix.url)}">ToolSlim</a>)</p>`:''}
+  <p class="small">Public page for this server: <a href="${esc(j.page)}">${esc(location.origin+j.page)}</a></p>
+  <p class="small">Badge: <code>[![MCP readiness](${location.origin}/badge.svg?url=${encodeURIComponent(j.url)})](${esc(location.origin+j.page)})</code></p></div>`}
  catch(err){out.innerHTML='<div class="card">Scan failed. Try again.</div>'}};
-{const q=new URLSearchParams(location.search).get('url');if(q){$('#u').value=q;$('#scan').requestSubmit()}}
 $('#sub').onsubmit=async(e)=>{e.preventDefault();const em=$('#em').value;if(em){await fetch('/api/subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:em})}).catch(()=>{})}location.href='/state-of-mcp-2026-11.html'};
 fetch('/api/pricing').then(r=>r.json()).then(p=>{document.querySelectorAll('[data-plan]').forEach(a=>{const u=p.checkout?.[a.dataset.plan];if(u)a.href=u;else{a.setAttribute('aria-disabled','true');a.textContent+=' (soon)'}})}).catch(()=>{});
 </script></body></html>

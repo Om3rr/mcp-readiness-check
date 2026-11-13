@@ -136,3 +136,46 @@ test('monitoring: register within plan limit, drift detection, cron posts webhoo
   await runMonitors(env, fakeScan, async (u, i) => posts.push([u, JSON.parse(i.body)]));
   assert.equal(posts.length, 1); assert.equal(posts[0][0], 'https://hooks.example/x'); assert.equal(posts[0][1].scoreTo, 80);
 });
+
+test('server pages: stable path mapping, SSR with title/meta/canonical, badge links to page, sitemap', async () => {
+  const { pagePath, targetFromPath, render, savePage, sitemap } = await import('../worker/src/pages.js');
+  assert.equal(pagePath('https://mcp.example.com/mcp'), '/s/mcp.example.com/mcp');
+  assert.equal(pagePath('https://mcp.example.com/'), '/s/mcp.example.com');
+  assert.equal(targetFromPath('/s/mcp.example.com/mcp'), 'https://mcp.example.com/mcp');
+  assert.equal(targetFromPath('/s/a.com/../x'), null);
+  const view = { score: 72, server: 'Acme <MCP>', toolCount: 40, contextTokens: 9100, authRequired: false, top: [{ level: 'fail', id: 'x', title: 'Accepts a foreign Origin' }], locked: 4, fix: { why: 'Tool list costs ~9,100 tokens per agent turn', command: 'npx toolslim <your-mcp-url> --fix', url: 'https://github.com/Om3rr/toolslim' } };
+  const html = render({ CHECKOUT_URL_PRO: 'https://buy.example.com/pro' }, 'https://w.test/s/mcp.example.com/mcp', 'https://mcp.example.com/mcp', { ...view, at: '2026-11-13T16:00:00.000Z' });
+  assert.match(html, /<title>Acme &lt;MCP&gt; MCP server readiness: 72\/100/);
+  assert.match(html, /<link rel="canonical" href="https:\/\/w.test\/s\/mcp.example.com\/mcp">/);
+  assert.match(html, /<meta name="description" content="[^"]*40 tools/);
+  assert.match(html, /application\/ld\+json/);
+  assert.match(html, /buy\.example\.com\/pro/);
+  assert.match(html, /\]\(https:\/\/w.test\/s\/mcp.example.com\/mcp\)/); // badge markdown links to the page
+  assert.match(html, /toolslim/);
+  assert.ok(!html.includes('<MCP>'));
+  assert.match(render({}, 'https://w.test/s/x.com/mcp', 'https://x.com/mcp', null, 'down'), /noindex/);
+  const store = kv(); store.list = async ({ prefix }) => ({ keys: [...store.m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true });
+  await savePage({ LICENSES: store }, 'https://mcp.example.com/mcp', view);
+  const sm = await (await sitemap({ LICENSES: store }, 'https://w.test')).text();
+  assert.match(sm, /<loc>https:\/\/w.test\/s\/mcp.example.com\/mcp<\/loc>/);
+});
+
+test('server page route: serves cached scan without sign-up, redirects /scan?url=, rejects private targets', async () => {
+  const { savePage } = await import('../worker/src/pages.js');
+  const store = kv(); const env = { LICENSES: store };
+  await savePage(env, 'https://mcp.example.com/mcp', { score: 95, server: 'Ex', toolCount: 3, contextTokens: 400, top: [], locked: 0 });
+  const r = await call(env, '/s/mcp.example.com/mcp');
+  assert.equal(r.status, 200); assert.match(await r.text(), /Ex MCP server readiness: 95\/100/);
+  const red = await call(env, '/scan?url=https://mcp.example.com/mcp');
+  assert.equal(red.status, 301); assert.equal(red.headers.get('location'), 'https://w.test/s/mcp.example.com/mcp');
+  assert.equal((await call(env, '/s/localhost/mcp')).status, 404);
+  assert.match(await (await call(env, '/robots.txt')).text(), /sitemap\.xml/);
+});
+
+test('/api/license contract used by ToolSlim: plan + status active for a Pro key', async () => {
+  const env = { LICENSES: kv() };
+  const key = await issueLicense(env, { plan: 'pro', source: 't', ref: 'ts' });
+  const j = await (await call(env, '/api/license', { headers: { authorization: `Bearer ${key}` } })).json();
+  assert.equal(j.plan, 'pro'); assert.equal(j.status, 'active');
+  assert.equal((await call(env, '/api/license', { headers: { authorization: 'Bearer mrc_live_nope' } })).status, 401);
+});
