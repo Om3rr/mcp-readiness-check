@@ -27,6 +27,7 @@ export async function probeHttp(url, { token } = {}) {
     return { r, j: notify ? null : await parseBody(r) };
   };
   const init = await send('initialize', INIT);
+  if (init.r.status === 401 && !token) throw new Error(`Server requires authentication (HTTP 401${init.r.headers.get('www-authenticate') ? ', WWW-Authenticate present' : ''}). Good sign; re-run with --token to scan the tools.`);
   if (!init.j?.result) throw new Error(`initialize failed: HTTP ${init.r.status} ${JSON.stringify(init.j)}`);
   await send('notifications/initialized', undefined, { notify: true });
   const list = await send('tools/list', {});
@@ -49,6 +50,7 @@ export async function probeHttp(url, { token } = {}) {
     badToolStatus: badTool.r.status,
     unauthToolCallOk: Boolean(unauthCall && unauthCall.r.ok && unauthCall.j?.result && !unauthCall.j.result.isError),
     unauthToolCallName: ro?.name,
+    allReadOnly: tools.length > 0 && tools.every((t) => t.annotations?.readOnlyHint === true || /^(get|list|search|read|fetch|resolve|query|find|ask)[_-]?/i.test(t.name)),
   };
   return report(init.j.result, tools, checkHttp(obs));
 }

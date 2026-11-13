@@ -53,8 +53,10 @@ export function checkHttp(obs) {
   if (u.protocol !== 'https:' && !local) add('fail', 'http.tls', 'Remote server is not using HTTPS', '', 'Serve MCP over TLS only.');
   if (obs.unauthToolsList && !obs.authProvided) add('info', 'http.auth', 'tools/list works without credentials', 'Fine for public read-only servers; otherwise require OAuth 2.1 / bearer auth.', 'Return 401 with WWW-Authenticate for protected servers.');
   if (obs.unauthToolCallOk) add('fail', 'http.auth_call', 'A tool call succeeded without credentials', `Called "${obs.unauthToolCallName}" with no auth.`, 'Require auth for every non-public tool.');
-  if (obs.acao === '*') add('warn', 'http.cors', 'CORS allows any origin (Access-Control-Allow-Origin: *)', 'Any website the user visits can script calls to this server from the browser.', 'Allow-list known origins.');
-  if (obs.evilOriginAccepted) add(local ? 'fail' : 'warn', 'http.origin', 'Requests with a foreign Origin header are accepted', 'The MCP Streamable HTTP spec says servers MUST validate Origin to prevent DNS-rebinding attacks, which matters most for localhost servers.', 'Reject requests whose Origin is not on an allow-list (403).');
+  // Public, unauthenticated, read-only servers (docs search etc.) gain little from CORS/Origin limits.
+  const publicRO = !obs.authProvided && obs.unauthToolsList && obs.allReadOnly;
+  if (obs.acao === '*') add(publicRO ? 'info' : 'warn', 'http.cors', 'CORS allows any origin (Access-Control-Allow-Origin: *)', 'Any website the user visits can script calls to this server from the browser.', 'Allow-list known origins.');
+  if (obs.evilOriginAccepted) add(local ? 'fail' : publicRO ? 'info' : 'warn', 'http.origin', 'Requests with a foreign Origin header are accepted', 'The MCP Streamable HTTP spec says servers MUST validate Origin to prevent DNS-rebinding attacks, which matters most for localhost servers.', 'Reject requests whose Origin is not on an allow-list (403).');
   if (obs.unknownMethodCode !== -32601) add('warn', 'rpc.method_not_found', 'Unknown methods do not return JSON-RPC -32601', `Got ${JSON.stringify(obs.unknownMethodCode)}.`, 'Return error code -32601 for unknown methods.');
   if (obs.badToolStatus >= 500) add('warn', 'rpc.unknown_tool', 'Calling an unknown tool crashes with HTTP 5xx', '', 'Return a JSON-RPC error or isError: true result.');
   if (!obs.sessionHeader) add('info', 'http.session', 'No Mcp-Session-Id issued', 'Fine for stateless servers.', '');

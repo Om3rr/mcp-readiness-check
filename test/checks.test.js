@@ -46,3 +46,8 @@ test('end-to-end probe against a deliberately sloppy server', async () => {
     assert.ok(r.score < 70);
   } finally { srv.close(); }
 });
+
+test('public read-only servers get info, not warnings, for CORS/Origin', () => {
+  const f = checkHttp({ url: 'https://docs.example.com/mcp', acao: '*', evilOriginAccepted: true, unauthToolsList: true, allReadOnly: true, unknownMethodCode: -32601, badToolStatus: 200, sessionHeader: 's' });
+  assert.ok(f.every((x) => x.level === 'info'));
+});
