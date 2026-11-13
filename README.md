@@ -10,21 +10,14 @@
     url: http://127.0.0.1:8787/mcp   # start your server earlier in the job
     fail-under: 80
     max-context-tokens: 8000
-    api-key: ${{ secrets.MCP_READINESS_KEY }}   # optional Pro plan: all findings + fixes, HTML report, SARIF
 ```
 
 Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
 
-**Badge** (links to the public scan page): `[![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/scan?url=https://your-server/mcp)`
-**Hosted API, web app, payments, `scan_mcp` remote tool:** [worker/](worker/README.md)
+**Badge** (links to the public scan page; the hosted service is not live yet, so `<service>` is a placeholder): `[![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/scan?url=https://your-server/mcp)`
+**Hosted scan service and `scan_mcp` remote tool** (not deployed yet): [worker/](worker/README.md)
 
-| Plan | Price |
-|---|---|
-| Free | Action (top 3 issues, 50 runs/day/repo), badge + public scan page, 10 web scans/h, this CLI |
-| Pro | $19/mo: all findings + fixes, HTML/PDF report, SARIF, hosted API, 3 monitors |
-| Team | $99/mo: 20,000 scans, 25 monitors |
-| Verified badge | $79 one-off (only if it passes) |
-| Report pack / pay-per-scan | $9 for 5 reports · $0.04 per scan |
+**Free tier:** score gate, context-token budget, top 3 issues per run, 50 runs/day per repo, plus this CLI (unlimited, local).
 
 Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim): `npx toolslim <url> --fix`.
 
@@ -53,7 +46,7 @@ npm test
 | **Prompts and sessions** | Poisoning in `prompts/list` metadata; guessable `Mcp-Session-Id`; stack traces or file paths leaking in errors; generic tool names that collide across servers; missing tool titles; old protocol versions |
 | **JSON-RPC hygiene** | `-32601` for unknown methods, no 5xx on unknown tools, `protocolVersion`, `serverInfo`, server `instructions` |
 
-Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not a substitute for an architecture review of auth, data flows and approval gates. Full findings with fixes, PDF reports and CI use are on the paid plans above.
+Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not a substitute for an architecture review of auth, data flows and approval gates.
 
 ## Examples
 
@@ -63,3 +56,7 @@ Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not
 * **Before/after on our own gateway:** [agent-commerce-mvp v0.3](examples/agent-commerce-v0.3.md) ([HTML](examples/agent-commerce-v0.3.html)) scored **60/100**: it accepted foreign Origins, sent wildcard CORS, and had no annotations on its write tools. After the fixes, [v0.4](examples/agent-commerce-v0.4.md) ([HTML](examples/agent-commerce-v0.4.html)) scores **100/100**.
 
 **Media** (`docs/media`): [CLI run (GIF)](docs/media/cli.gif) / [MP4](docs/media/cli.mp4) · [HTML reports walkthrough (MP4)](docs/media/html-reports-walkthrough.mp4) · screenshots: [scan light](docs/media/public-scan-light.png), [scan dark](docs/media/public-scan-dark.png), [report before](docs/media/report-before-light.png), [report after](docs/media/report-after-light.png)
+
+## License
+
+[MIT](LICENSE) © 2026 Omer Shacham
