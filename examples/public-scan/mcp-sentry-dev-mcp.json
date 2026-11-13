@@ -1,0 +1,77 @@
+{
+  "server": {
+    "name": "mcp.sentry.dev/mcp"
+  },
+  "protocolVersion": null,
+  "toolCount": null,
+  "authRequired": true,
+  "oauth": {
+    "www": {
+      "scheme": "Bearer",
+      "realm": "OAuth",
+      "resource_metadata": "https://mcp.sentry.dev/.well-known/oauth-protected-resource/mcp"
+    },
+    "prm": {
+      "resource": "https://mcp.sentry.dev/mcp",
+      "authorization_servers": [
+        "https://mcp.sentry.dev"
+      ],
+      "scopes_supported": [
+        "org:read",
+        "project:write",
+        "team:write",
+        "event:write",
+        "alerts:write"
+      ],
+      "bearer_methods_supported": [
+        "header"
+      ]
+    },
+    "as": "https://mcp.sentry.dev"
+  },
+  "score": 100,
+  "findings": [
+    {
+      "id": "auth.required",
+      "level": "pass",
+      "title": "Unauthenticated requests are rejected with 401",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.prm",
+      "level": "pass",
+      "title": "Protected-resource metadata (RFC 9728) published",
+      "detail": "https://mcp.sentry.dev/.well-known/oauth-protected-resource/mcp",
+      "fix": ""
+    },
+    {
+      "id": "auth.as_meta",
+      "level": "pass",
+      "title": "Authorization-server metadata found",
+      "detail": "https://mcp.sentry.dev",
+      "fix": ""
+    },
+    {
+      "id": "auth.pkce",
+      "level": "pass",
+      "title": "PKCE S256 advertised",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.dcr",
+      "level": "pass",
+      "title": "Dynamic client registration available",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "level": "info",
+      "id": "auth.scope",
+      "title": "Tools not scanned (needs a token)",
+      "detail": "Re-run with --token to check tools, annotations and transport behaviour after login.",
+      "fix": ""
+    }
+  ]
+}

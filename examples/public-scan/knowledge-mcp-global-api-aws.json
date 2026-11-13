@@ -1,0 +1,53 @@
+{
+  "server": {
+    "name": "AWSKnowledgeMCP",
+    "version": "1.0.0"
+  },
+  "protocolVersion": "2025-03-26",
+  "toolCount": 5,
+  "score": 90,
+  "findings": [
+    {
+      "level": "info",
+      "id": "init.instructions",
+      "title": "No server instructions",
+      "detail": "Instructions are the right place for safety rules (what needs human approval).",
+      "fix": ""
+    },
+    {
+      "id": "tools.description_long",
+      "level": "warn",
+      "title": "\"aws___read_documentation\" description is 2118 chars",
+      "detail": "Long descriptions burn context on every turn and hide instructions.",
+      "fix": "Keep under ~1,000 chars; move docs to resources."
+    },
+    {
+      "id": "tools.title",
+      "level": "info",
+      "title": "5 of 5 tools have no human-readable title",
+      "detail": "Since 2025-06-18 clients show the title in approval prompts. Missing: aws___read_documentation, aws___search_documentation, aws___list_regions, aws___get_regional_availability, aws___retrieve_skill",
+      "fix": "Add title: \"…\" to each tool."
+    },
+    {
+      "id": "http.auth",
+      "level": "info",
+      "title": "tools/list works without credentials",
+      "detail": "Fine for public read-only servers; otherwise require OAuth 2.1 / bearer auth.",
+      "fix": "Return 401 with WWW-Authenticate for protected servers."
+    },
+    {
+      "id": "http.origin",
+      "level": "info",
+      "title": "Requests with a foreign Origin header are accepted",
+      "detail": "The MCP Streamable HTTP spec says servers MUST validate Origin to prevent DNS-rebinding attacks, which matters most for localhost servers.",
+      "fix": "Reject requests whose Origin is not on an allow-list (403)."
+    },
+    {
+      "id": "rpc.method_not_found",
+      "level": "warn",
+      "title": "Unknown methods do not return JSON-RPC -32601",
+      "detail": "Got -32600.",
+      "fix": "Return error code -32601 for unknown methods."
+    }
+  ]
+}

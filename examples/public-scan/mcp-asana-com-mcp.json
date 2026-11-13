@@ -1,0 +1,77 @@
+{
+  "server": {
+    "name": "mcp.asana.com/mcp"
+  },
+  "protocolVersion": null,
+  "toolCount": null,
+  "authRequired": true,
+  "oauth": {
+    "www": {
+      "scheme": "Bearer",
+      "realm": "OAuth",
+      "resource_metadata": "https://mcp.asana.com/.well-known/oauth-protected-resource",
+      "error": "invalid_token",
+      "error_description": "Missing or invalid access token"
+    },
+    "prm": {
+      "resource": "https://mcp.asana.com",
+      "authorization_servers": [
+        "https://mcp.asana.com"
+      ],
+      "scopes_supported": [
+        "default"
+      ],
+      "bearer_methods_supported": [
+        "header"
+      ],
+      "resource_documentation": "https://developers.asana.com/docs/using-asanas-mcp-server",
+      "resource_name": "Asana MCP"
+    },
+    "as": "https://mcp.asana.com"
+  },
+  "score": 100,
+  "findings": [
+    {
+      "id": "auth.required",
+      "level": "pass",
+      "title": "Unauthenticated requests are rejected with 401",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.prm",
+      "level": "pass",
+      "title": "Protected-resource metadata (RFC 9728) published",
+      "detail": "https://mcp.asana.com/.well-known/oauth-protected-resource",
+      "fix": ""
+    },
+    {
+      "id": "auth.as_meta",
+      "level": "pass",
+      "title": "Authorization-server metadata found",
+      "detail": "https://mcp.asana.com",
+      "fix": ""
+    },
+    {
+      "id": "auth.pkce",
+      "level": "pass",
+      "title": "PKCE S256 advertised",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.dcr",
+      "level": "pass",
+      "title": "Dynamic client registration available",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "level": "info",
+      "id": "auth.scope",
+      "title": "Tools not scanned (needs a token)",
+      "detail": "Re-run with --token to check tools, annotations and transport behaviour after login.",
+      "fix": ""
+    }
+  ]
+}

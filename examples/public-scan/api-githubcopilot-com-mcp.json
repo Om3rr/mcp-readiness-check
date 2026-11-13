@@ -1,0 +1,84 @@
+{
+  "server": {
+    "name": "api.githubcopilot.com/mcp/"
+  },
+  "protocolVersion": null,
+  "toolCount": null,
+  "authRequired": true,
+  "oauth": {
+    "www": {
+      "scheme": "Bearer",
+      "error": "invalid_request",
+      "error_description": "No access token was provided in this request",
+      "resource_metadata": "https://api.githubcopilot.com/.well-known/oauth-protected-resource/mcp/"
+    },
+    "prm": {
+      "resource": "https://api.githubcopilot.com/mcp/",
+      "authorization_servers": [
+        "https://github.com/login/oauth"
+      ],
+      "scopes_supported": [
+        "repo",
+        "read:org",
+        "read:user",
+        "user:email",
+        "read:packages",
+        "write:packages",
+        "read:project",
+        "project",
+        "gist",
+        "notifications"
+      ],
+      "bearer_methods_supported": [
+        "header"
+      ],
+      "resource_name": "GitHub MCP Server"
+    },
+    "as": "https://github.com/login/oauth"
+  },
+  "score": 100,
+  "findings": [
+    {
+      "id": "auth.required",
+      "level": "pass",
+      "title": "Unauthenticated requests are rejected with 401",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.prm",
+      "level": "pass",
+      "title": "Protected-resource metadata (RFC 9728) published",
+      "detail": "https://api.githubcopilot.com/.well-known/oauth-protected-resource/mcp/",
+      "fix": ""
+    },
+    {
+      "id": "auth.as_meta",
+      "level": "pass",
+      "title": "Authorization-server metadata found",
+      "detail": "https://github.com/login/oauth",
+      "fix": ""
+    },
+    {
+      "id": "auth.pkce",
+      "level": "pass",
+      "title": "PKCE S256 advertised",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.dcr",
+      "level": "info",
+      "title": "No dynamic client registration endpoint",
+      "detail": "Generic MCP clients then need a pre-registered client id.",
+      "fix": ""
+    },
+    {
+      "level": "info",
+      "id": "auth.scope",
+      "title": "Tools not scanned (needs a token)",
+      "detail": "Re-run with --token to check tools, annotations and transport behaviour after login.",
+      "fix": ""
+    }
+  ]
+}

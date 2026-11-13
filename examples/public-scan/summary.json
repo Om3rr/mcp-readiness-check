@@ -1,0 +1,288 @@
+[
+  {
+    "url": "https://docs.mcp.cloudflare.com/mcp",
+    "file": "docs-mcp-cloudflare-com-mcp.html",
+    "name": "docs-ai-search",
+    "kind": "Public",
+    "tools": 2,
+    "score": 100,
+    "top": "No warnings",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://learn.microsoft.com/api/mcp",
+    "file": "learn-microsoft-com-api-mcp.html",
+    "name": "Microsoft Learn MCP Server",
+    "kind": "Public",
+    "tools": 3,
+    "score": 100,
+    "top": "No warnings",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.api.coingecko.com/mcp",
+    "file": "mcp-api-coingecko-com-mcp.html",
+    "name": "coingecko_coingecko_typescript_api",
+    "kind": "Public",
+    "tools": 2,
+    "score": 100,
+    "top": "No warnings",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.svelte.dev/mcp",
+    "file": "mcp-svelte-dev-mcp.html",
+    "name": "Svelte MCP",
+    "kind": "Public",
+    "tools": 4,
+    "score": 100,
+    "top": "No warnings",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.exa.ai/mcp",
+    "file": "mcp-exa-ai-mcp.html",
+    "name": "Exa",
+    "kind": "Public",
+    "tools": 2,
+    "score": 100,
+    "top": "No warnings",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.semgrep.ai/mcp",
+    "file": "mcp-semgrep-ai-mcp.html",
+    "name": "mcp.semgrep.ai/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.linear.app/mcp",
+    "file": "mcp-linear-app-mcp.html",
+    "name": "mcp.linear.app/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.notion.com/mcp",
+    "file": "mcp-notion-com-mcp.html",
+    "name": "mcp.notion.com/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.sentry.dev/mcp",
+    "file": "mcp-sentry-dev-mcp.html",
+    "name": "mcp.sentry.dev/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://api.githubcopilot.com/mcp/",
+    "file": "api-githubcopilot-com-mcp.html",
+    "name": "api.githubcopilot.com/mcp/",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.stripe.com",
+    "file": "mcp-stripe-com.html",
+    "name": "mcp.stripe.com/",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.supabase.com/mcp",
+    "file": "mcp-supabase-com-mcp.html",
+    "name": "mcp.supabase.com/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.neon.tech/mcp",
+    "file": "mcp-neon-tech-mcp.html",
+    "name": "mcp.neon.tech/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://bindings.mcp.cloudflare.com/mcp",
+    "file": "bindings-mcp-cloudflare-com-mcp.html",
+    "name": "bindings.mcp.cloudflare.com/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.vercel.com",
+    "file": "mcp-vercel-com.html",
+    "name": "mcp.vercel.com/",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.paypal.com/mcp",
+    "file": "mcp-paypal-com-mcp.html",
+    "name": "mcp.paypal.com/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.asana.com/mcp",
+    "file": "mcp-asana-com-mcp.html",
+    "name": "mcp.asana.com/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.intercom.com/mcp",
+    "file": "mcp-intercom-com-mcp.html",
+    "name": "mcp.intercom.com/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.webflow.com/mcp",
+    "file": "mcp-webflow-com-mcp.html",
+    "name": "mcp.webflow.com/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.jam.dev/mcp",
+    "file": "mcp-jam-dev-mcp.html",
+    "name": "mcp.jam.dev/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 100,
+    "top": "OAuth discovery complete",
+    "fails": [],
+    "warns": []
+  },
+  {
+    "url": "https://mcp.deepwiki.com/mcp",
+    "file": "mcp-deepwiki-com-mcp.html",
+    "name": "DeepWiki",
+    "kind": "Public",
+    "tools": 3,
+    "score": 95,
+    "top": "No tool declares annotations",
+    "fails": [],
+    "warns": [
+      "annotations.none"
+    ]
+  },
+  {
+    "url": "https://mcp.context7.com/mcp",
+    "file": "mcp-context7-com-mcp.html",
+    "name": "Context7",
+    "kind": "Public",
+    "tools": 2,
+    "score": 95,
+    "top": "\"resolve-library-id\" description is 2006 chars",
+    "fails": [],
+    "warns": [
+      "tools.description_long"
+    ]
+  },
+  {
+    "url": "https://huggingface.co/mcp",
+    "file": "huggingface-co-mcp.html",
+    "name": "Hugging Face",
+    "kind": "Public",
+    "tools": 4,
+    "score": 95,
+    "top": "\"hf_fs\" description is 3674 chars",
+    "fails": [],
+    "warns": [
+      "tools.description_long"
+    ]
+  },
+  {
+    "url": "https://mcp.atlassian.com/v1/mcp",
+    "file": "mcp-atlassian-com-v1-mcp.html",
+    "name": "mcp.atlassian.com/v1/mcp",
+    "kind": "OAuth",
+    "tools": null,
+    "score": 95,
+    "top": "Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)",
+    "fails": [],
+    "warns": [
+      "auth.legacy_discovery"
+    ]
+  },
+  {
+    "url": "https://knowledge-mcp.global.api.aws",
+    "file": "knowledge-mcp-global-api-aws.html",
+    "name": "AWSKnowledgeMCP",
+    "kind": "Public",
+    "tools": 5,
+    "score": 90,
+    "top": "\"aws___read_documentation\" description is 2118 chars",
+    "fails": [],
+    "warns": [
+      "tools.description_long",
+      "rpc.method_not_found"
+    ]
+  }
+]

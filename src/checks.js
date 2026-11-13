@@ -34,14 +34,26 @@ export function checkTools(tools = []) {
       const untyped = props.filter((p) => !s.properties[p]?.type && !s.properties[p]?.enum && !s.properties[p]?.anyOf && !s.properties[p]?.oneOf);
       if (untyped.length) add('warn', 'schema.untyped', `"${n}" has untyped args: ${untyped.join(', ')}`, '', 'Give every property a type.');
     }
+    if (/^(search|fetch|read|write|query|get|list|run|execute|read_file|write_file)$/i.test(n)) add('info', 'tools.generic_name', `"${n}" is a generic name`, 'With several servers connected, generic names collide or get shadowed by another server\'s tool.', 'Prefix tool names with the server or domain, e.g. "acme_search".');
     const a = t.annotations || {};
     if (RISKY.test(n) && a.destructiveHint === undefined && a.readOnlyHint === undefined)
       add('warn', 'annotations.risky', `"${n}" sounds state-changing but has no annotations`, 'Clients use readOnlyHint/destructiveHint/idempotentHint to decide when to ask the human first.', 'Add annotations, e.g. { destructiveHint: true } or { readOnlyHint: true }.');
   }
+  const untitled = tools.filter((t) => !t.title && !t.annotations?.title).map((t) => t.name);
+  if (untitled.length) add('info', 'tools.title', `${untitled.length} of ${tools.length} tools have no human-readable title`, `Since 2025-06-18 clients show the title in approval prompts. Missing: ${untitled.slice(0, 6).join(', ')}${untitled.length > 6 ? '…' : ''}`, 'Add title: "…" to each tool.');
   const annotated = tools.filter((t) => t.annotations && Object.keys(t.annotations).length).length;
   if (!annotated) add('warn', 'annotations.none', 'No tool declares annotations', `0 of ${tools.length} tools have readOnlyHint/destructiveHint.`, 'Annotate every tool; mark reads readOnlyHint: true.');
   if (tools.length > 40) add('warn', 'tools.many', `${tools.length} tools exposed`, 'Large tool lists degrade tool selection and cost context.', 'Group or split into toolsets.');
   if (!f.some((x) => x.level === 'fail' || x.level === 'warn')) add('pass', 'tools.ok', `All ${tools.length} tools look clean`);
+  return f;
+}
+
+export function checkPrompts(prompts = []) {
+  const f = [];
+  for (const p of prompts) {
+    const blob = `${p.description || ''} ${JSON.stringify(p.arguments || [])}`;
+    for (const [re, why] of POISON) if (re.test(blob)) f.push({ level: 'fail', id: 'prompts.poisoning', title: `Prompt "${p.name}" looks poisoned: it ${why}`, detail: '', fix: 'Remove model-directed instructions from prompt metadata.' });
+  }
   return f;
 }
 
@@ -60,6 +72,8 @@ export function checkHttp(obs) {
   if (obs.unknownMethodCode !== -32601) add('warn', 'rpc.method_not_found', 'Unknown methods do not return JSON-RPC -32601', `Got ${JSON.stringify(obs.unknownMethodCode)}.`, 'Return error code -32601 for unknown methods.');
   if (obs.badToolStatus >= 500) add('warn', 'rpc.unknown_tool', 'Calling an unknown tool crashes with HTTP 5xx', '', 'Return a JSON-RPC error or isError: true result.');
   if (!obs.sessionHeader) add('info', 'http.session', 'No Mcp-Session-Id issued', 'Fine for stateless servers.', '');
+  else if (obs.sessionHeader.length < 16 || /^\d+$/.test(obs.sessionHeader)) add('warn', 'http.session_entropy', 'Mcp-Session-Id looks guessable', `"${obs.sessionHeader}"`, 'Use a cryptographically random id (e.g. a UUID).');
+  if (obs.errorLeak) add('warn', 'rpc.error_leak', 'Error responses leak internals', obs.errorLeak, 'Return short error messages; log stack traces server-side.');
   return f;
 }
 
@@ -67,6 +81,8 @@ export function checkInit(init) {
   const f = [];
   if (!init?.protocolVersion) f.push({ level: 'fail', id: 'init.version', title: 'initialize did not return a protocolVersion', detail: '', fix: '' });
   if (!init?.serverInfo?.name || !init?.serverInfo?.version) f.push({ level: 'warn', id: 'init.serverInfo', title: 'serverInfo name/version missing', detail: '', fix: 'Return serverInfo { name, version }.' });
+  const v = init?.protocolVersion || '';
+  if (v && v < '2025-03-26') f.push({ level: 'warn', id: 'init.old_protocol', title: `Old protocol version ${v}`, detail: 'Pre-2025-03-26 servers lack Streamable HTTP, annotations and the OAuth discovery flow.', fix: 'Upgrade the MCP SDK.' });
   if (!init?.instructions) f.push({ level: 'info', id: 'init.instructions', title: 'No server instructions', detail: 'Instructions are the right place for safety rules (what needs human approval).', fix: '' });
   return f;
 }

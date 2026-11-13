@@ -1,0 +1,70 @@
+{
+  "server": {
+    "name": "mcp.atlassian.com/v1/mcp"
+  },
+  "protocolVersion": null,
+  "toolCount": null,
+  "authRequired": true,
+  "oauth": {
+    "www": {
+      "scheme": "Bearer",
+      "realm": "OAuth",
+      "error": "invalid_token",
+      "error_description": "Missing or invalid access token"
+    },
+    "prm": null,
+    "as": "https://mcp.atlassian.com"
+  },
+  "score": 95,
+  "findings": [
+    {
+      "id": "auth.required",
+      "level": "pass",
+      "title": "Unauthenticated requests are rejected with 401",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.resource_metadata_hint",
+      "level": "info",
+      "title": "WWW-Authenticate has no resource_metadata pointer",
+      "detail": "The 2025-06-18 spec has servers point clients at RFC 9728 metadata from the 401.",
+      "fix": "Add resource_metadata=\"https://…/.well-known/oauth-protected-resource\"."
+    },
+    {
+      "id": "auth.legacy_discovery",
+      "level": "warn",
+      "title": "Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)",
+      "detail": "Clients built for the 2025-06-18 spec look for protected-resource metadata first.",
+      "fix": "Also publish /.well-known/oauth-protected-resource."
+    },
+    {
+      "id": "auth.as_meta",
+      "level": "pass",
+      "title": "Authorization-server metadata found",
+      "detail": "https://mcp.atlassian.com",
+      "fix": ""
+    },
+    {
+      "id": "auth.pkce",
+      "level": "pass",
+      "title": "PKCE S256 advertised",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "auth.dcr",
+      "level": "pass",
+      "title": "Dynamic client registration available",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "level": "info",
+      "id": "auth.scope",
+      "title": "Tools not scanned (needs a token)",
+      "detail": "Re-run with --token to check tools, annotations and transport behaviour after login.",
+      "fix": ""
+    }
+  ]
+}

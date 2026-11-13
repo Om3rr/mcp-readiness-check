@@ -1,0 +1,33 @@
+$ node bin/mcp-readiness-check.js http://localhost:8787/mcp --token $KEY --html report.html
+# MCP readiness report: agent-commerce-mvp
+
+Target: agent-commerce-mvp v0.3 (local) · protocol 2025-06-18 · 13 tools · score 60/100
+
+❌ Requests with a foreign Origin header are accepted — The MCP Streamable HTTP spec says servers MUST validate Origin to prevent DNS-rebinding att
+  - Fix: Reject requests whose Origin is not on an allow-list (403).
+⚠️ "create_listing" sounds state-changing but has no annotations — Clients use readOnlyHint/destructiveHint/idempotentHint to decide when to ask
+  - Fix: Add annotations, e.g. { destructiveHint: true } or { readOnlyHint: true }.
+⚠️ "approve_listing" sounds state-changing but has no annotations — Clients use readOnlyHint/destructiveHint/idempotentHint to decide when to as
+  - Fix: Add annotations, e.g. { destructiveHint: true } or { readOnlyHint: true }.
+⚠️ "approve_deal" sounds state-changing but has no annotations — Clients use readOnlyHint/destructiveHint/idempotentHint to decide when to ask t
+  - Fix: Add annotations, e.g. { destructiveHint: true } or { readOnlyHint: true }.
+⚠️ No tool declares annotations — 0 of 13 tools have readOnlyHint/destructiveHint.
+  - Fix: Annotate every tool; mark reads readOnlyHint: true.
+⚠️ CORS allows any origin (Access-Control-Allow-Origin: *) — Any website the user visits can script calls to this server from the browser.
+  - Fix: Allow-list known origins.
+ℹ️ "search" is a generic name — With several servers connected, generic names collide or get shadowed by another server's tool.
+  - Fix: Prefix tool names with the server or domain, e.g. "acme_search".
+ℹ️ 13 of 13 tools have no human-readable title — Since 2025-06-18 clients show the title in approval prompts. Missing: create_listing, approve_l
+  - Fix: Add title: "…" to each tool.
+ℹ️ No Mcp-Session-Id issued — Fine for stateless servers.
+
+$ node bin/mcp-readiness-check.js --batch examples/servers.txt --out examples/public-scan
+scanning https://mcp.intercom.com/mcp … 100
+scanning https://mcp.webflow.com/mcp … 100
+scanning https://mcp.jam.dev/mcp … 100
+scanning https://mcp.deepwiki.com/mcp … 95
+scanning https://mcp.context7.com/mcp … 95
+scanning https://huggingface.co/mcp … 95
+scanning https://mcp.atlassian.com/v1/mcp … 95
+scanning https://knowledge-mcp.global.api.aws … 90
+wrote examples/public-scan/index.html (25 servers)

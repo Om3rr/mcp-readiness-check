@@ -1,0 +1,39 @@
+{
+  "server": {
+    "name": "DeepWiki",
+    "version": "4.0.2"
+  },
+  "protocolVersion": "2025-06-18",
+  "toolCount": 3,
+  "score": 95,
+  "findings": [
+    {
+      "id": "annotations.none",
+      "level": "warn",
+      "title": "No tool declares annotations",
+      "detail": "0 of 3 tools have readOnlyHint/destructiveHint.",
+      "fix": "Annotate every tool; mark reads readOnlyHint: true."
+    },
+    {
+      "id": "http.auth",
+      "level": "info",
+      "title": "tools/list works without credentials",
+      "detail": "Fine for public read-only servers; otherwise require OAuth 2.1 / bearer auth.",
+      "fix": "Return 401 with WWW-Authenticate for protected servers."
+    },
+    {
+      "id": "http.origin",
+      "level": "info",
+      "title": "Requests with a foreign Origin header are accepted",
+      "detail": "The MCP Streamable HTTP spec says servers MUST validate Origin to prevent DNS-rebinding attacks, which matters most for localhost servers.",
+      "fix": "Reject requests whose Origin is not on an allow-list (403)."
+    },
+    {
+      "id": "http.session",
+      "level": "info",
+      "title": "No Mcp-Session-Id issued",
+      "detail": "Fine for stateless servers.",
+      "fix": ""
+    }
+  ]
+}

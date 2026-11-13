@@ -1,9 +1,10 @@
 // Talks to an MCP server over Streamable HTTP or stdio and collects observations.
 import { spawn } from 'node:child_process';
 import { createInterface } from 'node:readline';
-import { checkTools, checkHttp, checkInit, score } from './checks.js';
+import { checkTools, checkHttp, checkInit, checkPrompts, score } from './checks.js';
+import { probeOAuth } from './oauth.js';
 
-const INIT = { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'mcp-readiness-check', version: '0.1.0' } };
+const INIT = { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 'mcp-readiness-check', version: '0.2.0' } };
 
 async function parseBody(r) {
   const t = await r.text();
@@ -27,11 +28,19 @@ export async function probeHttp(url, { token } = {}) {
     return { r, j: notify ? null : await parseBody(r) };
   };
   const init = await send('initialize', INIT);
-  if (init.r.status === 401 && !token) throw new Error(`Server requires authentication (HTTP 401${init.r.headers.get('www-authenticate') ? ', WWW-Authenticate present' : ''}). Good sign; re-run with --token to scan the tools.`);
+  if ((init.r.status === 401 || init.r.status === 403) && !token) {
+    const { findings, oauth } = await probeOAuth(url, init.r);
+    const u = new URL(url);
+    if (u.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(u.hostname)) findings.push({ level: 'fail', id: 'http.tls', title: 'Remote server is not using HTTPS', detail: '', fix: '' });
+    findings.push({ level: 'info', id: 'auth.scope', title: 'Tools not scanned (needs a token)', detail: 'Re-run with --token to check tools, annotations and transport behaviour after login.', fix: '' });
+    return { server: { name: u.host + u.pathname }, protocolVersion: null, toolCount: null, authRequired: true, oauth, score: score(findings), findings };
+  }
   if (!init.j?.result) throw new Error(`initialize failed: HTTP ${init.r.status} ${JSON.stringify(init.j)}`);
   await send('notifications/initialized', undefined, { notify: true });
   const list = await send('tools/list', {});
   const tools = list.j?.result?.tools || [];
+  const promptsRes = init.j.result.capabilities?.prompts ? await send('prompts/list', {}) : null;
+  const prompts = promptsRes?.j?.result?.prompts || [];
   const unauth = await send('tools/list', {}, { auth: false });
   const evil = await send('tools/list', {}, { origin: 'https://evil.example' });
   const unknown = await send('no/such_method', {});
@@ -48,11 +57,12 @@ export async function probeHttp(url, { token } = {}) {
     evilOriginAccepted: evil.r.ok && Boolean(evil.j?.result),
     unknownMethodCode: unknown.j?.error?.code ?? null,
     badToolStatus: badTool.r.status,
+    errorLeak: (() => { const s = JSON.stringify(badTool.j || {}) + JSON.stringify(unknown.j || {}); const m = s.match(/(\s+at\s+[\w$.<>]+\s+\(|\/(home|usr|var|app|srv)\/[\w./-]+\.(js|ts|py)|Traceback \(most recent call last\))/); return m ? m[0].trim().slice(0, 80) : null; })(),
     unauthToolCallOk: Boolean(unauthCall && unauthCall.r.ok && unauthCall.j?.result && !unauthCall.j.result.isError),
     unauthToolCallName: ro?.name,
     allReadOnly: tools.length > 0 && tools.every((t) => t.annotations?.readOnlyHint === true || /^(get|list|search|read|fetch|resolve|query|find|ask)[_-]?/i.test(t.name)),
   };
-  return report(init.j.result, tools, checkHttp(obs));
+  return report(init.j.result, tools, [...checkPrompts(prompts), ...checkHttp(obs)]);
 }
 
 export async function probeStdio(cmd, args = []) {
@@ -84,7 +94,7 @@ export function toMarkdown(r, target) {
   const order = { fail: 0, warn: 1, info: 2, pass: 3 };
   const rows = [...r.findings].sort((a, b) => order[a.level] - order[b.level]);
   return [`# MCP readiness report: ${r.server?.name || target}`, '',
-    `Target: \`${target}\` · protocol ${r.protocolVersion} · ${r.toolCount} tools · **score ${r.score}/100**`, '',
+    `Target: \`${target}\` · ${r.authRequired ? 'auth required (OAuth discovery checked)' : `protocol ${r.protocolVersion} · ${r.toolCount} tools`} · **score ${r.score}/100**`, '',
     ...rows.map((x) => `- ${icon[x.level]} **${x.title}**${x.detail ? ` — ${x.detail}` : ''}${x.fix ? `\n  - Fix: ${x.fix}` : ''}`), '',
     '_Automated surface checks only. They do not replace a design review of auth, data flows, and human-approval gates._'].join('\n');
 }

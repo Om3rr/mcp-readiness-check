@@ -1,0 +1,39 @@
+{
+  "server": {
+    "name": "Microsoft Learn MCP Server",
+    "version": "1.0.0"
+  },
+  "protocolVersion": "2025-06-18",
+  "toolCount": 3,
+  "score": 100,
+  "findings": [
+    {
+      "id": "schema.required",
+      "level": "info",
+      "title": "\"microsoft_docs_search\" declares no required fields",
+      "detail": "",
+      "fix": "List required args so clients validate before calling."
+    },
+    {
+      "id": "tools.ok",
+      "level": "pass",
+      "title": "All 3 tools look clean",
+      "detail": "",
+      "fix": ""
+    },
+    {
+      "id": "http.auth",
+      "level": "info",
+      "title": "tools/list works without credentials",
+      "detail": "Fine for public read-only servers; otherwise require OAuth 2.1 / bearer auth.",
+      "fix": "Return 401 with WWW-Authenticate for protected servers."
+    },
+    {
+      "id": "http.origin",
+      "level": "info",
+      "title": "Requests with a foreign Origin header are accepted",
+      "detail": "The MCP Streamable HTTP spec says servers MUST validate Origin to prevent DNS-rebinding attacks, which matters most for localhost servers.",
+      "fix": "Reject requests whose Origin is not on an allow-list (403)."
+    }
+  ]
+}

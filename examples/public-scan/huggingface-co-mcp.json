@@ -1,0 +1,53 @@
+{
+  "server": {
+    "name": "huggingface.co/mcp",
+    "version": "0.4.34",
+    "title": "Hugging Face",
+    "websiteUrl": "https://huggingface.co/mcp",
+    "icons": [
+      {
+        "src": "https://huggingface.co/favicon.ico"
+      }
+    ]
+  },
+  "protocolVersion": "2025-06-18",
+  "toolCount": 4,
+  "score": 95,
+  "findings": [
+    {
+      "id": "schema.required",
+      "level": "info",
+      "title": "\"hub_repo_search\" declares no required fields",
+      "detail": "",
+      "fix": "List required args so clients validate before calling."
+    },
+    {
+      "id": "tools.description_long",
+      "level": "warn",
+      "title": "\"hf_fs\" description is 3674 chars",
+      "detail": "Long descriptions burn context on every turn and hide instructions.",
+      "fix": "Keep under ~1,000 chars; move docs to resources."
+    },
+    {
+      "id": "http.auth",
+      "level": "info",
+      "title": "tools/list works without credentials",
+      "detail": "Fine for public read-only servers; otherwise require OAuth 2.1 / bearer auth.",
+      "fix": "Return 401 with WWW-Authenticate for protected servers."
+    },
+    {
+      "id": "http.cors",
+      "level": "info",
+      "title": "CORS allows any origin (Access-Control-Allow-Origin: *)",
+      "detail": "Any website the user visits can script calls to this server from the browser.",
+      "fix": "Allow-list known origins."
+    },
+    {
+      "id": "http.origin",
+      "level": "info",
+      "title": "Requests with a foreign Origin header are accepted",
+      "detail": "The MCP Streamable HTTP spec says servers MUST validate Origin to prevent DNS-rebinding attacks, which matters most for localhost servers.",
+      "fix": "Reject requests whose Origin is not on an allow-list (403)."
+    }
+  ]
+}
