@@ -32,7 +32,7 @@ let r;
 try { r = await probeHttp(url, { token: I('TOKEN') || undefined, timeoutMs: 20000 }); }
 catch (e) { console.error(`::error::Could not scan ${url}: ${e.message}`); process.exit(1); }
 
-const m = await meter(I('API_URL', 'https://mcp-readiness.example.workers.dev'), I('API_KEY'));
+const m = await meter(I('API_URL', 'https://mcp-readiness.omer20sh.workers.dev'), I('API_KEY'));
 if (m.error) console.log(`::warning::License: ${m.error}. Running in free mode.`);
 const mode = m.mode === 'full' ? 'full' : m.mode === 'capped' ? 'capped' : 'free';
 const issues = r.findings.filter((f) => f.level === 'fail' || f.level === 'warn');
