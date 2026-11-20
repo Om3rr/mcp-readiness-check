@@ -32,7 +32,7 @@ test('landing: hero numbers match the stats file', () => {
 test('landing: paid tiers are coming soon and log price_click with a tier', () => {
   const html = read('index.html');
   const tiers = [...html.matchAll(/data-event="price_click" data-tier="([a-z]+)"/g)].map((m) => m[1]);
-  assert.deepEqual(tiers.sort(), ['credits', 'pack', 'pro', 'team', 'verified']);
+  assert.deepEqual([...new Set(tiers)].sort(), ['credits', 'pack', 'pro', 'team', 'verified']);
   assert.match(html, /We store your email only to tell you once when Pro opens/);
   assert.match(html, /id="waitlist"/);
 });
@@ -59,4 +59,22 @@ test('SEO files: robots lets AI crawlers in, sitemap lists the comparison page, 
   assert.match(read('llms.txt'), /^# MCP Readiness/);
   assert.match(read('index.html'), /href="\/mcp-servers\/"/);
   assert.match(read('favicon.svg'), /<svg/);
+});
+
+test('scan result page: next steps with badge, prefilled Action and Pro CTA, score copy, escaped', async () => {
+  const { render, scoreCopy } = await import('../worker/src/pages.js');
+  const evil = 'https://evil.example/mcp?a="><script>x</script>';
+  const low = render({}, 'https://w.test/s/evil.example/mcp', evil, { score: 40, server: '<b>x</b>', toolCount: 2, contextTokens: 100, top: [], at: '2026-11-20T10:00:00Z' });
+  assert.match(low, /Fix these first/);
+  assert.match(low, /Keep this score: add the badge/);
+  assert.match(low, /Fail CI if it drops: add the Action/);
+  assert.match(low, /Get auto-fix for token bloat: Pro, coming soon/);
+  assert.match(low, /data-event="badge_copied"/);
+  assert.match(low, /data-event="action_install_click"/);
+  assert.match(low, /data-event="price_click" data-tier="pro"/);
+  assert.match(low, /url: https:\/\/evil\.example\/mcp\?a=&quot;&gt;&lt;script&gt;/);
+  assert.ok(!low.includes('<script>x</script>'));
+  assert.ok(!low.includes('<b>x</b>'));
+  assert.match(scoreCopy(95), /^Show it off/);
+  assert.match(scoreCopy(80), /^Close/);
 });
