@@ -10,11 +10,11 @@ const read = (f) => readFileSync(join(pub, f), 'utf8');
 const htmlFiles = (dir = pub) => readdirSync(dir).flatMap((f) => { const p = join(dir, f); return statSync(p).isDirectory() ? htmlFiles(p) : p.endsWith('.html') ? [p] : []; });
 const call = (path) => worker.fetch(new Request(`https://w.test${path}`), { LICENSES: { get: async () => null, put: async () => {}, list: async () => ({ keys: [], list_complete: true }) } }, { waitUntil() {} });
 
-test('landing: no placeholders, no prices, no checkout, no contact placeholder', () => {
+test('landing: no placeholders, no prices, no checkout, contact is a real mailto', () => {
   const html = read('index.html');
   assert.ok(!html.includes('YOUR-DOMAIN'));
   assert.ok(!html.includes('[email]'));
-  assert.ok(!/Contact:/.test(html));
+  assert.match(html, /Contact: <a href="mailto:omer20sh@gmail\.com">omer20sh@gmail\.com<\/a>/);
   assert.doesNotMatch(html, /\$\d/);
   assert.doesNotMatch(html, /lemonsqueezy|buy\.stripe|checkout\.|Buy \d|Cancel anytime/i);
   assert.match(html, /https:\/\/mcp-readiness\.omer20sh\.workers\.dev\/badge\.svg\?url=/);
