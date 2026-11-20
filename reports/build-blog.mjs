@@ -119,6 +119,7 @@ export function build() {
     const { html, h1 } = renderMarkdown(p.body);
     const faq = extractFaq(p.body);
     const graph = [{ '@type': 'Article', headline: p.title, description: p.description, url, mainEntityOfPage: url, ...(p.date ? { datePublished: p.date, dateModified: p.date } : {}), author: { '@type': 'Person', name: 'Omer Shacham' }, publisher: { '@type': 'Organization', name: 'MCP Readiness', url: SITE }, image: `${SITE}/og.png` }];
+    graph.push({ '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'MCP Readiness', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: 'Blog', item: `${SITE}/blog/` }, { '@type': 'ListItem', position: 3, name: p.title, item: url }] });
     if (faq.length) graph.push({ '@type': 'FAQPage', mainEntity: faq.map((x) => ({ '@type': 'Question', name: x.q, acceptedAnswer: { '@type': 'Answer', text: x.a } })) });
     mkdirSync(`worker/public/blog/${p.slug}`, { recursive: true });
     writeFileSync(`worker/public/blog/${p.slug}/index.html`, `${head(`${p.title} | MCP Readiness`, p.description, url, { '@context': 'https://schema.org', '@graph': graph })}
