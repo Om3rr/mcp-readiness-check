@@ -118,3 +118,24 @@ test('CI docs: inputs and outputs match action.yml, page is linked and in the si
   const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
   assert.match(readme, /## CI quick start/); assert.match(readme, /\/docs\/ci\//);
 });
+
+test('per-server SEO pages: CMO spec, auth note, escaping, sitemap', async () => {
+  const docs = read('mcp-servers/google-docs/index.html');
+  assert.match(docs, /<title>Google Docs MCP server: token cost, tools &amp; readiness score<\/title>/);
+  assert.match(docs, /<meta name="description" content="Google Docs adds ~10,011 tokens per turn with 2 tools\. Readiness 85\/100\. Free live scan and GitHub Action\.">/);
+  assert.match(docs, /<link rel="canonical" href="https:\/\/mcp-readiness\.omer20sh\.workers\.dev\/mcp-servers\/google-docs\/">/);
+  assert.equal((docs.match(/<h1>/g) || []).length, 1);
+  assert.match(docs, /TL;DR/); assert.match(docs, /Scan your own server/); assert.match(docs, /data-event="badge_copied"/);
+  const ld = JSON.parse(docs.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+  const faq = ld['@graph'].find((g) => g['@type'] === 'FAQPage');
+  assert.deepEqual(faq.mainEntity.map((q) => q.name), ['How many tokens does Google Docs MCP server add?', 'Does Google Docs support OAuth discovery?', 'How do I test my own MCP server like Google Docs?']);
+  assert.equal((docs.match(/<a href="\/mcp-servers\/[a-z0-9-]+\/">/g) || []).length >= 3, true);
+  for (const s of ['gmail', 'google-slides']) assert.match(read(`mcp-servers/${s}/index.html`), /tokens per turn with \d+ tools/);
+  const air = read('mcp-servers/airtable/index.html');
+  assert.match(air, /The score covers only the public surface/);
+  const { SEO_PATHS } = await import('../worker/src/seo-paths.js');
+  assert.ok(SEO_PATHS.includes('/mcp-servers/google-docs/') && SEO_PATHS.includes('/docs/ci/') && SEO_PATHS.length >= 77);
+  const r = await call('/sitemap.xml');
+  assert.match(await r.text(), /\/mcp-servers\/gmail\//);
+  assert.match(read('llms.txt'), /\/mcp-servers\/google-slides\//);
+});

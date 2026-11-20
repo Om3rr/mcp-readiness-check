@@ -1,0 +1,1472 @@
+[
+  {
+    "slug": "airtable",
+    "name": "Airtable",
+    "url": "https://mcp.airtable.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Airtable MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Airtable MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Airtable MCP server (https://mcp.airtable.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Airtable MCP server add?",
+        "a": "Token cost is not available without login. The Airtable tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Airtable support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Airtable MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Airtable MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "apify",
+    "name": "Apify",
+    "url": "https://mcp.apify.com",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:48Z",
+    "title": "Apify MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Apify MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Apify MCP server (https://mcp.apify.com) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Apify MCP server add?",
+        "a": "Token cost is not available without login. The Apify tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Apify support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Apify MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Apify MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "asana-v2",
+    "name": "Asana",
+    "url": "https://mcp.asana.com/v2/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Asana MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Asana MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Asana MCP server (https://mcp.asana.com/v2/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Asana MCP server add?",
+        "a": "Token cost is not available without login. The Asana tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Asana support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Asana MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Asana MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "asana-command",
+    "name": "Asana Command",
+    "url": "https://mcp.asana.com/v2/command/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Asana Command MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Asana Command MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Asana Command MCP server (https://mcp.asana.com/v2/command/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Asana Command MCP server add?",
+        "a": "Token cost is not available without login. The Asana Command tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Asana Command support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Asana Command MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Asana Command MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "atlassian-rovo",
+    "name": "Atlassian Rovo",
+    "url": "https://mcp.atlassian.com/v2/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Atlassian Rovo MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Atlassian Rovo MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Atlassian Rovo MCP server (https://mcp.atlassian.com/v2/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Atlassian Rovo MCP server add?",
+        "a": "Token cost is not available without login. The Atlassian Rovo tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Atlassian Rovo support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Atlassian Rovo MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Atlassian Rovo MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "box",
+    "name": "Box",
+    "url": "https://mcp.box.com",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:49Z",
+    "title": "Box MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Box MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Box MCP server (https://mcp.box.com) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Box MCP server add?",
+        "a": "Token cost is not available without login. The Box tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Box support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Box MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Box MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "browserbase",
+    "name": "Browserbase",
+    "url": "https://mcp.browserbase.com/mcp",
+    "score": 85,
+    "tools": 6,
+    "tokens_per_turn": 752,
+    "warnings": [
+      "\"navigate\" has little or no description",
+      "No tool declares annotations"
+    ],
+    "scanned_at": "2026-11-20T18:17:21Z",
+    "title": "Browserbase MCP server: readiness score 85/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Browserbase MCP server on 20 November 2026: score 85/100, 6 tools, about 752 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Browserbase MCP server (https://mcp.browserbase.com/mcp) on 20 November 2026 scored 85/100. The public tool list exposes 6 tools and adds about 752 tokens per agent turn. Open issues: \"navigate\" has little or no description; No tool declares annotations.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Browserbase MCP server add?",
+        "a": "The public tool list on the Browserbase MCP server adds about 752 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 6 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Browserbase support OAuth discovery?",
+        "a": "The Browserbase MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Browserbase MCP server expose?",
+        "a": "The unauthenticated scan listed 6 tools on the Browserbase MCP server on 20 November 2026. The readiness score was 85/100."
+      }
+    ]
+  },
+  {
+    "slug": "buffer",
+    "name": "Buffer",
+    "url": "https://mcp.buffer.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:49Z",
+    "title": "Buffer MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Buffer MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Buffer MCP server (https://mcp.buffer.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Buffer MCP server add?",
+        "a": "Token cost is not available without login. The Buffer tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Buffer support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Buffer MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Buffer MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "canva",
+    "name": "Canva",
+    "url": "https://mcp.canva.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:49Z",
+    "title": "Canva MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Canva MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Canva MCP server (https://mcp.canva.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Canva MCP server add?",
+        "a": "Token cost is not available without login. The Canva tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Canva support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Canva MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Canva MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "clickup",
+    "name": "ClickUp",
+    "url": "https://mcp.clickup.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:49Z",
+    "title": "ClickUp MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the ClickUp MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the ClickUp MCP server (https://mcp.clickup.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the ClickUp MCP server add?",
+        "a": "Token cost is not available without login. The ClickUp tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does ClickUp support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the ClickUp MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the ClickUp MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-agents-sdk-docs",
+    "name": "Cloudflare Agents SDK Docs",
+    "url": "https://agents.cloudflare.com/mcp",
+    "score": 95,
+    "tools": 1,
+    "tokens_per_turn": 101,
+    "warnings": [
+      "No tool declares annotations"
+    ],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare Agents SDK Docs MCP server: readiness score 95/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare Agents SDK Docs MCP server on 20 November 2026: score 95/100, 1 tools, about 101 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare Agents SDK Docs MCP server (https://agents.cloudflare.com/mcp) on 20 November 2026 scored 95/100. The public tool list exposes 1 tools and adds about 101 tokens per agent turn. Open issues: No tool declares annotations.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare Agents SDK Docs MCP server add?",
+        "a": "The public tool list on the Cloudflare Agents SDK Docs MCP server adds about 101 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 1 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Cloudflare Agents SDK Docs support OAuth discovery?",
+        "a": "The Cloudflare Agents SDK Docs MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Cloudflare Agents SDK Docs MCP server expose?",
+        "a": "The unauthenticated scan listed 1 tools on the Cloudflare Agents SDK Docs MCP server on 20 November 2026. The readiness score was 95/100."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-api",
+    "name": "Cloudflare API",
+    "url": "https://mcp.cloudflare.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare API MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare API MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare API MCP server (https://mcp.cloudflare.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare API MCP server add?",
+        "a": "Token cost is not available without login. The Cloudflare API tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Cloudflare API support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Cloudflare API MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Cloudflare API MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-blog",
+    "name": "Cloudflare Blog",
+    "url": "https://blog.mcp.cloudflare.com/mcp",
+    "score": 100,
+    "tools": 4,
+    "tokens_per_turn": 464,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare Blog MCP server: readiness score 100/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare Blog MCP server on 20 November 2026: score 100/100, 4 tools, about 464 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare Blog MCP server (https://blog.mcp.cloudflare.com/mcp) on 20 November 2026 scored 100/100. The public tool list exposes 4 tools and adds about 464 tokens per agent turn. No open issues were reported on the public surface.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare Blog MCP server add?",
+        "a": "The public tool list on the Cloudflare Blog MCP server adds about 464 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 4 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Cloudflare Blog support OAuth discovery?",
+        "a": "The Cloudflare Blog MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Cloudflare Blog MCP server expose?",
+        "a": "The unauthenticated scan listed 4 tools on the Cloudflare Blog MCP server on 20 November 2026. The readiness score was 100/100."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-browser-run",
+    "name": "Cloudflare Browser Run",
+    "url": "https://browser.mcp.cloudflare.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare Browser Run MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare Browser Run MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without...",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare Browser Run MCP server (https://browser.mcp.cloudflare.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare Browser Run MCP server add?",
+        "a": "Token cost is not available without login. The Cloudflare Browser Run tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Cloudflare Browser Run support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Cloudflare Browser Run MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Cloudflare Browser Run MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-containers",
+    "name": "Cloudflare Containers",
+    "url": "https://containers.mcp.cloudflare.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare Containers MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare Containers MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without l...",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare Containers MCP server (https://containers.mcp.cloudflare.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare Containers MCP server add?",
+        "a": "Token cost is not available without login. The Cloudflare Containers tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Cloudflare Containers support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Cloudflare Containers MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Cloudflare Containers MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-demo-day",
+    "name": "Cloudflare Demo Day",
+    "url": "https://demo-day.mcp.cloudflare.com/mcp",
+    "score": 90,
+    "tools": 1,
+    "tokens_per_turn": 52,
+    "warnings": [
+      "No tool declares annotations"
+    ],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare Demo Day MCP server: readiness score 90/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare Demo Day MCP server on 20 November 2026: score 90/100, 1 tools, about 52 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare Demo Day MCP server (https://demo-day.mcp.cloudflare.com/mcp) on 20 November 2026 scored 90/100. The public tool list exposes 1 tools and adds about 52 tokens per agent turn. Open issues: No tool declares annotations.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare Demo Day MCP server add?",
+        "a": "The public tool list on the Cloudflare Demo Day MCP server adds about 52 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 1 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Cloudflare Demo Day support OAuth discovery?",
+        "a": "The Cloudflare Demo Day MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Cloudflare Demo Day MCP server expose?",
+        "a": "The unauthenticated scan listed 1 tools on the Cloudflare Demo Day MCP server on 20 November 2026. The readiness score was 90/100."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-dex",
+    "name": "Cloudflare DEX",
+    "url": "https://dex.mcp.cloudflare.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare DEX MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare DEX MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare DEX MCP server (https://dex.mcp.cloudflare.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare DEX MCP server add?",
+        "a": "Token cost is not available without login. The Cloudflare DEX tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Cloudflare DEX support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Cloudflare DEX MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Cloudflare DEX MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "cloudflare-casb",
+    "name": "Cloudflare One CASB",
+    "url": "https://casb.mcp.cloudflare.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Cloudflare One CASB MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Cloudflare One CASB MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Cloudflare One CASB MCP server (https://casb.mcp.cloudflare.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Cloudflare One CASB MCP server add?",
+        "a": "Token cost is not available without login. The Cloudflare One CASB tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Cloudflare One CASB support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Cloudflare One CASB MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Cloudflare One CASB MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "coingecko",
+    "name": "CoinGecko",
+    "url": "https://mcp.api.coingecko.com/mcp",
+    "score": 100,
+    "tools": 2,
+    "tokens_per_turn": 439,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "CoinGecko MCP server: readiness score 100/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the CoinGecko MCP server on 20 November 2026: score 100/100, 2 tools, about 439 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the CoinGecko MCP server (https://mcp.api.coingecko.com/mcp) on 20 November 2026 scored 100/100. The public tool list exposes 2 tools and adds about 439 tokens per agent turn. No open issues were reported on the public surface.",
+    "faqs": [
+      {
+        "q": "How many tokens does the CoinGecko MCP server add?",
+        "a": "The public tool list on the CoinGecko MCP server adds about 439 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 2 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does CoinGecko support OAuth discovery?",
+        "a": "The CoinGecko MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the CoinGecko MCP server expose?",
+        "a": "The unauthenticated scan listed 2 tools on the CoinGecko MCP server on 20 November 2026. The readiness score was 100/100."
+      }
+    ]
+  },
+  {
+    "slug": "fal",
+    "name": "fal",
+    "url": "https://mcp.fal.ai/mcp-relay",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:50Z",
+    "title": "fal MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the fal MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the fal MCP server (https://mcp.fal.ai/mcp-relay) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the fal MCP server add?",
+        "a": "Token cost is not available without login. The fal tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does fal support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the fal MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the fal MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "figma",
+    "name": "Figma",
+    "url": "https://mcp.figma.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Figma MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Figma MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Figma MCP server (https://mcp.figma.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Figma MCP server add?",
+        "a": "Token cost is not available without login. The Figma tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Figma support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Figma MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Figma MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "firecrawl",
+    "name": "Firecrawl",
+    "url": "https://mcp.firecrawl.dev/v2/mcp",
+    "score": 95,
+    "tools": 3,
+    "tokens_per_turn": 3869,
+    "warnings": [
+      "\"firecrawl_search\" description is 1975 chars"
+    ],
+    "scanned_at": "2026-11-20T18:15:48Z",
+    "title": "Firecrawl MCP server: readiness score 95/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Firecrawl MCP server on 20 November 2026: score 95/100, 3 tools, about 3869 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Firecrawl MCP server (https://mcp.firecrawl.dev/v2/mcp) on 20 November 2026 scored 95/100. The public tool list exposes 3 tools and adds about 3869 tokens per agent turn. Open issues: \"firecrawl_search\" description is 1975 chars.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Firecrawl MCP server add?",
+        "a": "The public tool list on the Firecrawl MCP server adds about 3869 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 3 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Firecrawl support OAuth discovery?",
+        "a": "The Firecrawl MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Firecrawl MCP server expose?",
+        "a": "The unauthenticated scan listed 3 tools on the Firecrawl MCP server on 20 November 2026. The readiness score was 95/100."
+      }
+    ]
+  },
+  {
+    "slug": "gitlab",
+    "name": "GitLab",
+    "url": "https://gitlab.com/api/v4/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "GitLab MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the GitLab MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the GitLab MCP server (https://gitlab.com/api/v4/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the GitLab MCP server add?",
+        "a": "Token cost is not available without login. The GitLab tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does GitLab support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the GitLab MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the GitLab MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "gmail",
+    "name": "Gmail",
+    "url": "https://gmailmcp.googleapis.com/mcp/v1",
+    "score": 85,
+    "tools": 23,
+    "tokens_per_turn": 11282,
+    "warnings": [
+      "\"search_threads\" description is 2589 chars",
+      "\"create_label\" has untyped args: color"
+    ],
+    "scanned_at": "2026-11-20T18:17:21Z",
+    "title": "Gmail MCP server: readiness score 85/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Gmail MCP server on 20 November 2026: score 85/100, 23 tools, about 11282 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Gmail MCP server (https://gmailmcp.googleapis.com/mcp/v1) on 20 November 2026 scored 85/100. The public tool list exposes 23 tools and adds about 11282 tokens per agent turn. Open issues: \"search_threads\" description is 2589 chars; \"create_label\" has untyped args: color.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Gmail MCP server add?",
+        "a": "The public tool list on the Gmail MCP server adds about 11282 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 23 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Gmail support OAuth discovery?",
+        "a": "The Gmail MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Gmail MCP server expose?",
+        "a": "The unauthenticated scan listed 23 tools on the Gmail MCP server on 20 November 2026. The readiness score was 85/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-calendar",
+    "name": "Google Calendar",
+    "url": "https://calendarmcp.googleapis.com/mcp/v1",
+    "score": 80,
+    "tools": 9,
+    "tokens_per_turn": 5765,
+    "warnings": [
+      "\"suggest_time\" has untyped args: preferences",
+      "\"create_event\" has untyped args: guestPermissions, workingLocationProperties",
+      "\"update_event\" has untyped args: guestPermissions"
+    ],
+    "scanned_at": "2026-11-20T18:17:21Z",
+    "title": "Google Calendar MCP server: readiness score 80/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google Calendar MCP server on 20 November 2026: score 80/100, 9 tools, about 5765 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google Calendar MCP server (https://calendarmcp.googleapis.com/mcp/v1) on 20 November 2026 scored 80/100. The public tool list exposes 9 tools and adds about 5765 tokens per agent turn. Open issues: \"suggest_time\" has untyped args: preferences; \"create_event\" has untyped args: guestPermissions, workingLocationProperties; \"update_event\" has untyped args: guestPermissions.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google Calendar MCP server add?",
+        "a": "The public tool list on the Google Calendar MCP server adds about 5765 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 9 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google Calendar support OAuth discovery?",
+        "a": "The Google Calendar MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google Calendar MCP server expose?",
+        "a": "The unauthenticated scan listed 9 tools on the Google Calendar MCP server on 20 November 2026. The readiness score was 80/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-chat",
+    "name": "Google Chat",
+    "url": "https://chatmcp.googleapis.com/mcp/v1",
+    "score": 85,
+    "tools": 4,
+    "tokens_per_turn": 3792,
+    "warnings": [
+      "\"search_messages\" has untyped args: searchParameters",
+      "\"search_conversations\" description is 2949 chars"
+    ],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Google Chat MCP server: readiness score 85/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google Chat MCP server on 20 November 2026: score 85/100, 4 tools, about 3792 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google Chat MCP server (https://chatmcp.googleapis.com/mcp/v1) on 20 November 2026 scored 85/100. The public tool list exposes 4 tools and adds about 3792 tokens per agent turn. Open issues: \"search_messages\" has untyped args: searchParameters; \"search_conversations\" description is 2949 chars.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google Chat MCP server add?",
+        "a": "The public tool list on the Google Chat MCP server adds about 3792 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 4 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google Chat support OAuth discovery?",
+        "a": "The Google Chat MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google Chat MCP server expose?",
+        "a": "The unauthenticated scan listed 4 tools on the Google Chat MCP server on 20 November 2026. The readiness score was 85/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-classroom",
+    "name": "Google Classroom",
+    "url": "https://classroommcp.googleapis.com/mcp/v1",
+    "score": 90,
+    "tools": 0,
+    "tokens_per_turn": 0,
+    "warnings": [
+      "Server exposes no tools"
+    ],
+    "scanned_at": "2026-11-20T18:15:52Z",
+    "title": "Google Classroom MCP server: readiness score 90/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google Classroom MCP server on 20 November 2026: score 90/100, 0 tools, about 0 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google Classroom MCP server (https://classroommcp.googleapis.com/mcp/v1) on 20 November 2026 scored 90/100. The public tool list exposes 0 tools and adds about 0 tokens per agent turn. Open issues: Server exposes no tools.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google Classroom MCP server add?",
+        "a": "The public tool list on the Google Classroom MCP server adds about 0 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 0 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google Classroom support OAuth discovery?",
+        "a": "The Google Classroom MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google Classroom MCP server expose?",
+        "a": "The unauthenticated scan listed 0 tools on the Google Classroom MCP server on 20 November 2026. The readiness score was 90/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-docs",
+    "name": "Google Docs",
+    "url": "https://docsmcp.googleapis.com/mcp/v1",
+    "score": 85,
+    "tools": 2,
+    "tokens_per_turn": 10011,
+    "warnings": [
+      "\"update_doc\" description is 35839 chars",
+      "\"update_doc\" has untyped args: writeControl"
+    ],
+    "scanned_at": "2026-11-20T18:15:50Z",
+    "title": "Google Docs MCP server: readiness score 85/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google Docs MCP server on 20 November 2026: score 85/100, 2 tools, about 10011 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google Docs MCP server (https://docsmcp.googleapis.com/mcp/v1) on 20 November 2026 scored 85/100. The public tool list exposes 2 tools and adds about 10011 tokens per agent turn. Open issues: \"update_doc\" description is 35839 chars; \"update_doc\" has untyped args: writeControl.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google Docs MCP server add?",
+        "a": "The public tool list on the Google Docs MCP server adds about 10011 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 2 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google Docs support OAuth discovery?",
+        "a": "The Google Docs MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google Docs MCP server expose?",
+        "a": "The unauthenticated scan listed 2 tools on the Google Docs MCP server on 20 November 2026. The readiness score was 85/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-drive",
+    "name": "Google Drive",
+    "url": "https://drivemcp.googleapis.com/mcp/v1",
+    "score": 85,
+    "tools": 9,
+    "tokens_per_turn": 4609,
+    "warnings": [
+      "\"read_file_content\" description is 1839 chars",
+      "\"search_files\" description is 3769 chars"
+    ],
+    "scanned_at": "2026-11-20T18:17:21Z",
+    "title": "Google Drive MCP server: readiness score 85/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google Drive MCP server on 20 November 2026: score 85/100, 9 tools, about 4609 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google Drive MCP server (https://drivemcp.googleapis.com/mcp/v1) on 20 November 2026 scored 85/100. The public tool list exposes 9 tools and adds about 4609 tokens per agent turn. Open issues: \"read_file_content\" description is 1839 chars; \"search_files\" description is 3769 chars.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google Drive MCP server add?",
+        "a": "The public tool list on the Google Drive MCP server adds about 4609 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 9 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google Drive support OAuth discovery?",
+        "a": "The Google Drive MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google Drive MCP server expose?",
+        "a": "The unauthenticated scan listed 9 tools on the Google Drive MCP server on 20 November 2026. The readiness score was 85/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-people",
+    "name": "Google People",
+    "url": "https://people.googleapis.com/mcp/v1",
+    "score": 100,
+    "tools": 3,
+    "tokens_per_turn": 607,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Google People MCP server: readiness score 100/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google People MCP server on 20 November 2026: score 100/100, 3 tools, about 607 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google People MCP server (https://people.googleapis.com/mcp/v1) on 20 November 2026 scored 100/100. The public tool list exposes 3 tools and adds about 607 tokens per agent turn. No open issues were reported on the public surface.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google People MCP server add?",
+        "a": "The public tool list on the Google People MCP server adds about 607 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 3 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google People support OAuth discovery?",
+        "a": "The Google People MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google People MCP server expose?",
+        "a": "The unauthenticated scan listed 3 tools on the Google People MCP server on 20 November 2026. The readiness score was 100/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-sheets",
+    "name": "Google Sheets",
+    "url": "https://sheetsmcp.googleapis.com/mcp/v1",
+    "score": 85,
+    "tools": 6,
+    "tokens_per_turn": 7860,
+    "warnings": [
+      "\"update_spreadsheet\" description is 20139 chars",
+      "\"update_spreadsheet\" has untyped args: writeControl"
+    ],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Google Sheets MCP server: readiness score 85/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google Sheets MCP server on 20 November 2026: score 85/100, 6 tools, about 7860 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google Sheets MCP server (https://sheetsmcp.googleapis.com/mcp/v1) on 20 November 2026 scored 85/100. The public tool list exposes 6 tools and adds about 7860 tokens per agent turn. Open issues: \"update_spreadsheet\" description is 20139 chars; \"update_spreadsheet\" has untyped args: writeControl.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google Sheets MCP server add?",
+        "a": "The public tool list on the Google Sheets MCP server adds about 7860 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 6 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google Sheets support OAuth discovery?",
+        "a": "The Google Sheets MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google Sheets MCP server expose?",
+        "a": "The unauthenticated scan listed 6 tools on the Google Sheets MCP server on 20 November 2026. The readiness score was 85/100."
+      }
+    ]
+  },
+  {
+    "slug": "google-slides",
+    "name": "Google Slides",
+    "url": "https://slidesmcp.googleapis.com/mcp/v1",
+    "score": 80,
+    "tools": 4,
+    "tokens_per_turn": 8957,
+    "warnings": [
+      "\"read_slide_page_thumbnail\" has untyped args: thumbnailProperties",
+      "\"update_presentation\" description is 29010 chars",
+      "\"update_presentation\" has untyped args: writeControl"
+    ],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Google Slides MCP server: readiness score 80/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Google Slides MCP server on 20 November 2026: score 80/100, 4 tools, about 8957 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Google Slides MCP server (https://slidesmcp.googleapis.com/mcp/v1) on 20 November 2026 scored 80/100. The public tool list exposes 4 tools and adds about 8957 tokens per agent turn. Open issues: \"read_slide_page_thumbnail\" has untyped args: thumbnailProperties; \"update_presentation\" description is 29010 chars; \"update_presentation\" has untyped args: writeControl.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Google Slides MCP server add?",
+        "a": "The public tool list on the Google Slides MCP server adds about 8957 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 4 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Google Slides support OAuth discovery?",
+        "a": "The Google Slides MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Google Slides MCP server expose?",
+        "a": "The unauthenticated scan listed 4 tools on the Google Slides MCP server on 20 November 2026. The readiness score was 80/100."
+      }
+    ]
+  },
+  {
+    "slug": "higgsfield",
+    "name": "Higgsfield AI",
+    "url": "https://mcp.higgsfield.ai/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:17:21Z",
+    "title": "Higgsfield AI MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Higgsfield AI MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Higgsfield AI MCP server (https://mcp.higgsfield.ai/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Higgsfield AI MCP server add?",
+        "a": "Token cost is not available without login. The Higgsfield AI tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Higgsfield AI support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Higgsfield AI MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Higgsfield AI MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "hostinger",
+    "name": "Hostinger",
+    "url": "https://mcp.hostinger.com",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:50Z",
+    "title": "Hostinger MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Hostinger MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Hostinger MCP server (https://mcp.hostinger.com) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Hostinger MCP server add?",
+        "a": "Token cost is not available without login. The Hostinger tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Hostinger support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Hostinger MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Hostinger MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "hubspot",
+    "name": "HubSpot",
+    "url": "https://mcp.hubspot.com",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "HubSpot MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the HubSpot MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the HubSpot MCP server (https://mcp.hubspot.com) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the HubSpot MCP server add?",
+        "a": "Token cost is not available without login. The HubSpot tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does HubSpot support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the HubSpot MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the HubSpot MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "intercom",
+    "name": "Intercom",
+    "url": "https://mcp.intercom.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Intercom MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Intercom MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Intercom MCP server (https://mcp.intercom.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Intercom MCP server add?",
+        "a": "Token cost is not available without login. The Intercom tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Intercom support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Intercom MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Intercom MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "jam",
+    "name": "Jam",
+    "url": "https://mcp.jam.dev/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Jam MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Jam MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Jam MCP server (https://mcp.jam.dev/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Jam MCP server add?",
+        "a": "Token cost is not available without login. The Jam tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Jam support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Jam MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Jam MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "klaviyo",
+    "name": "Klaviyo",
+    "url": "https://mcp.klaviyo.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:50Z",
+    "title": "Klaviyo MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Klaviyo MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Klaviyo MCP server (https://mcp.klaviyo.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Klaviyo MCP server add?",
+        "a": "Token cost is not available without login. The Klaviyo tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Klaviyo support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Klaviyo MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Klaviyo MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "miro",
+    "name": "Miro",
+    "url": "https://mcp.miro.com",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:50Z",
+    "title": "Miro MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Miro MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Miro MCP server (https://mcp.miro.com) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Miro MCP server add?",
+        "a": "Token cost is not available without login. The Miro tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Miro support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Miro MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Miro MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "monday",
+    "name": "monday.com",
+    "url": "https://mcp.monday.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:50Z",
+    "title": "monday.com MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the monday.com MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the monday.com MCP server (https://mcp.monday.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the monday.com MCP server add?",
+        "a": "Token cost is not available without login. The monday.com tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does monday.com support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the monday.com MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the monday.com MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "mongodb",
+    "name": "MongoDB",
+    "url": "https://mcp.mongodb.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "MongoDB MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the MongoDB MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the MongoDB MCP server (https://mcp.mongodb.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the MongoDB MCP server add?",
+        "a": "Token cost is not available without login. The MongoDB tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does MongoDB support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the MongoDB MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the MongoDB MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "netlify",
+    "name": "Netlify",
+    "url": "https://netlify-mcp.netlify.app/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Netlify MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Netlify MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Netlify MCP server (https://netlify-mcp.netlify.app/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Netlify MCP server add?",
+        "a": "Token cost is not available without login. The Netlify tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Netlify support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Netlify MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Netlify MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "perplexity",
+    "name": "Perplexity",
+    "url": "https://api.perplexity.ai/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:52Z",
+    "title": "Perplexity MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Perplexity MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Perplexity MCP server (https://api.perplexity.ai/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Perplexity MCP server add?",
+        "a": "Token cost is not available without login. The Perplexity tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Perplexity support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Perplexity MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Perplexity MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "plaid",
+    "name": "Plaid",
+    "url": "https://api.dashboard.plaid.com/mcp/",
+    "score": 90,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [
+      "401 without a WWW-Authenticate header",
+      "Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)"
+    ],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Plaid MCP server: readiness score 90/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Plaid MCP server on 20 November 2026: score 90/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Plaid MCP server (https://api.dashboard.plaid.com/mcp/) on 20 November 2026 scored 90/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. Open pre-login issues: 401 without a WWW-Authenticate header; Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728).",
+    "faqs": [
+      {
+        "q": "How many tokens does the Plaid MCP server add?",
+        "a": "Token cost is not available without login. The Plaid tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Plaid support OAuth discovery?",
+        "a": "An unauthenticated scan reached a login wall on the Plaid MCP server. OAuth or auth discovery issues reported: 401 without a WWW-Authenticate header; Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)."
+      },
+      {
+        "q": "How many tools does the Plaid MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 90/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "posthog",
+    "name": "PostHog",
+    "url": "https://mcp.posthog.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "PostHog MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the PostHog MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the PostHog MCP server (https://mcp.posthog.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the PostHog MCP server add?",
+        "a": "Token cost is not available without login. The PostHog tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does PostHog support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the PostHog MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the PostHog MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "prisma",
+    "name": "Prisma",
+    "url": "https://mcp.prisma.io/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Prisma MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Prisma MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Prisma MCP server (https://mcp.prisma.io/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Prisma MCP server add?",
+        "a": "Token cost is not available without login. The Prisma tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Prisma support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Prisma MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Prisma MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "slack",
+    "name": "Slack",
+    "url": "https://mcp.slack.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Slack MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Slack MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Slack MCP server (https://mcp.slack.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Slack MCP server add?",
+        "a": "Token cost is not available without login. The Slack tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Slack support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Slack MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Slack MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "square-http",
+    "name": "Square",
+    "url": "https://mcp.squareup.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:52Z",
+    "title": "Square MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Square MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Square MCP server (https://mcp.squareup.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Square MCP server add?",
+        "a": "Token cost is not available without login. The Square tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Square support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Square MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Square MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "svelte",
+    "name": "Svelte",
+    "url": "https://mcp.svelte.dev/mcp",
+    "score": 100,
+    "tools": 4,
+    "tokens_per_turn": 1186,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Svelte MCP server: readiness score 100/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Svelte MCP server on 20 November 2026: score 100/100, 4 tools, about 1186 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Svelte MCP server (https://mcp.svelte.dev/mcp) on 20 November 2026 scored 100/100. The public tool list exposes 4 tools and adds about 1186 tokens per agent turn. No open issues were reported on the public surface.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Svelte MCP server add?",
+        "a": "The public tool list on the Svelte MCP server adds about 1186 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 4 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Svelte support OAuth discovery?",
+        "a": "The Svelte MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Svelte MCP server expose?",
+        "a": "The unauthenticated scan listed 4 tools on the Svelte MCP server on 20 November 2026. The readiness score was 100/100."
+      }
+    ]
+  },
+  {
+    "slug": "ticktick",
+    "name": "TickTick",
+    "url": "https://mcp.ticktick.com",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "TickTick MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the TickTick MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the TickTick MCP server (https://mcp.ticktick.com) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the TickTick MCP server add?",
+        "a": "Token cost is not available without login. The TickTick tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does TickTick support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the TickTick MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the TickTick MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "twilio-docs",
+    "name": "Twilio Docs",
+    "url": "https://mcp.twilio.com/docs",
+    "score": 100,
+    "tools": 2,
+    "tokens_per_turn": 1035,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:48Z",
+    "title": "Twilio Docs MCP server: readiness score 100/100 and token cost",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Twilio Docs MCP server on 20 November 2026: score 100/100, 2 tools, about 1035 tokens per agent turn.",
+    "summary": "An unauthenticated MCP Readiness scan of the Twilio Docs MCP server (https://mcp.twilio.com/docs) on 20 November 2026 scored 100/100. The public tool list exposes 2 tools and adds about 1035 tokens per agent turn. No open issues were reported on the public surface.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Twilio Docs MCP server add?",
+        "a": "The public tool list on the Twilio Docs MCP server adds about 1035 tokens to each agent turn (estimate, about plus or minus 10%). It exposes 2 tools. That list is sent to the model on every turn."
+      },
+      {
+        "q": "Does Twilio Docs support OAuth discovery?",
+        "a": "The Twilio Docs MCP server answered tools/list without login, so OAuth was not required to read the public tool list."
+      },
+      {
+        "q": "How many tools does the Twilio Docs MCP server expose?",
+        "a": "The unauthenticated scan listed 2 tools on the Twilio Docs MCP server on 20 November 2026. The readiness score was 100/100."
+      }
+    ]
+  },
+  {
+    "slug": "wix",
+    "name": "Wix",
+    "url": "https://mcp.wix.com/mcp",
+    "score": 100,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [],
+    "scanned_at": "2026-11-20T18:15:51Z",
+    "title": "Wix MCP server: readiness score 100/100 (authentication required)",
+    "meta_description": "Unauthenticated MCP Readiness scan of the Wix MCP server on 20 November 2026: score 100/100, authentication required, tool list not visible without login.",
+    "summary": "An unauthenticated MCP Readiness scan of the Wix MCP server (https://mcp.wix.com/mcp) on 20 November 2026 scored 100/100. The server requires authentication, so the tool list and per-turn token cost were not visible without a login. No open pre-login issues were reported.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Wix MCP server add?",
+        "a": "Token cost is not available without login. The Wix tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens."
+      },
+      {
+        "q": "Does Wix support OAuth discovery?",
+        "a": "Yes. An unauthenticated scan of the Wix MCP server reached a login wall and found no open pre-login OAuth discovery issues."
+      },
+      {
+        "q": "How many tools does the Wix MCP server expose?",
+        "a": "Tool count is not available without login. The unauthenticated scan reached an authentication required surface and scored 100/100 on 20 November 2026."
+      }
+    ]
+  },
+  {
+    "slug": "asana",
+    "name": "Asana (v1)",
+    "url": "https://mcp.asana.com/mcp",
+    "score": null,
+    "tools": null,
+    "tokens_per_turn": null,
+    "warnings": [
+      "Scan failed: Asana MCP v1 has been permanently shut down. Reconnect using the v2 endpoint at https://mcp.asana.com/v2/mcp."
+    ],
+    "scanned_at": "2026-11-20T18:15:47Z",
+    "title": "Asana (v1) MCP server: unauthenticated scan did not complete",
+    "meta_description": "Unauthenticated MCP Readiness scan of the legacy Asana v1 MCP server (https://mcp.asana.com/mcp) did not complete on 20 November 2026. The v1 endpoint has been shut down.",
+    "summary": "We scanned the legacy Asana v1 MCP server at https://mcp.asana.com/mcp without authentication on 20 November 2026, the same way the existing popular-server list was built. The scan did not complete. The scanner reported: Asana MCP v1 has been permanently shut down. Reconnect using the v2 endpoint at https://mcp.asana.com/v2/mcp. The current official endpoint, already in this dataset as Asana (https://mcp.asana.com/v2/mcp), did complete.",
+    "faqs": [
+      {
+        "q": "How many tokens does the Asana (v1) MCP server add?",
+        "a": "Token cost is not available. The unauthenticated scan of https://mcp.asana.com/mcp did not complete on 20 November 2026 because Asana MCP v1 has been permanently shut down."
+      },
+      {
+        "q": "Does Asana (v1) support OAuth discovery?",
+        "a": "This scan could not verify OAuth discovery on the v1 URL. Asana reported that MCP v1 has been permanently shut down and to reconnect at https://mcp.asana.com/v2/mcp."
+      },
+      {
+        "q": "How many tools does the Asana (v1) MCP server expose?",
+        "a": "Tool count is not available. The v1 endpoint at https://mcp.asana.com/mcp has been permanently shut down."
+      }
+    ]
+  }
+]
