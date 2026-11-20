@@ -11,6 +11,8 @@ crons = ["17 6 * * *"]   # daily monitoring re-scan (06:17 UTC)
 [assets]
 directory = "./public"
 binding = "ASSETS"
+# So / and other public pages hit the Worker and can be counted in /stats.
+run_worker_first = true
 
 # Create with: npx wrangler kv namespace create LICENSES  (then paste the id)
 [[kv_namespaces]]
