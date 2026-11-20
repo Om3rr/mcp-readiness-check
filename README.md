@@ -4,6 +4,63 @@
 
 > **Is your MCP server ready for real agents?**
 
+## CI quick start: badge and PR gate in 3 steps
+
+Full guide with troubleshooting: https://mcp-readiness.omer20sh.workers.dev/docs/ci/
+
+1. **Scan** your server free at https://mcp-readiness.omer20sh.workers.dev (no sign-up).
+2. **Add the badge** to your README (swap in your URL):
+   ```markdown
+   [![MCP readiness](https://mcp-readiness.omer20sh.workers.dev/badge.svg?url=https://your-server.example.com/mcp)](https://mcp-readiness.omer20sh.workers.dev/s/your-server.example.com/mcp)
+   ```
+3. **Add the Action** as `.github/workflows/mcp-readiness.yml`:
+   ```yaml
+   name: MCP readiness
+   on: [pull_request]
+   jobs:
+     mcp-readiness:
+       runs-on: ubuntu-latest
+       steps:
+         - uses: Om3rr/mcp-readiness-check@v1
+           id: mcp
+           with:
+             url: https://your-server.example.com/mcp
+             fail-under: 80            # fail below this score (default 70, 0 never fails)
+             max-context-tokens: 8000  # fail if tools/list costs more tokens per turn (default 0 = off)
+         - run: echo "Score ${{ steps.mcp.outputs.score }}, ~${{ steps.mcp.outputs.context-tokens }} tokens per turn"
+   ```
+
+**Local server in CI:** start it in the job, wait for the port, then scan localhost:
+
+```yaml
+      - run: |
+          PORT=8787 npm start &
+          for i in $(seq 1 30); do curl -s -o /dev/null http://127.0.0.1:8787/mcp && break; sleep 1; done
+      - uses: Om3rr/mcp-readiness-check@v1
+        with:
+          url: http://127.0.0.1:8787/mcp
+          fail-under: 80
+          max-context-tokens: 8000
+```
+
+| Input | Default | What it does |
+|---|---|---|
+| `url` | required | Streamable HTTP endpoint: public https URL or `http://127.0.0.1:PORT/mcp` |
+| `fail-under` | `70` | Fail below this score (0-100); 0 never fails |
+| `max-context-tokens` | `0` | Fail if the tool list costs more tokens per turn; 0 disables |
+| `token` | `""` | Bearer token (from secrets) to scan tools behind login |
+| `json-path` | `""` | Write the JSON report here |
+| `api-key` | `""` | Optional license key; not needed for the free tier |
+
+Outputs: `score`, `context-tokens`, `findings`, `mode`.
+
+**Troubleshooting**
+- *OAuth discovery fails:* on 401, send `WWW-Authenticate: Bearer resource_metadata="…/.well-known/oauth-protected-resource"`, serve RFC 9728 metadata with `authorization_servers`, and RFC 8414 metadata on the authorization server. Pass `token` to scan tools behind login.
+- *Foreign Origin / CORS flagged:* validate `Origin` and return 403 for unknown origins; keep `Access-Control-Allow-Origin` to an allowlist. On localhost this is a fail (DNS rebinding).
+- *Timeouts or connection refused:* each request waits up to 15 s. Wait for the server to start (loop above), bind to the port in `url`, and use the Streamable HTTP path, not SSE-only or stdio.
+- *Token budget fails:* shorten tool descriptions and schemas, or set `max-context-tokens: 0` while you work on it.
+- *First run too strict:* start with `fail-under: 0`, fix the top issues, then raise it.
+
 ## GitHub Action: MCP Readiness Scan (free tier, 50 runs/day per repo)
 
 ```yaml

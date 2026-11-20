@@ -80,6 +80,7 @@ writeFileSync('worker/public/llms.txt', `# MCP Readiness
 
 ## Data
 - [Popular remote MCP servers, ${dayLabel}](${SITE}/mcp-servers/): scores and tokens per turn.
+- [CI setup guide](${SITE}/docs/ci/): badge and GitHub Action in 3 steps, local servers in CI, troubleshooting.
 ${STATS.map((s) => `- ${s}`).join('\n')}
 - State of public MCP servers (official registry scan, 13 Nov 2026): ${st.ok.toLocaleString('en-US')} live servers reached; ${st.pub_origin}% of public servers accept a foreign Origin.
 - [State of public MCP servers, Nov 2026](${SITE}/state-of-mcp-2026-11.html): the full registry scan and a checklist for server owners.
