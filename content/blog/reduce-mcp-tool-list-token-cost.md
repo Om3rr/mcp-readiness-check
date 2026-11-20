@@ -9,9 +9,9 @@ slug: reduce-mcp-tool-list-token-cost
 
 > **TL;DR:** Every MCP client has to show the model the server's tool list — names, descriptions, and JSON Schemas — so the model can decide what to call. That payload is paid for on every agent turn, not just once. In our unauthenticated scans of popular remote MCP servers on 20 November 2026, the open servers ranged from about 80 tokens per turn (Astro Docs, one tool) to about 4,967 tokens (Hugging Face, four tools). The gap is almost never "too many tools." It is long descriptions and bulky schemas. Measure the list, cut the text the model does not need, split or scope tools, and fail CI when the list blows a budget.
 
-An MCP tool is more than a function name. The [MCP tools specification](https://modelcontextprotocol.io/specification/2025-11-25/server/tools) says a server that supports tools must answer `tools/list` with the tools the caller can see. Each item carries a `name`, a `description`, an `inputSchema` (a JSON Schema, typically an object), and optional fields such as annotations (`readOnlyHint`, `destructiveHint`, and related hints). MCP clients then put that list into the model's context so the model can pick a tool and fill in arguments.
+An MCP tool is more than a function name. The [MCP tools specification](https://modelcontextprotocol.io/specification/2025-11-25/server/tools) says a server that supports tools must answer `tools/list` with the tools the caller can see. Each item carries a `name`, a `description`, an `inputSchema` (typically a JSON Schema object), and optional annotations such as `readOnlyHint` and `destructiveHint`. MCP clients put that list into the model's context so the model can pick a tool and fill in arguments.
 
-That is the token cost people underestimate. The tool list is not a one-time handshake. It is part of the prompt for the turn. Add a second MCP server, and you add a second list. A 4,967-token list on a mid-size context window is not a rounding error: it is context you cannot spend on the user's question or on the tool result that comes back.
+That is the token cost people underestimate. The tool list is not a one-time handshake; it is part of the prompt for every turn. Add a second MCP server, and you add a second list. A 4,967-token list is context you cannot spend on the user's question or the tool result.
 
 ## What popular servers actually cost
 
@@ -28,9 +28,9 @@ These figures are from the live comparison page [Popular MCP servers: readiness 
 | [AWS Knowledge](https://knowledge-mcp.global.api.aws) | 5 | ~1,978 | `aws___read_documentation` description is 2,118 characters |
 | [Hugging Face](https://huggingface.co/mcp) | 4 | ~4,967 | `hf_fs` description is 3,674 characters |
 
-Three of those eight servers have at least one tool description the scanner flags as too long. Hugging Face's four tools cost roughly sixty times what Astro Docs' single tool costs — not because four tools is "too many," but because one description alone is 3,674 characters. A rough 4-characters-per-token estimate puts that one field near 900 tokens before you count the schema or the other three tools.
+Three of those eight servers have at least one tool description the scanner flags as too long. Hugging Face's four tools cost roughly sixty times what Astro Docs costs, mostly because one description is 3,674 characters — around 900 tokens at four characters per token, before the schema or the other tools.
 
-The long tail is worse. The same comparison page points to our [State of public MCP servers](https://mcp-readiness.omer20sh.workers.dev/state-of-mcp-2026-11.html) report (official registry scan, 13 November 2026), where the longest single tool description was 27,638 characters. That is a tool list item, not a document the model asked to read.
+The long tail is worse. The same comparison page points to our [State of public MCP servers](https://mcp-readiness.omer20sh.workers.dev/state-of-mcp-2026-11.html) report (official registry scan, 13 November 2026), where the longest single tool description was 27,638 characters.
 
 Cite as: MCP Readiness, popular remote MCP servers, 20 November 2026, [https://mcp-readiness.omer20sh.workers.dev/mcp-servers/](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/).
 
@@ -38,7 +38,7 @@ Cite as: MCP Readiness, popular remote MCP servers, 20 November 2026, [https://m
 
 Tool *count* is the number people look at first, and it is the wrong leading indicator. Context7 exposes two tools and still costs about 1,304 tokens. Microsoft Learn exposes three and costs about 1,215. DeepWiki also exposes three and costs about 427. The difference is how much text travels with each tool.
 
-A description that tries to be the manual — every edge case, every example, every "IMPORTANT: you must…" paragraph — is billed on every turn, including turns where the model never calls that tool. Property descriptions on `inputSchema` have the same problem: a dozen fields, each with a long explanation and a large enum, will outweigh a short top-level description.
+A description that tries to be the manual is billed on every turn, including turns where the model never calls that tool. Property descriptions on `inputSchema` have the same problem: a dozen fields, each with a long explanation and a large enum, will outweigh a short top-level description.
 
 Annotations such as `readOnlyHint` and `destructiveHint` are small, useful hints for clients (see the [tools spec](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)). They are not a substitute for a short description, and they will not fix a 2,000-character blurb. Two of the eight open servers in the 20 November 2026 scan declared no tool annotations at all; that is a readiness issue, not a token issue.
 
@@ -64,9 +64,9 @@ Annotations such as `readOnlyHint` and `destructiveHint` are small, useful hints
 
 `max-context-tokens` is estimated at about four characters per token. Pick a budget from your own baseline: an 8,000-token cap would still let a Hugging Face-sized list through. If your server looks more like Astro Docs or DeepWiki, a lower cap will catch a single bloated description before it ships.
 
-**6. On the client side, install less.** Even a perfectly slim server is charged again if the user stacks five of them. Prefer one focused server over a bundle, and drop servers the agent is not using in that session.
+**6. On the client side, install less.** Even a perfectly slim server is charged again if the user stacks five of them. Prefer one focused server over a bundle.
 
-Shrinking `tools/list` does not reduce the tokens in a large *tool result*, and it does not replace authorization or Origin checks. The public numbers above are surface measurements, not a security audit or a judgment of those vendors' products. Token figures can move when a vendor ships a new list.
+Shrinking `tools/list` does not reduce the tokens in a large *tool result*, and it does not replace authorization or Origin checks. The public numbers are surface measurements, not a security audit. Token figures can move when a vendor ships a new list.
 
 If you want a first measurement today, [scan your MCP server](https://mcp-readiness.omer20sh.workers.dev/?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) (free, no sign-up) and add the [GitHub Action](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) so the next bloated description fails the PR instead of the agent's context window.
 
