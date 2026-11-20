@@ -4,7 +4,7 @@
 import { checkTarget } from './guard.js';
 
 // Shared look for server-rendered pages (matches worker/public/index.html).
-export const PAGE_CSS = `:root{--bg:#0b1020;--card:#121a33;--ink:#e6e9f5;--mut:#a7b0cc;--acc:#7c9cff;--line:#24305a;--code:#070b18}*{box-sizing:border-box}body{margin:0;overflow-wrap:break-word;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}a{color:var(--acc)}.wrap{max-width:1040px;margin:auto;padding:0 20px}main{max-width:860px}nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0}nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap}nav .brand img{width:26px;height:26px}nav .links{display:flex;gap:18px}nav .links a{text-decoration:none;color:var(--mut);white-space:nowrap;font-size:15px}h1{font-size:34px;line-height:1.15;margin:18px 0 8px;overflow-wrap:anywhere}h2{font-size:22px;margin:0 0 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0;min-width:0}.small{color:var(--mut);font-size:14px}code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cfd6f6}.codebox{position:relative;min-width:0}.codebox pre{padding-right:96px}.codebox .copy{position:absolute;top:8px;right:8px}.issues{padding-left:20px}.issues li{margin:6px 0}.fail{color:#f0706a}.warn{color:#d29922}.info{color:var(--mut)}button,.btn{padding:12px 18px;border-radius:10px;border:1px solid transparent;background:var(--acc);color:#0b1020;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block;line-height:1.2}.ghost{background:transparent;border-color:#3a4a80;color:var(--ink)}.sm{padding:8px 12px;font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.badgebox{margin:10px 0}.badgebox img{height:20px}.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--card)}table{width:100%;border-collapse:collapse}td,th{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}th{color:var(--mut);font-weight:600}footer{padding:30px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}footer a{color:var(--mut)}@media(max-width:640px){nav{flex-direction:column;align-items:flex-start;gap:10px}nav .links{width:100%;flex-wrap:wrap;column-gap:16px;row-gap:6px}h1{font-size:28px}.codebox pre{padding-right:14px;padding-top:44px}}`;
+export const PAGE_CSS = `:root{--bg:#0b1020;--card:#121a33;--ink:#e6e9f5;--mut:#a7b0cc;--acc:#7c9cff;--line:#24305a;--code:#070b18}*{box-sizing:border-box}body{margin:0;overflow-wrap:break-word;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}a{color:var(--acc)}.wrap{max-width:1040px;margin:auto;padding:0 20px}main{max-width:860px}nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0}nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap}nav .brand img{width:26px;height:26px}nav .links{display:flex;gap:18px}nav .links a{text-decoration:none;color:var(--mut);white-space:nowrap;font-size:15px}h1{font-size:34px;line-height:1.15;margin:18px 0 8px;overflow-wrap:anywhere}h2{font-size:22px;margin:0 0 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0;min-width:0}.small{color:var(--mut);font-size:14px}code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cfd6f6}.codebox{position:relative;min-width:0}.codebox pre{padding-right:96px}.codebox .copy{position:absolute;top:8px;right:8px}.lead{font-size:16px;margin:0 0 10px}h3{font-size:17px;margin:14px 0 8px}.issues{padding-left:20px}.issues li{margin:6px 0}.fail{color:#f0706a}.warn{color:#d29922}.info{color:var(--mut)}button,.btn{padding:12px 18px;border-radius:10px;border:1px solid transparent;background:var(--acc);color:#0b1020;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block;line-height:1.2}.ghost{background:transparent;border-color:#3a4a80;color:var(--ink)}.sm{padding:8px 12px;font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.badgebox{margin:10px 0}.badgebox img{height:20px}.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--card)}table{width:100%;border-collapse:collapse}td,th{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}th{color:var(--mut);font-weight:600}footer{padding:30px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}footer a{color:var(--mut)}@media(max-width:640px){nav{flex-direction:column;align-items:flex-start;gap:10px}nav .links{width:100%;flex-wrap:wrap;column-gap:16px;row-gap:6px}h1{font-size:28px}.codebox pre{padding-right:14px;padding-top:44px}}`;
 export const PAGE_NAV = `<nav aria-label="Main"><a class="brand" href="/"><img src="/favicon.svg" alt="" width="26" height="26">MCP Readiness</a><div class="links"><a href="/#action">GitHub Action</a><a href="/mcp-servers/">Popular servers</a><a href="/state-of-mcp-2026-11.html">State of MCP report</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div></nav>`;
 export const PAGE_FOOT = `<footer>MCP Readiness · <a href="https://github.com/Om3rr/mcp-readiness-check">Source (MIT)</a> · <a href="https://github.com/Om3rr/mcp-readiness-cli">CLI</a> · <a href="/mcp-servers/">Popular servers</a> · <a href="/llms.txt">llms.txt</a> · <a href="/stats.html">Public traffic stats</a> · Scores are automated surface checks, not a security audit.<p class="contact" style="margin:10px 0 0">Contact: <a href="mailto:omer20sh@gmail.com">omer20sh@gmail.com</a></p></footer>`;
 
@@ -54,6 +54,33 @@ function html(body, status, cache = 'no-store') {
 }
 function notFound(msg) { return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not found | MCP Readiness</title><meta name="robots" content="noindex"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><style>${PAGE_CSS}</style></head><body><div class="wrap">${PAGE_NAV}<main><h1>Not found</h1><p>${esc(msg)}</p><p><a class="btn" href="/">Scan a public URL free</a></p></main>${PAGE_FOOT}</div></body></html>`; }
 
+const README = 'https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&utm_medium=scan-result&utm_campaign=action#readme';
+export function scoreCopy(score) {
+  if (score == null) return '';
+  if (score < 70) return 'Fix these first: the issues above are what agents trip on. Fix them, re-scan, then lock the score in CI.';
+  if (score > 90) return 'Show it off: this server is in great shape. Put the badge in your README and keep it there with the Action.';
+  return 'Close: fix the top issue to pass 90, then keep it from slipping with the Action.';
+}
+export function actionYaml(url) {
+  return `name: MCP readiness\non: [pull_request]\njobs:\n  mcp-readiness:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: Om3rr/mcp-readiness-check@v1\n        with:\n          url: ${url}\n          fail-under: 80\n          max-context-tokens: 8000`;
+}
+export function nextSteps(origin, canonical, url, r) {
+  const badgeUrl = `${origin}/badge.svg?url=${encodeURIComponent(url)}`;
+  const badgeMd = `[![MCP readiness](${badgeUrl})](${canonical})`;
+  const copy = r ? scoreCopy(Number(r.score)) : '';
+  return `<div class="card" id="next"><h2>Next steps</h2>${copy ? `<p class="lead"><b>${esc(copy.split(':')[0])}:</b>${esc(copy.slice(copy.indexOf(':') + 1))}</p>` : ''}
+<h3>1. Keep this score: add the badge</h3>
+<div class="badgebox"><img src="${esc(badgeUrl)}" alt="MCP readiness badge" height="20"></div>
+<div class="codebox"><pre id="badge-md">${esc(badgeMd)}</pre><button type="button" class="ghost sm copy" data-copy="badge-md" data-event="badge_copied">Copy badge</button></div>
+<h3 style="margin-top:18px">2. Fail CI if it drops: add the Action</h3>
+<p class="small">Save as <code>.github/workflows/mcp-readiness.yml</code>. For a server that only runs in CI, start it first and point <code>url</code> at localhost.</p>
+<div class="codebox"><pre id="yaml">${esc(actionYaml(url))}</pre><button type="button" class="ghost sm copy" data-copy="yaml" data-event="action_install_click">Copy</button></div>
+<div class="actions"><a class="btn" data-event="action_install_click" href="${esc(README)}">Add the Action</a><a class="btn ghost" href="/#action">How the Action works</a></div>
+<h3 style="margin-top:18px">3. Get auto-fix for token bloat: Pro, coming soon</h3>
+<p class="small">A slimmer drop-in tool list, every finding with its fix, and alerts when the score drops. No price yet.</p>
+<div class="actions"><a class="btn ghost" data-event="price_click" data-tier="pro" href="/#waitlist-box">Join the Pro waitlist</a><a class="btn ghost" href="/">Scan another server</a></div></div>`;
+}
+
 export function render(env, canonical, url, r, error) {
   const origin = new URL(canonical).origin;
   const name = r?.server || new URL(url).host;
@@ -81,16 +108,7 @@ ${r ? `<div class="card"><div style="display:flex;gap:20px;align-items:center"><
 ${r.locked ? `<p class="small">${esc(r.locked)} more issue(s) and every fix will be in the full report.</p>` : ''}
 ${r.fix ? `<p class="small">Heavy tool list: ${esc(r.fix.why)}. Pro (coming soon) writes a slimmer drop-in tools.json with ToolSlim.</p>` : ''}
 <p class="small"><b>Full report: coming soon.</b> Every finding with its fix, a ToolSlim slim tools.json, a hosted report, scans behind a test token, and monitoring. Payment will never change the score.</p></div>` : `<div class="card"><p>${esc(error || 'Not scanned yet.')}</p></div>`}
-<div class="card"><h2>Own this server? Add the badge</h2>
-<div class="badgebox"><img src="${esc(`${origin}/badge.svg?url=${encodeURIComponent(url)}`)}" alt="MCP readiness badge" height="20"></div>
-<div class="codebox"><pre id="badge-md">${esc(badgeMd)}</pre><button type="button" class="ghost sm copy" data-copy="badge-md" data-event="badge_copied">Copy badge</button></div>
-<h3 style="margin-top:18px">Gate every PR with the free GitHub Action</h3>
-<div class="codebox"><pre id="yaml">- uses: Om3rr/mcp-readiness-check@v1
-  with:
-    url: http://127.0.0.1:8787/mcp
-    fail-under: 80
-    max-context-tokens: 8000</pre><button type="button" class="ghost sm copy" data-copy="yaml" data-event="action_install_click">Copy</button></div>
-<div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=server-page&amp;utm_campaign=action#readme">Add the GitHub Action</a><a class="btn ghost" href="/">Scan another server</a></div></div>
+${nextSteps(origin, canonical, url, r)}
 <p class="small">Automated surface checks of what any MCP client sees before login: initialize, tools/list, an unknown method, a foreign Origin, a CORS preflight and OAuth discovery. No tool is called. A triage signal, not a security audit.</p>
 </main>${PAGE_FOOT}</div><script src="/t.js" defer></script></body></html>`;
 }

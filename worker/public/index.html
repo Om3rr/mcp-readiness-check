@@ -146,6 +146,8 @@ form.waitlist,form.sub{display:flex;gap:8px;flex-wrap:wrap;max-width:560px;margi
 const $=(s)=>document.querySelector(s);const esc=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const col=(s)=>s>=90?'var(--ok)':s>=70?'var(--warn)':'var(--bad)';
 const ORIGIN=location.origin;
+const scoreCopy=(n)=>n<70?'Fix these first: the issues above are what agents trip on. Fix them, re-scan, then lock the score in CI.':n>90?'Show it off: this server is in great shape. Put the badge in your README and keep it there with the Action.':'Close: fix the top issue to pass 90, then keep it from slipping with the Action.';
+const yamlFor=(u)=>`name: MCP readiness\non: [pull_request]\njobs:\n  mcp-readiness:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: Om3rr/mcp-readiness-check@v1\n        with:\n          url: ${u}\n          fail-under: 80\n          max-context-tokens: 8000`;
 async function runScan(target){const out=$('#result');const btn=$('#scanbtn');btn.disabled=true;out.innerHTML='<div class="card small">Scanning… usually 2–10 seconds.</div>';
  try{const r=await fetch('/api/scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url:target})});const j=await r.json();
   if(!r.ok){out.innerHTML=`<div class="card">Couldn't scan: <b>${esc(j.error)}</b> ${esc(j.detail||'')}</div>`;return}
@@ -157,9 +159,14 @@ async function runScan(target){const out=$('#result');const btn=$('#scanbtn');bt
   ${j.locked?`<p class="small">${esc(j.locked)} more issue(s) and every fix will be in the full report (Pro, coming soon).</p>`:''}
   ${j.fix?`<p class="small">${esc(j.fix.why)}. Pro (coming soon) writes a slimmer drop-in tool list with ToolSlim.</p>`:''}
   <p class="small">Public page for this server: <a href="${esc(j.page)}">${esc(pageUrl)}</a></p>
-  <h3 style="margin-top:14px">Add the badge</h3><div class="badgebox"><img src="${esc(badgeUrl)}" alt="MCP readiness badge" height="20"></div>
+  ${scoreCopy(score)?`<p style="margin:14px 0 4px"><b>${esc(scoreCopy(score).split(':')[0])}:</b>${esc(scoreCopy(score).slice(scoreCopy(score).indexOf(':')+1))}</p>`:''}
+  <h3 style="margin-top:14px">Keep this score: add the badge</h3><div class="badgebox"><img src="${esc(badgeUrl)}" alt="MCP readiness badge" height="20"></div>
   <div class="codebox"><pre id="result-badge">${esc(md)}</pre><button type="button" class="ghost sm copy" data-copy="result-badge" data-event="badge_copied">Copy badge</button></div>
-  <div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=landing&amp;utm_campaign=action#readme">Gate it in CI</a><a class="btn ghost" href="${esc(j.page)}">Open the public page</a></div></div>`}
+  <h3 style="margin-top:16px">Fail CI if it drops: add the Action</h3>
+  <div class="codebox"><pre id="result-yaml">${esc(yamlFor(j.url))}</pre><button type="button" class="ghost sm copy" data-copy="result-yaml" data-event="action_install_click">Copy</button></div>
+  <div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=scan-result&amp;utm_campaign=action#readme">Add the Action</a><a class="btn ghost" href="${esc(j.page)}">Open the public page</a></div>
+  <h3 style="margin-top:16px">Get auto-fix for token bloat: Pro, coming soon</h3>
+  <div class="actions" style="margin-top:6px"><button type="button" class="ghost" data-event="price_click" data-tier="pro" data-goto="waitlist-box">Join the Pro waitlist</button></div></div></div>`}
  catch(err){out.innerHTML='<div class="card">Scan failed. Try again.</div>'}finally{btn.disabled=false}}
 $('#scan').addEventListener('submit',(e)=>{e.preventDefault();runScan($('#u').value)});
 document.querySelectorAll('[data-try]').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault();$('#u').value=a.getAttribute('data-try');runScan(a.getAttribute('data-try'))}));
