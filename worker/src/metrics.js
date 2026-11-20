@@ -2,7 +2,7 @@
 import { escapeHtml } from "./escape.js";
 export const WORKER_TZ = "Asia/Jerusalem";
 const BOT_RE = /bot|crawler|spider|crawling|slurp|bingpreview|facebookexternalhit|facebot|pingdom|uptimerobot|healthcheck|kube-probe|lighthouse|pagespeed|headlesschrome|whatsapp|telegram|discordbot|embedly|linkedinbot|twitterbot|applebot|yandex|duckduckbot|baiduspider|semrush|ahrefs|mj12bot|dotbot|gptbot|claudebot|chatgpt|amazonbot|bytespider|petalsearch|cf-health|cloudflare-traffic-manager|monitor|preview-block|statuscake|site24x7/i;
-const SKIP_ROUTES = new Set(["/api/health", "/favicon.ico", "/robots.txt", "/stats", "/stats.html", "/stats.json"]);
+const SKIP_ROUTES = new Set(["/api/health", "/favicon.ico", "/favicon.svg", "/t.js", "/robots.txt", "/stats", "/stats.html", "/stats.json"]);
 export function israelDay(now = new Date()) {
     return now.toLocaleDateString("en-CA", { timeZone: WORKER_TZ });
 }
@@ -472,27 +472,40 @@ export function statsHtmlResponse(data, title) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <title>${esc(title)} — traffic (last 30 days)</title>
   <style>
-    :root { color-scheme: light; }
-    body { font: 16px/1.5 ui-sans-serif, system-ui, sans-serif; max-width: 880px; margin: 40px auto; padding: 0 20px; color: #0f172a; }
-    h1 { font-size: 1.5rem; margin: 0 0 8px; }
-    p.meta { color: #475569; margin: 0 0 24px; }
-    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 0 0 28px; }
-    .card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 16px; }
+    :root { color-scheme: dark; --bg:#0b1020; --card:#121a33; --ink:#e6e9f5; --mut:#a7b0cc; --acc:#7c9cff; --line:#24305a; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+    .wrap { max-width: 960px; margin: 0 auto; padding: 0 20px 48px; }
+    nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 0; flex-wrap: wrap; }
+    nav .brand { display: flex; align-items: center; gap: 10px; color: var(--ink); text-decoration: none; font-weight: 700; font-size: 18px; white-space: nowrap; }
+    nav .brand .mark { width: 24px; height: 24px; border-radius: 7px; border: 2px solid var(--acc); display: inline-block; background: linear-gradient(135deg, transparent 45%, var(--acc) 45%, var(--acc) 58%, transparent 58%); }
+    nav .links a { color: var(--mut); text-decoration: none; margin-left: 16px; white-space: nowrap; }
+    h1 { font-size: 1.6rem; margin: 8px 0 8px; }
+    h2 { font-size: 1.1rem; margin: 28px 0 10px; }
+    p.meta { color: var(--mut); margin: 0 0 24px; font-size: .95rem; }
+    .nw { white-space: nowrap; }
+    .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 0 0 8px; }
+    .card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; min-width: 0; }
     .card .n { font-size: 1.6rem; font-weight: 700; }
-    .card .l { color: #475569; font-size: 0.85rem; }
-    table { width: 100%; border-collapse: collapse; margin: 0 0 28px; }
-    th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #e2e8f0; }
-    th { font-size: 0.8rem; text-transform: uppercase; letter-spacing: .04em; color: #475569; }
-    code { font-family: ui-monospace, SFMono-Regular, monospace; font-size: .9em; }
-    a { color: #1d4ed8; }
+    .card .l { color: var(--mut); font-size: 0.85rem; }
+    .card.ex { opacity: .9; border-style: dashed; }
+    .tablewrap { overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--card); border: 1px solid var(--line); border-radius: 12px; margin: 0 0 8px; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 9px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+    tr:last-child td { border-bottom: 0; }
+    th { font-size: 0.78rem; text-transform: uppercase; letter-spacing: .04em; color: var(--mut); }
+    code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: .9em; }
+    a { color: var(--acc); }
+    @media (max-width: 640px) { nav .links a { margin: 0 16px 0 0; } h1 { font-size: 1.35rem; } }
   </style>
 </head>
-<body>
-  <h1>${esc(title)}</h1>
-  <p class="meta">Public, privacy-preserving totals for the last ${data.window_days} days.
-    Timezone: Israel time (${esc(data.timezone)}). Generated ${esc(data.generated_at)}.
+<body><div class="wrap">
+  <nav aria-label="Main"><a class="brand" href="/"><span class="mark" aria-hidden="true"></span>${esc(title)}</a><div class="links"><a href="/">Home</a><a href="/stats">JSON</a></div></nav>
+  <h1>Public traffic, last ${data.window_days} days</h1>
+  <p class="meta">Privacy-preserving totals. Timezone: Israel time (${esc(data.timezone)}). Generated <span class="nw">${esc(data.generated_at)}</span>.
     No IP addresses, emails, or other personal data are shown here. Waitlist emails are stored privately and never appear on this page.
     JSON: <a href="/stats">/stats</a>.</p>
   <div class="cards">
@@ -503,43 +516,43 @@ export function statsHtmlResponse(data, title) {
     <div class="card"><div class="n">${totals.badge_hits || 0}</div><div class="l">Badge hits</div></div>
     <div class="card"><div class="n">${totals.outside_scans || 0}</div><div class="l">Outside scans</div></div>
     <div class="card"><div class="n">${totals.waitlist_signups || 0}</div><div class="l">Pro waitlist</div></div>
-    <div class="card"><div class="n">${internalHits}</div><div class="l">Internal hits (excluded)</div></div>
-    <div class="card"><div class="n">${Object.values(aiCrawlers).reduce((a, b) => a + b, 0)}</div><div class="l">AI crawlers (excluded)</div></div>
+    <div class="card ex"><div class="n">${internalHits}</div><div class="l">Internal hits (excluded)</div></div>
+    <div class="card ex"><div class="n">${Object.values(aiCrawlers).reduce((a, b) => a + b, 0)}</div><div class="l">AI crawlers (excluded)</div></div>
   </div>
   <h2>Daily</h2>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr><th>Day</th><th>Requests</th><th>Uniques</th><th>Scans ok</th><th>Scans fail</th><th>Outside</th><th>Badges</th></tr></thead>
     <tbody>${dailyRows}</tbody>
-  </table>
+  </table></div>
   <h2>Routes</h2>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr><th>Route</th><th>Requests</th></tr></thead>
     <tbody>${routeRows}</tbody>
-  </table>
+  </table></div>
   <h2>Events</h2>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr><th>Event</th><th>Count</th></tr></thead>
     <tbody>${eventRows}</tbody>
-  </table>
+  </table></div>
   <h2>Price clicks by tier</h2>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr><th>Tier</th><th>Clicks</th></tr></thead>
     <tbody>${tierRows}</tbody>
-  </table>
+  </table></div>
   <h2>Top referrers</h2>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr><th>Referrer</th><th>Hits</th></tr></thead>
     <tbody>${refRows}</tbody>
-  </table>
+  </table></div>
   <h2>Excluded: AI crawlers</h2>
-  <table>
+  <div class="tablewrap"><table>
     <thead><tr><th>Crawler</th><th>Hits</th></tr></thead>
     <tbody>${crawlerRows}</tbody>
-  </table>
+  </table></div>
   <h2>Excluded: internal hits</h2>
   <p class="meta">GitHub Actions/CI, curl/node, <code>x-studio-internal: 1</code>, and user-agents containing <code>studio-agent</code>. These are not included in visitor or scan counts.</p>
   <p>Internal hits: <strong>${internalHits}</strong></p>
-</body>
+</div></body>
 </html>`;
     return new Response(html, {
         headers: { "content-type": "text/html; charset=utf-8", "cache-control": "public, max-age=60" },

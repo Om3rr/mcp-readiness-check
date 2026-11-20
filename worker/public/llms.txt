@@ -1,0 +1,24 @@
+# MCP Readiness
+
+> Free, open-source live scanner for Model Context Protocol (MCP) servers. It connects like Claude, ChatGPT and Cursor do and scores OAuth discovery (RFC 9728), tool annotations, Origin/CORS, JSON-RPC conformance, schemas, and the token cost of the tool list on every agent turn. Web scan, public page per server, README badge, CLI and a GitHub Action. Paid plans are coming soon; there is no checkout today.
+
+## Use it
+- [Scan a public MCP server](https://mcp-readiness.omer20sh.workers.dev/): paste an https URL, no sign-up, 10 scans/hour.
+- [Server pages](https://mcp-readiness.omer20sh.workers.dev/s/mcp.context7.com/mcp): /s/<host>/<path> shows the latest score, token cost, top issues and the badge.
+- [GitHub Action](https://github.com/Om3rr/mcp-readiness-check#readme): fail a PR under a score or over a token budget; works on localhost in CI.
+- [CLI](https://github.com/Om3rr/mcp-readiness-cli): scan a remote or stdio MCP server from the terminal.
+- [Source (MIT)](https://github.com/Om3rr/mcp-readiness-check)
+
+## Data
+- [Popular remote MCP servers, 20 November 2026](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/): scores and tokens per turn.
+- 23 popular remote MCP servers scanned unauthenticated on 20 November 2026: 8 answer tools/list without login, 15 require OAuth.
+- 14 of 15 OAuth-protected servers had no open pre-login issue (401, WWW-Authenticate, OAuth protected-resource discovery); open issues: Atlassian (Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)).
+- Tool-list cost per agent turn ranges from ~80 tokens (Astro Docs) to ~4,967 tokens (Hugging Face) among the open servers.
+- 7 of 8 open servers accept requests with a foreign Origin header; the spec says servers MUST validate Origin (this matters most for localhost servers).
+- 2 of 8 open servers declare no tool annotations (readOnlyHint / destructiveHint); 3 of 8 have at least one tool description that is too long.
+- The long tail is different: see the State of public MCP servers report (official registry scan, 13 Nov 2026), where the longest single tool description was 27,638 characters.
+- State of public MCP servers (official registry scan, 13 Nov 2026): 15,067 live servers reached; 44% of public servers accept a foreign Origin.
+- [State of public MCP servers, Nov 2026](https://mcp-readiness.omer20sh.workers.dev/state-of-mcp-2026-11.html): the full registry scan and a checklist for server owners.
+
+## Optional
+- [Public traffic stats](https://mcp-readiness.omer20sh.workers.dev/stats.html)

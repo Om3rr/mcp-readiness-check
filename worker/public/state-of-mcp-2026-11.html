@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><title>State of public MCP servers, Nov 2026</title>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="canonical" href="https://mcp-readiness.omer20sh.workers.dev/state-of-mcp-2026-11.html"><title>State of public MCP servers, Nov 2026</title>
 <style>
 @page{size:A4;margin:15mm}
 :root{--ink:#0f172a;--mut:#475569;--line:#e2e8f0;--blue:#1d4ed8;--acc:#7c3aed}
@@ -15,7 +15,9 @@ table{width:100%;border-collapse:collapse;font-size:9.3pt;margin:6px 0}td,th{bor
 .callout{background:#f0f9ff;border:1px solid #bae6fd;border-radius:8px;padding:9px 12px;margin:10px 0}
 ol li,ul li{margin:3px 0}.pb{page-break-before:always}
 code{font:8.8pt ui-monospace,Menlo,monospace;background:#f1f5f9;padding:0 3px;border-radius:3px}
-</style></head><body>
+@media screen and (max-width:640px){body{font-size:15px;padding:12px}.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}table{display:block;overflow-x:auto}.topbar{font-size:14px}}
+.topbar{margin:4px 0 12px}.topbar a{color:var(--blue)}@media print{.topbar{display:none}}
+</style></head><body><p class="topbar"><a href="/">← MCP Readiness: scan your MCP server free</a> · <a href="/mcp-servers/">Popular servers</a></p>
 <div class="hero"><div class="small mut">REPORT · November 2026 · DRAFT, NOT PUBLISHED</div>
 <h1>State of public MCP servers</h1>
 <div>What 15,067 live Model Context Protocol servers from the official registry get right, what they skip, and what it costs the agents that connect to them.</div>
@@ -97,5 +99,5 @@ code{font:8.8pt ui-monospace,Menlo,monospace;background:#f1f5f9;padding:0 3px;bo
 
 <h2>Method</h2>
 <p class="small">Source: the official MCP registry API (registry.modelcontextprotocol.io), latest version of each server, Streamable-HTTP remotes only, deduplicated to one endpoint per registered domain. Probes, all unauthenticated and with no side effects: <code>initialize</code>, <code>tools/list</code>, <code>prompts/list</code>, an unknown method, an unknown tool name, a request with a foreign <code>Origin</code>, a CORS preflight, and OAuth discovery (RFC 9728, RFC 8414, legacy 2025-03-26, PKCE, DCR). 20-second timeout, run on 13 Nov 2026. Scores are the scanner's weighted deductions (fail −15, warn −5) and are a triage signal, not a security audit. Small vendors are anonymized. Vendors named in section 5 were scanned on public endpoints and are named only for positive practice.</p>
-<p class="small mut" style="border-top:1px solid var(--line);padding-top:6px;margin-top:14px">Want this for your server, public or internal? The MCP Readiness Review covers the automated scan, a manual review of auth and approval gates, a ranked fix plan and a re-scan in 3 working days. Omer Shacham · [email] · [LinkedIn URL]</p>
+<p class="small mut" style="border-top:1px solid var(--line);padding-top:6px;margin-top:14px">Want this for your own server? <a href="/">Scan it free</a>, or gate every PR with the free <a href="https://github.com/Om3rr/mcp-readiness-check#readme">GitHub Action</a>.</p>
 </body></html>
