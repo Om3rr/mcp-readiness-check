@@ -7,8 +7,9 @@ import { consume, getLicense, PLANS } from './license.js';
 import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
 import { registerMonitor, runMonitors } from './monitor.js';
+import { serverPage, savePage, pagePath, sitemap } from './pages.js';
 
-const VERSION = '0.3.0';
+const VERSION = '0.5.0';
 const ORDER = { fail: 0, warn: 1, info: 2, pass: 3 };
 const json = (o, status = 200, extra = {}) => new Response(JSON.stringify(o, null, 1), { status, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*', ...extra } });
 const bearer = (req, url) => (req.headers.get('authorization') || '').replace(/^Bearer\s+/i, '') || url.searchParams.get('key') || '';
@@ -118,7 +119,9 @@ export default {
         if (body.token) return json({ error: 'token_scans_need_a_license' }, 402);
         if (!(await rateLimit(env, req, 'scan', Number(env.FREE_SCANS_PER_HOUR || 10)))) return json({ error: 'rate_limited', detail: 'Free scans are limited per hour. A license removes the limit.' }, 429);
         const r = await scan(env, t.url);
-        return json({ url: t.url, ...limited(r, env) });
+        const view = limited(r, env);
+        await savePage(env, t.url, view).catch(() => {});
+        return json({ url: t.url, page: pagePath(t.url), ...view });
       }
 
       if (p === '/api/report') {
@@ -193,8 +196,20 @@ export default {
         if (key) await env.LICENSES.delete(`claim:${sid}`);
         return thanksPage(key, env);
       }
-      // Public scan page (badges link here): same page as /, auto-runs ?url=
-      if (p === '/scan' && env.ASSETS) return env.ASSETS.fetch(new Request(new URL('/', url), req));
+      // Indexable per-server pages (README badges link here). No sign-up.
+      if (p.startsWith('/s/') && req.method === 'GET') {
+        return serverPage(req, env, {
+          scanLimited: async (u) => limited(await scan(env, u), env),
+          canScan: () => rateLimit(env, req, 'page', Number(env.PAGE_SCANS_PER_HOUR || 20)),
+        });
+      }
+      if (p === '/scan') {
+        const t = checkTarget(url.searchParams.get('url'));
+        if (t.ok) return Response.redirect(`${env.PUBLIC_URL || url.origin}${pagePath(t.url)}`, 301);
+        if (env.ASSETS) return env.ASSETS.fetch(new Request(new URL('/', url), req));
+      }
+      if (p === '/sitemap.xml') return sitemap(env, env.PUBLIC_URL || url.origin);
+      if (p === '/robots.txt') return new Response(`User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${env.PUBLIC_URL || url.origin}/sitemap.xml\n`, { headers: { 'content-type': 'text/plain' } });
       if (env.ASSETS) return env.ASSETS.fetch(req);
       return json({ error: 'not_found' }, 404);
     } catch (e) {
