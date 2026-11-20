@@ -96,6 +96,14 @@
 - [Twilio Docs MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/twilio-docs/): ~1,035 tokens per turn, 2 tools, readiness 100/100
 - [Wix MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/wix/): login required, pre-login readiness 100/100
 
+## Blog
+- [Blog](https://mcp-readiness.omer20sh.workers.dev/blog/): guides for shipping MCP servers.
+- [The MCP OAuth discovery checklist](https://mcp-readiness.omer20sh.workers.dev/blog/mcp-oauth-discovery-checklist/): A step-by-step checklist for MCP OAuth: RFC 9728 protected resource metadata, authorization server metadata, the 401 WWW-Authenticate hint, and the legacy 2025-03-26 flow to avoid.
+- [MCP server testing tools compared: Inspector, scanners, and CI gates](https://mcp-readiness.omer20sh.workers.dev/blog/mcp-server-testing-tools-comparison/): A fair comparison of MCP Inspector, hosted security scanners, and CI readiness checks — what each tool actually does, what it does not do, and how to use them together before you ship.
+- [How to reduce MCP tool-list token cost](https://mcp-readiness.omer20sh.workers.dev/blog/reduce-mcp-tool-list-token-cost/): A practical guide to shrinking the tokens an MCP server adds on every agent turn, with live measurements from 8 open popular servers and a CI budget you can enforce.
+- [A production-readiness checklist for remote MCP servers](https://mcp-readiness.omer20sh.workers.dev/blog/remote-mcp-production-readiness-checklist/): A practical checklist for shipping a remote MCP server: Origin validation, OAuth discovery, tool annotations, JSON-RPC errors, and a token budget, with figures from 23 popular servers.
+- [How to test an MCP server before shipping (CI with a GitHub Action)](https://mcp-readiness.omer20sh.workers.dev/blog/test-mcp-server-before-shipping/): A pre-ship test plan for MCP servers: what to check by hand with MCP Inspector, and how to fail a pull request with a free GitHub Action that scores readiness and tool-list token cost.
+
 ## Reports
 - State of public MCP servers (official registry scan, 13 Nov 2026): 15,067 live servers reached; 44% of public servers accept a foreign Origin.
 - [State of public MCP servers, Nov 2026](https://mcp-readiness.omer20sh.workers.dev/state-of-mcp-2026-11.html): the full registry scan and a checklist for server owners.
