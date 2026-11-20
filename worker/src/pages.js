@@ -8,6 +8,12 @@ export const PAGE_CSS = `:root{--bg:#0b1020;--card:#121a33;--ink:#e6e9f5;--mut:#
 export const PAGE_NAV = `<nav aria-label="Main"><a class="brand" href="/"><img src="/favicon.svg" alt="" width="26" height="26">MCP Readiness</a><div class="links"><a href="/#action">GitHub Action</a><a href="/mcp-servers/">Popular servers</a><a href="/state-of-mcp-2026-11.html">State of MCP report</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div></nav>`;
 export const PAGE_FOOT = `<footer>MCP Readiness · <a href="https://github.com/Om3rr/mcp-readiness-check">Source (MIT)</a> · <a href="https://github.com/Om3rr/mcp-readiness-cli">CLI</a> · <a href="/mcp-servers/">Popular servers</a> · <a href="/llms.txt">llms.txt</a> · <a href="/stats.html">Public traffic stats</a> · Scores are automated surface checks, not a security audit.<p class="contact" style="margin:10px 0 0">Contact: <a href="mailto:omer20sh@gmail.com">omer20sh@gmail.com</a></p></footer>`;
 
+// Open Graph + Twitter card tags. The image is a static 1200x630 PNG served from worker/public/og.png.
+export function ogTags(title, desc, url, origin = 'https://mcp-readiness.omer20sh.workers.dev') {
+  const img = `${origin}/og.png`;
+  return `<meta property="og:type" content="website"><meta property="og:site_name" content="MCP Readiness"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${esc(img)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="MCP Readiness: is your MCP server ready for real agents?"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(desc)}"><meta name="twitter:image" content="${esc(img)}">`;
+}
+
 const TTL_MS = 24 * 3600 * 1000;
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -97,7 +103,7 @@ export function render(env, canonical, url, r, error) {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(canonical)}">${r ? '' : '\n<meta name="robots" content="noindex">'}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-<meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(canonical)}">
+${ogTags(title, desc, canonical, origin)}
 ${ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>` : ''}
 <style>${PAGE_CSS}.score{font-size:56px;font-weight:800;line-height:1;color:${col}}</style></head>
 <body><div class="wrap">${PAGE_NAV}<main>
