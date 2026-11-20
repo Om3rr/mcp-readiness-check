@@ -8,6 +8,9 @@ import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
 import { registerMonitor, runMonitors } from './monitor.js';
 import { serverPage, savePage, pagePath, sitemap } from './pages.js';
+import { bucketRoute, handleEvent, handleStats, handleWaitlist, scheduleTrack } from './metrics.js';
+
+const WORKER_NAME = 'mcp-readiness';
 
 const VERSION = '0.5.0';
 const ORDER = { fail: 0, warn: 1, info: 2, pass: 3 };
@@ -96,8 +99,7 @@ async function mcpEndpoint(req, env, url) {
   }
 }
 
-export default {
-  async fetch(req, env, ctx) {
+async function route(req, env, ctx, mark) {
     const url = new URL(req.url);
     const p = url.pathname;
     try {
@@ -109,16 +111,20 @@ export default {
         const body = await req.json().catch(() => ({}));
         const t = checkTarget(body.url);
         if (!t.ok) return json({ error: t.error }, 400);
+        mark.targetUrl = t.url;
+        mark.events = ['scan_started'];
         const key = bearer(req, url);
         if (key) {
           const c = await consume(env, key);
           if (!c.ok) return json({ error: c.error }, c.error === 'invalid_license' ? 401 : 402);
           const r = await scan(env, t.url, { token: body.token });
+          mark.scan = 'success';
           return json({ ...r, url: t.url, plan: c.lic.plan, remaining: c.lic.remaining });
         }
         if (body.token) return json({ error: 'token_scans_need_a_license' }, 402);
         if (!(await rateLimit(env, req, 'scan', Number(env.FREE_SCANS_PER_HOUR || 10)))) return json({ error: 'rate_limited', detail: 'Free scans are limited per hour. A license removes the limit.' }, 429);
         const r = await scan(env, t.url);
+        mark.scan = 'success';
         const view = limited(r, env);
         await savePage(env, t.url, view).catch(() => {});
         return json({ url: t.url, page: pagePath(t.url), ...view });
@@ -129,7 +135,10 @@ export default {
         if (!t.ok) return json({ error: t.error }, 400);
         const c = await consume(env, bearer(req, url));
         if (!c.ok) return json({ error: c.error, pricing: '/#pricing' }, c.error === 'invalid_license' ? 401 : 402);
+        mark.targetUrl = t.url;
+        mark.events = ['scan_started'];
         const html = toHtml(await scan(env, t.url), t.url);
+        mark.scan = 'success';
         if (url.searchParams.get('format') === 'pdf') {
           const pdf = await pdfFromHtml(env, html);
           if (pdf) return new Response(pdf.body, { headers: { 'content-type': 'application/pdf', 'content-disposition': 'attachment; filename="mcp-readiness-report.pdf"' } });
@@ -174,7 +183,11 @@ export default {
         const hit = await cache.match(ck);
         if (hit) return hit;
         let score = null;
-        if (t.ok && (await rateLimit(env, req, 'badge', Number(env.BADGE_MISSES_PER_HOUR || 30)))) { try { score = (await scan(env, t.url)).score; } catch {} }
+        if (t.ok && (await rateLimit(env, req, 'badge', Number(env.BADGE_MISSES_PER_HOUR || 30)))) {
+          mark.targetUrl = t.url;
+          mark.events = ['scan_started'];
+          try { score = (await scan(env, t.url)).score; mark.scan = 'success'; } catch { mark.scan = 'fail'; }
+        }
         const res = new Response(badge(score), { headers: { 'content-type': 'image/svg+xml', 'cache-control': 'public, max-age=21600' } });
         ctx?.waitUntil?.(cache.put(ck, res.clone()));
         return res;
@@ -199,7 +212,18 @@ export default {
       // Indexable per-server pages (README badges link here). No sign-up.
       if (p.startsWith('/s/') && req.method === 'GET') {
         return serverPage(req, env, {
-          scanLimited: async (u) => limited(await scan(env, u), env),
+          scanLimited: async (u) => {
+            mark.targetUrl = u;
+            mark.events = ['scan_started'];
+            try {
+              const view = limited(await scan(env, u), env);
+              mark.scan = 'success';
+              return view;
+            } catch (e) {
+              mark.scan = 'fail';
+              throw e;
+            }
+          },
           canScan: () => rateLimit(env, req, 'page', Number(env.PAGE_SCANS_PER_HOUR || 20)),
         });
       }
@@ -213,8 +237,32 @@ export default {
       if (env.ASSETS) return env.ASSETS.fetch(req);
       return json({ error: 'not_found' }, 404);
     } catch (e) {
+      if (mark && mark.events && mark.events.includes('scan_started') && !mark.scan) mark.scan = 'fail';
       return json({ error: 'scan_failed', detail: String(e?.message || e).slice(0, 200) }, 502);
     }
+}
+
+export default {
+  async fetch(req, env, ctx) {
+    const url = new URL(req.url);
+    const p = url.pathname.replace(/\/+$/, '') || '/';
+    if ((req.method === 'GET' || req.method === 'HEAD') && (p === '/stats' || p === '/stats.json' || p === '/stats.html')) {
+      return handleStats(env, WORKER_NAME, p === '/stats.json' ? '/stats' : p, 'MCP Readiness');
+    }
+    if (p === '/api/event') return handleEvent(req, env, WORKER_NAME);
+    if (p === '/api/waitlist') return handleWaitlist(req, env, WORKER_NAME);
+    const mark = {};
+    const res = await route(req, env, ctx, mark);
+    const badge = p === '/badge' || p === '/badge.svg';
+    scheduleTrack(ctx, env, req, {
+      worker: WORKER_NAME,
+      route: bucketRoute(url.pathname),
+      scan: mark.scan || null,
+      badge,
+      targetUrl: mark.targetUrl,
+      events: mark.events || [],
+    });
+    return res;
   },
   async scheduled(_event, env, ctx) {
     ctx.waitUntil(runMonitors(env, scan));
