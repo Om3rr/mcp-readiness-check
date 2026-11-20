@@ -78,3 +78,20 @@ test('scan result page: next steps with badge, prefilled Action and Pro CTA, sco
   assert.match(scoreCopy(95), /^Show it off/);
   assert.match(scoreCopy(80), /^Close/);
 });
+
+test('OG/meta: every public page has title, description, canonical, og:* and a large twitter card', () => {
+  for (const f of htmlFiles()) {
+    const html = readFileSync(f, 'utf8');
+    for (const re of [/<title>[^<]+<\/title>/, /<meta name="description" content="[^"]+"/, /<link rel="canonical" href="https:\/\/mcp-readiness\.omer20sh\.workers\.dev\//, /property="og:title"/, /property="og:description"/, /property="og:url"/, /property="og:image" content="https:\/\/mcp-readiness\.omer20sh\.workers\.dev\/og\.png"/, /name="twitter:card" content="summary_large_image"/]) assert.match(html, re, `${f} missing ${re}`);
+  }
+  const png = readFileSync(join(pub, 'og.png'));
+  assert.equal(png.readUInt32BE(16), 1200); assert.equal(png.readUInt32BE(20), 630);
+});
+
+test('OG/meta: scan pages get a dynamic, escaped og:title with server name and score', async () => {
+  const { render } = await import('../worker/src/pages.js');
+  const h = render({}, 'https://w.test/s/a.example/mcp', 'https://a.example/mcp', { score: 88, server: 'Acme "<x>"', toolCount: 3, contextTokens: 500, top: [], at: '2026-11-20T10:00:00Z' });
+  assert.match(h, /<meta property="og:title" content="Acme &quot;&lt;x&gt;&quot; MCP server readiness: 88\/100/);
+  assert.match(h, /name="twitter:card" content="summary_large_image"/);
+  assert.match(h, /property="og:image" content="https:\/\/w\.test\/og\.png"/);
+});

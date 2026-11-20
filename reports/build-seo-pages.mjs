@@ -3,7 +3,7 @@
 // Usage: node reports/build-seo-pages.mjs reports/popular-remote-servers-2026-11-20.json
 // Re-scan: for each URL, `npx mcp-readiness-cli --json <url>` (or bin/mcp-readiness-check.js --json) and rebuild the JSON.
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
-import { PAGE_CSS, PAGE_NAV, PAGE_FOOT } from '../worker/src/pages.js';
+import { PAGE_CSS, PAGE_NAV, PAGE_FOOT , ogTags } from '../worker/src/pages.js';
 
 const SITE = process.env.SITE_URL || 'https://mcp-readiness.omer20sh.workers.dev';
 const REPO = 'https://github.com/Om3rr/mcp-readiness-check';
@@ -51,7 +51,7 @@ const CSS = `${PAGE_CSS}main{max-width:none}.n{font-weight:800}table.data{min-wi
 writeFileSync('worker/public/mcp-servers/index.html', `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${SITE}/mcp-servers/">
 <link rel="icon" type="image/svg+xml" href="/favicon.svg"><link rel="alternate" type="text/plain" href="${SITE}/llms.txt" title="llms.txt">
-<meta property="og:type" content="website"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${SITE}/mcp-servers/">
+${ogTags(title, desc, `${SITE}/mcp-servers/`)}
 <script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>
 <style>${CSS}</style></head><body><div class="wrap">${PAGE_NAV}<main>
 <h1>Popular remote MCP servers: readiness and token cost</h1>
