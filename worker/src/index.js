@@ -233,13 +233,20 @@ async function route(req, env, ctx, mark) {
         if (env.ASSETS) return env.ASSETS.fetch(new Request(new URL('/', url), req));
       }
       if (p === '/sitemap.xml') return sitemap(env, env.PUBLIC_URL || url.origin);
-      if (p === '/robots.txt') return new Response(`User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${env.PUBLIC_URL || url.origin}/sitemap.xml\n`, { headers: { 'content-type': 'text/plain' } });
+      if (p === '/robots.txt') return new Response(robotsTxt(env.PUBLIC_URL || url.origin), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
       if (env.ASSETS) return env.ASSETS.fetch(req);
       return json({ error: 'not_found' }, 404);
     } catch (e) {
       if (mark && mark.events && mark.events.includes('scan_started') && !mark.scan) mark.scan = 'fail';
       return json({ error: 'scan_failed', detail: String(e?.message || e).slice(0, 200) }, 502);
     }
+}
+
+// Search engines and AI answer engines are welcome on the pages; the API is not for crawling.
+const AI_AGENTS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'PerplexityBot', 'Google-Extended', 'Bingbot'];
+export function robotsTxt(origin) {
+  const block = (ua) => `User-agent: ${ua}\nAllow: /\nDisallow: /api/\n`;
+  return `# MCP Readiness. A summary for language models is at ${origin}/llms.txt\n${['*', ...AI_AGENTS].map(block).join('\n')}\nSitemap: ${origin}/sitemap.xml\n`;
 }
 
 export default {

@@ -1,111 +1,169 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MCP Readiness Check — Live MCP Server Scoring and CI Gates</title>
-<meta name="description" content="Probe a live MCP server for OAuth discovery, annotations, Origin/CORS and tool-list token cost. Free paste-a-URL scan, README badge and GitHub Action. Pro writes a slimmer tool list. Based on a 13 Nov 2026 scan of 12,926 official-registry servers.">
+<meta name="description" content="Probe a live MCP server for OAuth discovery, annotations, Origin/CORS and tool-list token cost. Free paste-a-URL scan, README badge and GitHub Action. Based on a 13 Nov 2026 scan of 15,067 live official-registry servers.">
+<link rel="canonical" href="https://mcp-readiness.omer20sh.workers.dev/">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="alternate" type="text/plain" href="https://mcp-readiness.omer20sh.workers.dev/llms.txt" title="llms.txt">
+<meta property="og:type" content="website"><meta property="og:url" content="https://mcp-readiness.omer20sh.workers.dev/">
+<meta property="og:title" content="Is your MCP server ready for real agents?">
+<meta property="og:description" content="Free live scan of an MCP server: OAuth discovery, Origin/CORS, annotations, schemas and tool-list token cost. README badge and a GitHub Action that gates PRs.">
+<meta name="theme-color" content="#0b1020">
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"SoftwareApplication","name":"MCP Readiness","applicationCategory":"DeveloperApplication","operatingSystem":"Web, GitHub Actions, Node.js","url":"https://mcp-readiness.omer20sh.workers.dev/","description":"Live readiness and token-cost scanner for Model Context Protocol servers, with a README badge and a GitHub Action.","isAccessibleForFree":true,"license":"https://opensource.org/licenses/MIT","codeRepository":"https://github.com/Om3rr/mcp-readiness-check"},{"@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do I test an MCP server in production?","acceptedAnswer":{"@type":"Answer","text":"Paste its public https URL into the free scanner. It connects the way Claude, ChatGPT and Cursor do, sends initialize and tools/list, an unknown method, a foreign Origin, a CORS preflight and the OAuth discovery requests, and returns a 0-100 score with the top issues. To test before production, run the free GitHub Action against localhost in CI."}},{"@type":"Question","name":"How many tokens does an MCP server cost per turn?","acceptedAnswer":{"@type":"Answer","text":"Its whole tools/list is sent to the model on every turn. On 20 November 2026 popular open servers ranged from about 80 tokens (Astro Docs) to about 4,967 tokens (Hugging Face). The scan reports the estimate for your server."}},{"@type":"Question","name":"Do MCP servers have to validate Origin?","acceptedAnswer":{"@type":"Answer","text":"Yes. The MCP Streamable HTTP transport says servers MUST validate the Origin header to prevent DNS-rebinding attacks. In our 13 November 2026 registry scan, 44% of public servers accepted a foreign Origin."}},{"@type":"Question","name":"Is this a security audit?","acceptedAnswer":{"@type":"Answer","text":"No. It is an automated surface scan of what any client sees before login. It is a triage signal, not a substitute for a review of auth, data flows and approval gates."}},{"@type":"Question","name":"Is it free?","acceptedAnswer":{"@type":"Answer","text":"Yes. The web scan (10 per hour), the public page per server, the README badge, the open-source CLI and the GitHub Action (50 runs per day per repo) are free with no sign-up. Pro is coming soon and has no price yet."}}]}]}</script>
 <style>
-:root{--bg:#0b1020;--card:#121a33;--ink:#e6e9f5;--mut:#9aa3c0;--acc:#7c9cff;--ok:#3fb950;--warn:#d29922;--bad:#e5534b;--line:#24305a}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
-a{color:var(--acc)}.wrap{max-width:1040px;margin:auto;padding:0 20px}nav{display:flex;justify-content:space-between;align-items:center;padding:18px 0}nav b{font-size:18px}nav a{margin-left:18px;text-decoration:none;color:var(--mut)}
-.hero{padding:48px 0 28px;text-align:center}.hero h1{font-size:44px;line-height:1.1;margin:0 0 14px;letter-spacing:-.02em}.hero p{font-size:19px;color:var(--mut);max-width:720px;margin:0 auto}
-form.scan{display:flex;gap:8px;max-width:720px;margin:26px auto 8px}form.scan input{flex:1;padding:14px 16px;border-radius:10px;border:1px solid var(--line);background:#0e1530;color:var(--ink);font-size:16px}
-button,.btn{padding:13px 18px;border-radius:10px;border:0;background:var(--acc);color:#0b1020;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block}.btn.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}.btn[aria-disabled=true]{opacity:.45;pointer-events:none}
-.small{font-size:13px;color:var(--mut)}#result{max-width:720px;margin:16px auto;text-align:left}
-.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}.grid{display:grid;gap:16px}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}
-section{padding:40px 0}h2{font-size:28px;margin:0 0 8px}h3{margin:0 0 6px}.kpi b{font-size:30px;display:block}
-pre{background:#070b18;border:1px solid var(--line);border-radius:10px;padding:14px;overflow:auto;font:13px/1.5 ui-monospace,Menlo,monospace;color:#cfd6f6}
+:root{--bg:#0b1020;--card:#121a33;--ink:#e6e9f5;--mut:#a7b0cc;--acc:#7c9cff;--ok:#3fb950;--warn:#d29922;--bad:#f0706a;--line:#24305a;--code:#070b18}
+*{box-sizing:border-box}html{-webkit-text-size-adjust:100%}body{margin:0;overflow-wrap:break-word;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--acc)}.wrap{max-width:1040px;margin:auto;padding:0 20px}
+nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0}nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap}nav .brand img{width:26px;height:26px}
+nav .links{display:flex;gap:18px;align-items:center}nav .links a{text-decoration:none;color:var(--mut);white-space:nowrap;font-size:15px}nav .links a:hover{color:var(--ink)}
+.hero{padding:44px 0 24px;text-align:center}.hero h1{font-size:44px;line-height:1.1;margin:0 0 14px;letter-spacing:-.02em}.hero p.sub{font-size:19px;color:var(--mut);max-width:720px;margin:0 auto}
+form.scan{display:flex;gap:8px;max-width:720px;margin:26px auto 10px}form.scan input{flex:1;min-width:0;padding:14px 16px;border-radius:10px;border:1px solid var(--line);background:#0e1530;color:var(--ink);font-size:16px}
+button,.btn{padding:12px 18px;border-radius:10px;border:1px solid transparent;background:var(--acc);color:#0b1020;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block;line-height:1.2;text-align:center}
+.btn.ghost,button.ghost{background:transparent;border-color:#3a4a80;color:var(--ink)}.btn.ghost:hover,button.ghost:hover{border-color:var(--acc)}
+button:disabled{background:#3a4670;color:#e6e9f5;cursor:wait}
+.btn.sm,button.sm{padding:8px 12px;font-size:14px}
+.small{font-size:14px;color:var(--mut)}.fine{font-size:14px;color:var(--mut);max-width:720px;margin:0 auto}.try a{margin:0 4px}
+#result{max-width:720px;margin:18px auto 0;text-align:left}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;min-width:0}
+.grid{display:grid;gap:16px}.grid>*{min-width:0}.g3{grid-template-columns:repeat(3,minmax(0,1fr))}.g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+section{padding:40px 0}h2{font-size:28px;line-height:1.2;margin:0 0 10px}h3{margin:0 0 6px;font-size:18px}.kpi b{font-size:30px;display:block}
+pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;max-width:100%;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cfd6f6;white-space:pre-wrap;overflow-wrap:anywhere}
+code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}
+.codebox{position:relative;min-width:0}.codebox .copy{position:absolute;top:8px;right:8px}.codebox pre{padding-right:96px}
 .f{padding:8px 0;border-bottom:1px solid var(--line)}.lv{font-size:12px;font-weight:700;text-transform:uppercase;margin-right:8px}
-table{width:100%;border-collapse:collapse}td,th{padding:10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}th{color:var(--mut);font-weight:600}
-.price{font-size:30px;font-weight:800}.plan ul{padding-left:18px;color:var(--mut);margin:10px 0 16px}.plan.hl{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}
-code{font-size:12px;word-break:break-all}footer{padding:30px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}form.waitlist{display:flex;gap:8px;flex-wrap:wrap;max-width:560px;margin:16px 0 8px}form.waitlist input[type=email]{flex:1;min-width:220px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0e1530;color:var(--ink)}
-@media(max-width:800px){.g3,.g2{grid-template-columns:1fr}.hero h1{font-size:32px}form.scan{flex-direction:column}}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+table{width:100%;border-collapse:collapse}td,th{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px;word-break:normal;overflow-wrap:normal}th{color:var(--mut);font-weight:600}tr:last-child td{border-bottom:0}
+table.compare{min-width:720px}table.compare td:first-child{min-width:200px}table.compare code{white-space:nowrap}td.n{font-weight:800}
+.plan ul{padding-left:18px;color:var(--mut);margin:10px 0 16px}.plan.hl{border-color:var(--acc);box-shadow:0 0 0 1px var(--acc)}.plan{display:flex;flex-direction:column}.plan .cta{margin-top:auto}.plan .tag{align-self:flex-start}
+.tag{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:#0b1020;background:#c9d4ff;border-radius:99px;padding:2px 10px;margin-bottom:8px}
+.bul{margin:8px 0 16px;padding-left:20px;color:var(--mut)}.bul li{margin:6px 0}
+.badgebox{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:10px 0}.badgebox img{height:20px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+footer{padding:30px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}footer a{color:var(--mut)}
+.hp{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}
+form.waitlist,form.sub{display:flex;gap:8px;flex-wrap:wrap;max-width:560px;margin:14px 0 8px}form.waitlist input[type=email],form.sub input[type=email]{flex:1;min-width:0;width:220px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0e1530;color:var(--ink);font-size:16px}
+.faq h3{margin-top:18px}.faq h3:first-child{margin-top:0}
+@media(max-width:860px){.g3,.g2{grid-template-columns:minmax(0,1fr)}.hero h1{font-size:34px}}
+@media(max-width:640px){nav{flex-direction:column;align-items:flex-start;gap:10px;padding:14px 0}nav .links{width:100%;flex-wrap:wrap;column-gap:16px;row-gap:6px}nav .links::-webkit-scrollbar{display:none}
+ .hero{padding:24px 0 16px}.hero h1{font-size:30px}.hero p.sub{font-size:17px}form.scan{flex-direction:column}section{padding:28px 0}h2{font-size:24px}.codebox pre{padding-right:14px;padding-top:44px}}
 </style></head><body><div class="wrap">
-<nav><b>MCP Readiness</b><div><a href="#action">GitHub Action</a><a href="#fix">ToolSlim</a><a href="#faq">FAQ</a><a href="#pricing">Pricing</a><a href="/state-of-mcp-2026-11.html">State of MCP report</a></div></nav>
+<nav aria-label="Main"><a class="brand" href="/"><img src="/favicon.svg" alt="" width="26" height="26">MCP Readiness</a><div class="links"><a href="#action">GitHub Action</a><a href="/mcp-servers/">Popular servers</a><a href="/state-of-mcp-2026-11.html">State of MCP report</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a></div></nav>
 
-<div class="hero">
+<header class="hero">
 <h1>Is your MCP server ready for real agents?</h1>
-<p>We connect to your live endpoint the way Claude, ChatGPT and Cursor do. Then we score OAuth discovery, safety annotations, Origin/CORS, schemas, and what your tool list costs in tokens on every turn. Paste a public URL, or add the GitHub Action and fail the PR when it isn't ready.</p>
-<form class="scan" id="scan"><input id="u" type="url" required placeholder="https://your-server.example.com/mcp" autocomplete="off"><button>Scan a public URL free</button></form>
-<div class="small">No sign-up. Public https endpoints only on the web form. We send initialize and tools/list, and never call your tools with side effects. Free scans show the score, the token cost, and the top 3 issues. · <a href="#action">Add the GitHub Action</a></div>
-<div id="result"></div>
-</div>
+<p class="sub">We connect to your live endpoint the way Claude, ChatGPT and Cursor do, then score OAuth discovery, Origin/CORS, tool annotations, schemas, and how many tokens your tool list costs on every turn.</p>
+<form class="scan" id="scan"><label class="hp" for="u">MCP server URL</label><input id="u" name="url" type="url" required placeholder="https://your-server.example.com/mcp" autocomplete="off" inputmode="url"><button id="scanbtn">Scan free</button></form>
+<p class="fine">No sign-up · public https only · we call initialize and tools/list, never your tools · <span class="try">Try: <a href="#" data-try="https://mcp.deepwiki.com/mcp">mcp.deepwiki.com/mcp</a> · <a href="#" data-try="https://huggingface.co/mcp">huggingface.co/mcp</a></span></p>
+<div id="result" aria-live="polite"></div>
+</header>
 
-<section><div class="grid g3">
-<div class="card kpi"><b>12,926</b><span class="small">live MCP servers reached from the official registry (13 Nov 2026)</span></div>
-<div class="card kpi"><b>45%</b><span class="small">of public servers accept requests from any web Origin, a spec MUST they miss</span></div>
-<div class="card kpi"><b>27,638</b><span class="small">characters in the longest single tool description we found, paid on every turn</span></div>
-</div><p class="small" style="text-align:center;margin-top:10px">From our free <a href="/state-of-mcp-2026-11.html">State of public MCP servers, Nov 2026</a> report.</p></section>
+<section aria-label="Key numbers"><div class="grid g3">
+<div class="card kpi"><b>15,067</b><span class="small">live MCP servers reached from the official registry (13 Nov 2026)</span></div>
+<div class="card kpi"><b>44%</b><span class="small">of public servers accept requests from a foreign web Origin, a spec MUST they miss (13 Nov 2026)</span></div>
+<div class="card kpi"><b>27,638</b><span class="small">characters in the longest single tool description we found, paid on every turn (13 Nov 2026)</span></div>
+</div><p class="small" style="text-align:center;margin-top:12px">From our free <a href="/state-of-mcp-2026-11.html">State of public MCP servers, Nov 2026</a> report.</p></section>
 
 <section id="action"><h2>A badge and a PR gate from one Action</h2>
-<p class="small">Start your server in CI, point the Action at localhost, and fail the job under your score or over your token budget. The README badge links to the public report. Pro unlocks every finding with its fix, a hosted report URL, scans behind a test token, and a baseline gate when the tool list grows. The Action itself is free.</p>
-<div class="grid g2"><pre>- uses: Om3rr/mcp-readiness-check@v1
+<p class="small">Start your server in CI, point the Action at localhost, and fail the job under your score or over your token budget. The Action is free.</p>
+<div class="grid g2">
+<div class="codebox"><pre id="yaml">- uses: Om3rr/mcp-readiness-check@v1
   with:
     url: http://127.0.0.1:8787/mcp
     fail-under: 80
-    max-context-tokens: 8000
-    api-key: ${{ secrets.MCP_READINESS_KEY }}  # Pro</pre>
-<div><h3>README badge</h3><p class="small">Your live score, linked to your server's public report page. It refreshes at most every 6 hours.</p>
-<pre>[![MCP readiness](https://YOUR-DOMAIN/badge.svg?url=https://your-server/mcp)](https://YOUR-DOMAIN/s/your-server/mcp)</pre>
-<h3>Pay-per-scan for agents</h3><p class="small">Add our remote MCP server and let your agent call <code>scan_mcp</code>. $0.05 per scan.</p>
-<pre>https://YOUR-DOMAIN/mcp   (Authorization: Bearer mrc_live_…)</pre></div></div></section>
-
-<section id="why"><div class="grid g3">
-<div class="card"><h3>Live protocol, not another config linter</h3><p class="small">We probe the running server: RFC 9728 / PKCE discovery, Origin validation, wildcard CORS, annotations, and JSON-RPC hygiene. Config scanners such as Snyk Agent Scan protect developer machines. We protect the agents that connect to your server.</p></div>
-<div class="card" id="fix"><h3>Context cost, priced — and on Pro, slimmed</h3><p class="small">Every tools/list is resent with every model call. We measure that bill in tokens and dollars, and Pro writes a drop-in slimmer tool list (<a href="https://github.com/Om3rr/toolslim">ToolSlim</a>). On Notion's official server, a 13 Nov 2026 read-only run measured 17,477 tokens per call and cut 70.2% at the lossless level.</p></div>
-<div class="card"><h3>A badge and a PR gate from one Action</h3><p class="small">Fail the job under your score or over your token budget, in your own runner, including localhost. Show the badge, and keep it from drifting.</p></div>
+    max-context-tokens: 8000</pre><button type="button" class="ghost sm copy" data-copy="yaml" data-event="action_install_click">Copy</button></div>
+<div><ul class="bul"><li>Fails the PR when the readiness score drops under your threshold.</li><li>Fails when the tool list goes over your token budget.</li><li>Scans localhost inside your own runner, so nothing has to be public.</li></ul>
+<div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=landing&amp;utm_campaign=action#readme">Add the GitHub Action</a><a class="btn ghost" href="https://github.com/Om3rr/mcp-readiness-cli">Open-source CLI</a></div></div>
 </div>
-<h2 style="margin-top:28px">How it works</h2>
+<div class="grid g2" style="margin-top:20px">
+<div class="card"><h3>README badge</h3><p class="small">Your live score, linked to your server's public page. Swap in your own URL. It refreshes at most every 6 hours.</p>
+<div class="badgebox"><img src="/badge.svg?url=https%3A%2F%2Fmcp.deepwiki.com%2Fmcp" alt="MCP readiness badge for DeepWiki" width="120" height="20"></div>
+<div class="codebox"><pre id="badge-md">[![MCP readiness](https://mcp-readiness.omer20sh.workers.dev/badge.svg?url=https://mcp.deepwiki.com/mcp)](https://mcp-readiness.omer20sh.workers.dev/s/mcp.deepwiki.com/mcp)</pre><button type="button" class="ghost sm copy" data-copy="badge-md" data-event="badge_copied">Copy</button></div></div>
+<div class="card"><h3>Scan from your agent</h3><p class="small">Add our remote MCP server and let your agent call <code>scan_mcp</code>. Agent access is part of Pro, coming soon.</p>
+<div class="codebox"><pre id="remote">https://mcp-readiness.omer20sh.workers.dev/mcp</pre><button type="button" class="ghost sm copy" data-copy="remote">Copy</button></div></div>
+</div></section>
+
+<section id="popular"><h2>Popular MCP servers: score and token cost</h2>
+<p class="small">Live, unauthenticated scans on 20 November 2026. Big vendors score well, so the difference is what their tool list costs you on every turn.</p>
+<div class="tablewrap"><table><thead><tr><th>Server</th><th>Score</th><th>Tokens per turn</th></tr></thead><tbody>
+<tr><td><a href="/s/mcp.docs.astro.build/mcp">Astro Docs</a></td><td class="n">95</td><td>~80</td></tr>
+<tr><td><a href="/s/mcp.deepwiki.com/mcp">DeepWiki</a></td><td class="n">95</td><td>~427</td></tr>
+<tr><td><a href="/s/mcp.context7.com/mcp">Context7</a></td><td class="n">95</td><td>~1,304</td></tr>
+<tr><td><a href="/s/knowledge-mcp.global.api.aws">AWS Knowledge</a></td><td class="n">90</td><td>~1,978</td></tr>
+<tr><td><a href="/s/huggingface.co/mcp">Hugging Face</a></td><td class="n">95</td><td>~4,967</td></tr>
+</tbody></table></div>
+<p style="margin-top:12px"><a href="/mcp-servers/">All 23 popular MCP servers: scores and token cost →</a></p></section>
+
+<section id="why"><h2>Live readiness, not another config linter</h2>
+<div class="tablewrap"><table class="compare"><thead><tr><th></th><th>MCP Readiness</th><th>Config / source scanners<br><span class="small">e.g. Snyk Agent Scan</span></th><th>Repo auditors<br><span class="small">e.g. CheckMCP</span></th></tr></thead><tbody>
+<tr><td>What is inspected</td><td>The <b>running endpoint</b>, over the wire</td><td>Client configs and tool descriptions on your machine</td><td>Repositories, graded against a checklist</td></tr>
+<tr><td>Token cost per turn</td><td>Measured from the real <code>tools/list</code></td><td>Not the focus</td><td>Varies</td></tr>
+<tr><td>OAuth discovery (RFC 9728, <code>resource_metadata</code>, PKCE)</td><td>Checked live</td><td>Not the focus</td><td>Varies</td></tr>
+<tr><td>Origin / CORS / JSON-RPC conformance</td><td>Probed</td><td>Not the focus</td><td>Varies</td></tr>
+<tr><td>Tool poisoning patterns</td><td>Checked</td><td>Their focus</td><td>Checked</td></tr>
+<tr><td>Works on localhost in CI</td><td>Action scans in your runner</td><td>Yes</td><td>Varies</td></tr>
+</tbody></table></div>
+<p class="small" style="margin-top:10px">Competitor columns summarise each tool's main focus as of Nov 2026; check their docs for current features. Config scanners protect your developers' machines. We protect the agents that connect to your server.</p>
+<h2 style="margin-top:32px">How it works</h2>
 <ol class="small">
 <li><b>Paste a URL or add the Action.</b> Point us at a public https MCP endpoint, or start the server in the GitHub Actions runner and scan http://127.0.0.1.</li>
 <li><b>We probe the surface agents see.</b> initialize, tools/list, an unknown method, a foreign Origin, a CORS preflight, and OAuth discovery. No side-effect tool calls.</li>
-<li><b>You get a score and a token bill.</b> A 0–100 readiness score, the approximate tokens tools/list costs every turn, and the top issues. Pro adds the full report, the slim tools.json, and the CI growth gate.</li>
-<li><b>Ship with a badge, keep it from drifting.</b> Drop the README badge. On Pro and Team, re-scan on a schedule and get a webhook if the score or token budget moves.</li>
+<li><b>You get a score and a token bill.</b> A 0–100 readiness score, the approximate tokens tools/list costs every turn, and the top issues.</li>
+<li><b>Ship with a badge, keep it from drifting.</b> Drop the README badge and gate every PR with the Action.</li>
 </ol></section>
 
-<section id="pricing"><h2>Pricing</h2><p class="small">The free tier is live in the open-source Action and CLI. Paid plans are coming soon. Payment will never change a score.</p>
-<form class="waitlist" id="waitlist"><input type="email" name="email" required placeholder="you@company.com" autocomplete="email"><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button type="submit">Join the Pro waitlist</button></form>
-<p class="small">We'll email you once when Pro launches. No spam, unsubscribe anytime.</p>
-<p class="small" id="waitlist-msg" hidden></p>
+<section id="pricing"><h2>Pricing</h2><p class="small">Everything on this page is free today. Paid plans are coming soon and have no price yet. Payment will never change a score.</p>
 <div class="grid g3">
-<div class="card plan"><h3>Free</h3><div class="price">$0</div><ul><li>Paste-a-URL scan (10/hour), no sign-up</li><li>GitHub Action with score and token-budget gates (50 runs/day per repo)</li><li>Top 3 issues</li><li>README badge and a public page per server</li><li>Open CLI</li></ul><a class="btn ghost" href="#action">Add the GitHub Action</a></div>
-<div class="card plan hl"><h3>Pro</h3><div class="price">$19<span class="small">/mo</span></div><ul><li>Everything in Free, higher CI cap</li><li>Every finding with its fix</li><li>ToolSlim slim tools.json (safe, standard, aggressive)</li><li>Baseline growth gate</li><li>Hosted report URL</li><li>Scans behind a test token</li><li>10 monitored endpoints with a drift webhook</li></ul><span class="btn ghost" aria-disabled="true">Coming soon</span></div>
-<div class="card plan"><h3>Team</h3><div class="price">$99<span class="small">/mo</span></div><ul><li>Everything in Pro</li><li>20,000 hosted scans/mo</li><li>200 monitored servers</li><li>Multiple API keys</li><li>Priority probing</li></ul><span class="btn ghost" aria-disabled="true">Coming soon</span></div>
+<div class="card plan"><span class="tag" style="background:#bfe8c8">Free today</span><h3>Free</h3><ul><li>Paste-a-URL scan (10/hour), no sign-up</li><li>GitHub Action with score and token-budget gates (50 runs/day per repo)</li><li>Top 3 issues</li><li>README badge and a public page per server</li><li>Open-source CLI</li></ul><a class="btn ghost cta" data-event="action_install_click" href="#action">Add the GitHub Action</a></div>
+<div class="card plan hl"><span class="tag">Coming soon</span><h3>Pro</h3><ul><li>Every finding with its fix</li><li>A slimmer drop-in tools.json (ToolSlim)</li><li>Baseline growth gate in CI</li><li>Hosted report URL</li><li>Scans behind a test token</li><li>Monitored endpoints with a drift webhook</li></ul><button type="button" class="ghost cta" data-event="price_click" data-tier="pro" data-goto="waitlist-box">Get notified</button></div>
+<div class="card plan"><span class="tag">Coming soon</span><h3>Team</h3><ul><li>Everything in Pro</li><li>Directory-scale hosted scans</li><li>Many monitored servers</li><li>Multiple API keys</li><li>Priority probing</li></ul><button type="button" class="ghost cta" data-event="price_click" data-tier="team" data-goto="waitlist-box">Get notified</button></div>
 </div>
 <div class="grid g3" style="margin-top:16px">
-<div class="card plan"><h3>Verified: $79 one-time</h3><p class="small">A fresh independent re-audit, featured directory listing, and a Verified badge only if the server passes.</p><span class="btn ghost" aria-disabled="true">Coming soon</span></div>
-<div class="card plan"><h3>Report pack: $9</h3><p class="small">Five full HTML and PDF reports, no subscription.</p><span class="btn ghost" aria-disabled="true">Coming soon</span></div>
-<div class="card plan"><h3>Credits: $0.05 per scan</h3><p class="small">100 credits for $5, used by the API or by an agent via the <code>scan_mcp</code> tool. Credits do not expire.</p><span class="btn ghost" aria-disabled="true">Coming soon</span></div>
+<div class="card plan"><span class="tag">Coming soon</span><h3>Verified badge</h3><p class="small">A fresh independent re-audit and a Verified badge, issued only if the server passes.</p><button type="button" class="ghost cta" data-event="price_click" data-tier="verified" data-goto="waitlist-box">Get notified</button></div>
+<div class="card plan"><span class="tag">Coming soon</span><h3>Report pack</h3><p class="small">Full HTML and PDF reports, no subscription.</p><button type="button" class="ghost cta" data-event="price_click" data-tier="pack" data-goto="waitlist-box">Get notified</button></div>
+<div class="card plan"><span class="tag">Coming soon</span><h3>Agent credits</h3><p class="small">Pay per scan from the API or from an agent via the <code>scan_mcp</code> tool.</p><button type="button" class="ghost cta" data-event="price_click" data-tier="credits" data-goto="waitlist-box">Get notified</button></div>
+</div>
+<div class="card" id="waitlist-box" style="margin-top:16px"><h3>Join the Pro waitlist</h3>
+<form class="waitlist" id="waitlist"><label class="hp" for="wl-email">Email</label><input id="wl-email" type="email" name="email" required placeholder="you@company.com" autocomplete="email"><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button type="submit">Join the waitlist</button></form>
+<p class="small">We store your email only to tell you once when Pro opens. No marketing list, no sharing, delete on request.</p>
+<p class="small" id="waitlist-msg" hidden></p></div></section>
+
+<section id="faq" class="faq"><h2>FAQ</h2>
+<div class="card">
+<h3>How do I test an MCP server in production?</h3><p class="small">Paste its public https URL into the scanner above. It connects the way Claude, ChatGPT and Cursor do, sends initialize and tools/list, an unknown method, a foreign Origin, a CORS preflight and the OAuth discovery requests, and returns a 0–100 score with the top issues. To test before production, run the free GitHub Action against localhost in CI.</p>
+<h3>How many tokens does an MCP server cost per turn?</h3><p class="small">Its whole tools/list is sent to the model on every turn. On 20 November 2026 popular open servers ranged from about 80 tokens (Astro Docs) to about 4,967 tokens (Hugging Face). The scan reports the estimate for your server. Token counts are estimates.</p>
+<h3>Do MCP servers have to validate Origin?</h3><p class="small">Yes. The MCP Streamable HTTP transport says servers MUST validate the Origin header to prevent DNS-rebinding attacks. In our 13 November 2026 registry scan, 44% of public servers accepted a foreign Origin.</p>
+<h3>Is this a security audit?</h3><p class="small">No. It is an automated surface scan of what any client sees before login. It is a triage signal, not a substitute for a review of auth, data flows and approval gates.</p>
+<h3>Is it free?</h3><p class="small">Yes. The web scan (10 per hour), the public page per server, the README badge, the open-source CLI and the GitHub Action (50 runs per day per repo) are free with no sign-up. Pro is coming soon and has no price yet.</p>
 </div></section>
 
-<section id="faq"><h2>FAQ</h2>
-<div class="card"><h3>Is this a security audit?</h3><p class="small">No. It is an automated surface scan of what any client sees before login. It is a triage signal, not a substitute for a review of auth, data flows, and approval gates.</p>
-<h3>How is this different from CheckMCP, Snyk Agent Scan, or MCPWatch?</h3><p class="small">CheckMCP is the closest hosted comp; we compete on a larger live official-registry corpus, a localhost CI Action, and a Pro tool-list rewrite. Snyk Agent Scan checks configs and skills on developer machines. MCPWatch grades repository source against OWASP-style checks. Use them together when they overlap.</p>
-<h3>Why pay if the public scan is free?</h3><p class="small">Free shows the score, the token cost, and the top 3 issues. Pro unlocks every finding with a fix, the slimmer tools.json, private or OAuth-gated scans, a hosted report, and a CI gate on growth. Payment never changes the score.</p>
-<h3>Can I scan localhost or a server behind login?</h3><p class="small">The GitHub Action runs in your runner and can scan localhost. Pro accepts a test-tenant token for tools behind login. The public web form only accepts public https URLs.</p>
-<h3>How do you measure tokens, and what does the 70% Notion figure mean?</h3><p class="small">Token counts are estimates. ToolSlim's zero-dependency estimator came out 1–9% above o200k_base on a 14-server set, 13 Nov 2026. The 70.2% cut (17,477 to 5,213 tokens) is the lossless safe rewrite of Notion's official server on that date, at the stated price assumption of 1,000 calls/day and $3 per 1M input tokens with no cache. Other servers in the same demo saved much less at the lossless level (for example Chrome DevTools 9%, Playwright 12%). Treat the dollar figures as a budget scenario, not a bill.</p></div></section>
-
 <section id="report"><div class="card"><h2>Free: State of public MCP servers, Nov 2026</h2>
-<p class="small">What 12,926 live servers get right, what they skip, and what it costs agents. Includes a checklist for server owners.</p>
-<form id="sub" style="display:flex;gap:8px;flex-wrap:wrap"><input id="em" type="email" placeholder="you@company.com (optional)" style="flex:1;min-width:220px;padding:12px;border-radius:10px;border:1px solid var(--line);background:#0e1530;color:var(--ink)"><button>Get the report</button></form>
-<div class="small" id="subnote">Or just <a href="/state-of-mcp-2026-11.html">read it</a>. The email is only for the next edition.</div></div></section>
+<p class="small">What 15,067 live servers get right, what they skip, and what it costs agents. Includes a checklist for server owners.</p>
+<form id="sub" class="sub"><label class="hp" for="em">Email (optional)</label><input id="em" type="email" placeholder="you@company.com (optional)" autocomplete="email"><button>Read the report</button></form>
+<p class="small">The email is optional and only used to send you the next edition. No marketing list, no sharing, delete on request.</p></div></section>
 
-<footer>MCP Readiness · scanner: <a href="https://github.com/Om3rr/mcp-readiness-check">mcp-readiness-check</a> · Scores are automated surface checks, not a security audit. Payment never changes a score. · Contact: [email]</footer>
+<footer>MCP Readiness · <a href="https://github.com/Om3rr/mcp-readiness-check">Source (MIT)</a> · <a href="https://github.com/Om3rr/mcp-readiness-cli">CLI</a> · <a href="/mcp-servers/">Popular servers</a> · <a href="/llms.txt">llms.txt</a> · <a href="/stats.html">Public traffic stats</a> · Scores are automated surface checks, not a security audit. Payment never changes a score.</footer>
 </div>
 <script>
-const $=(s)=>document.querySelector(s);const esc=(s)=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const $=(s)=>document.querySelector(s);const esc=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const col=(s)=>s>=90?'var(--ok)':s>=70?'var(--warn)':'var(--bad)';
-$('#scan').onsubmit=async(e)=>{e.preventDefault();const out=$('#result');out.innerHTML='<div class="card small">Scanning… usually 2–10 seconds.</div>';
- try{const r=await fetch('/api/scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url:$('#u').value})});const j=await r.json();
+const ORIGIN=location.origin;
+async function runScan(target){const out=$('#result');const btn=$('#scanbtn');btn.disabled=true;out.innerHTML='<div class="card small">Scanning… usually 2–10 seconds.</div>';
+ try{const r=await fetch('/api/scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url:target})});const j=await r.json();
   if(!r.ok){out.innerHTML=`<div class="card">Couldn't scan: <b>${esc(j.error)}</b> ${esc(j.detail||'')}</div>`;return}
-  out.innerHTML=`<div class="card"><div style="display:flex;gap:18px;align-items:center"><div style="font-size:44px;font-weight:800;color:${col(j.score)}">${j.score}</div><div><b>${esc(j.server||j.url)}</b><div class="small">${j.authRequired?'Login required: OAuth discovery checked':`${j.toolCount} tools · ~${(j.contextTokens||0).toLocaleString()} tokens per agent turn`}</div></div></div>
-  ${j.top.map(f=>`<div class="f"><span class="lv" style="color:${f.level==='fail'?'var(--bad)':'var(--warn)'}">${f.level}</span>${esc(f.title)}</div>`).join('')||'<div class="f">No issues found. Nice.</div>'}
-  ${j.locked?`<p class="small">${j.locked} more issue(s) and every fix are in the full report. <a href="#pricing">Unlock</a></p>`:''}
-  ${j.fix?`<p class="small">⚡ ${esc(j.fix.why)}. Pro writes the slimmer tool list; the lossless step is free: <code>${esc(j.fix.command)}</code> (<a href="${esc(j.fix.url)}">ToolSlim</a>)</p>`:''}
-  <p class="small">Public page for this server: <a href="${esc(j.page)}">${esc(location.origin+j.page)}</a></p>
-  <p class="small">Badge: <code>[![MCP readiness](${location.origin}/badge.svg?url=${encodeURIComponent(j.url)})](${esc(location.origin+j.page)})</code></p></div>`}
- catch(err){out.innerHTML='<div class="card">Scan failed. Try again.</div>'}};
-$('#sub').onsubmit=async(e)=>{e.preventDefault();const em=$('#em').value;if(em){await fetch('/api/subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:em})}).catch(()=>{})}location.href='/state-of-mcp-2026-11.html'};
-const ping=(event,extra={})=>{try{const body=JSON.stringify({event,path:location.pathname,ref:document.referrer,...extra});const blob=new Blob([body],{type:'application/json'});if(navigator.sendBeacon)navigator.sendBeacon('/api/event',blob);else fetch('/api/event',{method:'POST',headers:{'content-type':'application/json'},body,keepalive:true}).catch(()=>{});}catch{}};
-ping('landing_view');
-document.addEventListener('click',(ev)=>{const a=ev.target&&ev.target.closest&&ev.target.closest('a');if(!a)return;const href=a.getAttribute('href')||'';if(/#action|github.com\\/Om3rr\\/mcp-readiness-check|marketplace\\/actions/i.test(href))ping('action_install_click');});
+  const score=Math.round(Number(j.score)||0);const pageUrl=ORIGIN+String(j.page||'');
+  const badgeUrl=`${ORIGIN}/badge.svg?url=${encodeURIComponent(j.url)}`;
+  const md=`[![MCP readiness](${badgeUrl})](${pageUrl})`;
+  out.innerHTML=`<div class="card"><div style="display:flex;gap:18px;align-items:center"><div style="font-size:44px;font-weight:800;color:${col(score)}">${score}</div><div style="min-width:0"><b style="overflow-wrap:anywhere">${esc(j.server||j.url)}</b><div class="small">${j.authRequired?'Login required: OAuth discovery checked':`${esc(j.toolCount)} tools · ~${esc((Number(j.contextTokens)||0).toLocaleString('en-US'))} tokens per agent turn`}</div></div></div>
+  ${(j.top||[]).map(f=>`<div class="f"><span class="lv" style="color:${f.level==='fail'?'var(--bad)':'var(--warn)'}">${esc(f.level)}</span>${esc(f.title)}</div>`).join('')||'<div class="f">No issues found. Nice.</div>'}
+  ${j.locked?`<p class="small">${esc(j.locked)} more issue(s) and every fix will be in the full report (Pro, coming soon).</p>`:''}
+  ${j.fix?`<p class="small">${esc(j.fix.why)}. Pro (coming soon) writes a slimmer drop-in tool list with ToolSlim.</p>`:''}
+  <p class="small">Public page for this server: <a href="${esc(j.page)}">${esc(pageUrl)}</a></p>
+  <h3 style="margin-top:14px">Add the badge</h3><div class="badgebox"><img src="${esc(badgeUrl)}" alt="MCP readiness badge" height="20"></div>
+  <div class="codebox"><pre id="result-badge">${esc(md)}</pre><button type="button" class="ghost sm copy" data-copy="result-badge" data-event="badge_copied">Copy badge</button></div>
+  <div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=landing&amp;utm_campaign=action#readme">Gate it in CI</a><a class="btn ghost" href="${esc(j.page)}">Open the public page</a></div></div>`}
+ catch(err){out.innerHTML='<div class="card">Scan failed. Try again.</div>'}finally{btn.disabled=false}}
+$('#scan').addEventListener('submit',(e)=>{e.preventDefault();runScan($('#u').value)});
+document.querySelectorAll('[data-try]').forEach(a=>a.addEventListener('click',(e)=>{e.preventDefault();$('#u').value=a.getAttribute('data-try');runScan(a.getAttribute('data-try'))}));
+$('#sub').addEventListener('submit',async(e)=>{e.preventDefault();const em=$('#em').value;if(em){await fetch('/api/subscribe',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:em})}).catch(()=>{})}location.href='/state-of-mcp-2026-11.html'});
 const wl=document.getElementById('waitlist');const wlMsg=document.getElementById('waitlist-msg');
-if(wl)wl.addEventListener('submit',async(e)=>{e.preventDefault();const fd=new FormData(wl);const res=await fetch('/api/waitlist',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:fd.get('email'),website:fd.get('website')})});const data=await res.json().catch(()=>({}));if(wlMsg){wlMsg.hidden=false;wlMsg.textContent=data.ok?(data.already?'You are already on the list.':'You are on the Pro waitlist.'):(data.error||'Could not save that.');}});
-</script></body></html>
+if(wl)wl.addEventListener('submit',async(e)=>{e.preventDefault();const fd=new FormData(wl);const res=await fetch('/api/waitlist',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({email:fd.get('email'),website:fd.get('website')})}).catch(()=>null);const data=res?await res.json().catch(()=>({})):{};if(wlMsg){wlMsg.hidden=false;wlMsg.textContent=data.ok?(data.already?'You are already on the list.':'You are on the Pro waitlist.'):(data.error||'Could not save that.');}});
+</script><script src="/t.js" defer></script></body></html>

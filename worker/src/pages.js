@@ -3,6 +3,11 @@
 // README badges link here. No sign-up: a visit runs a free scan when the cached one is missing or older than 24 h.
 import { checkTarget } from './guard.js';
 
+// Shared look for server-rendered pages (matches worker/public/index.html).
+export const PAGE_CSS = `:root{--bg:#0b1020;--card:#121a33;--ink:#e6e9f5;--mut:#a7b0cc;--acc:#7c9cff;--line:#24305a;--code:#070b18}*{box-sizing:border-box}body{margin:0;overflow-wrap:break-word;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}a{color:var(--acc)}.wrap{max-width:1040px;margin:auto;padding:0 20px}main{max-width:860px}nav{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 0}nav .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;color:var(--ink);text-decoration:none;white-space:nowrap}nav .brand img{width:26px;height:26px}nav .links{display:flex;gap:18px}nav .links a{text-decoration:none;color:var(--mut);white-space:nowrap;font-size:15px}h1{font-size:34px;line-height:1.15;margin:18px 0 8px;overflow-wrap:anywhere}h2{font-size:22px;margin:0 0 10px}.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin:16px 0;min-width:0}.small{color:var(--mut);font-size:14px}code{font:13px ui-monospace,SFMono-Regular,Menlo,monospace;overflow-wrap:anywhere}pre{margin:0;background:var(--code);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.55 ui-monospace,SFMono-Regular,Menlo,monospace;color:#cfd6f6}.codebox{position:relative;min-width:0}.codebox pre{padding-right:96px}.codebox .copy{position:absolute;top:8px;right:8px}.issues{padding-left:20px}.issues li{margin:6px 0}.fail{color:#f0706a}.warn{color:#d29922}.info{color:var(--mut)}button,.btn{padding:12px 18px;border-radius:10px;border:1px solid transparent;background:var(--acc);color:#0b1020;font-weight:700;font-size:15px;cursor:pointer;text-decoration:none;display:inline-block;line-height:1.2}.ghost{background:transparent;border-color:#3a4a80;color:var(--ink)}.sm{padding:8px 12px;font-size:14px}.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}.badgebox{margin:10px 0}.badgebox img{height:20px}.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:12px;background:var(--card)}table{width:100%;border-collapse:collapse}td,th{padding:10px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:15px}th{color:var(--mut);font-weight:600}footer{padding:30px 0 50px;color:var(--mut);font-size:14px;border-top:1px solid var(--line);margin-top:30px}footer a{color:var(--mut)}@media(max-width:640px){nav{flex-direction:column;align-items:flex-start;gap:10px}nav .links{width:100%;flex-wrap:wrap;column-gap:16px;row-gap:6px}h1{font-size:28px}.codebox pre{padding-right:14px;padding-top:44px}}`;
+export const PAGE_NAV = `<nav aria-label="Main"><a class="brand" href="/"><img src="/favicon.svg" alt="" width="26" height="26">MCP Readiness</a><div class="links"><a href="/#action">GitHub Action</a><a href="/mcp-servers/">Popular servers</a><a href="/state-of-mcp-2026-11.html">State of MCP report</a><a href="/#pricing">Pricing</a><a href="/#faq">FAQ</a></div></nav>`;
+export const PAGE_FOOT = `<footer>MCP Readiness · <a href="https://github.com/Om3rr/mcp-readiness-check">Source (MIT)</a> · <a href="https://github.com/Om3rr/mcp-readiness-cli">CLI</a> · <a href="/mcp-servers/">Popular servers</a> · <a href="/llms.txt">llms.txt</a> · <a href="/stats.html">Public traffic stats</a> · Scores are automated surface checks, not a security audit.</footer>`;
+
 const TTL_MS = 24 * 3600 * 1000;
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
@@ -47,7 +52,7 @@ export async function serverPage(req, env, { scanLimited, canScan }) {
 function html(body, status, cache = 'no-store') {
   return new Response(body, { status, headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': cache } });
 }
-function notFound(msg) { return `<!doctype html><meta charset="utf-8"><title>Not found | MCP Readiness</title><meta name="robots" content="noindex"><p>${esc(msg)}</p><p><a href="/">Scan a public URL free</a></p>`; }
+function notFound(msg) { return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Not found | MCP Readiness</title><meta name="robots" content="noindex"><link rel="icon" type="image/svg+xml" href="/favicon.svg"><style>${PAGE_CSS}</style></head><body><div class="wrap">${PAGE_NAV}<main><h1>Not found</h1><p>${esc(msg)}</p><p><a class="btn" href="/">Scan a public URL free</a></p></main>${PAGE_FOOT}</div></body></html>`; }
 
 export function render(env, canonical, url, r, error) {
   const origin = new URL(canonical).origin;
@@ -61,31 +66,37 @@ export function render(env, canonical, url, r, error) {
   const badgeMd = `[![MCP readiness](${origin}/badge.svg?url=${encodeURIComponent(url)})](${canonical})`;
   const ld = r && { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description: desc, url: canonical, dateModified: r.at, about: { '@type': 'SoftwareApplication', name, applicationCategory: 'DeveloperApplication', url } };
   const issues = r ? (r.top || []).map((f) => `<li><b class="${esc(f.level)}">${esc(f.level)}</b> ${esc(f.title)}</li>`).join('') || '<li>No issues found in the free checks.</li>' : '';
+  const timeLabel = r ? `${r.at.replace('T', ' ').slice(0, 16)} UTC` : '';
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(canonical)}">${r ? '' : '\n<meta name="robots" content="noindex">'}
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
 <meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(canonical)}">
 ${ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>` : ''}
-<style>body{font:16px/1.55 system-ui,sans-serif;background:#0b1020;color:#e5e7eb;margin:0}main{max-width:820px;margin:0 auto;padding:32px 20px}a{color:#93c5fd}h1{font-size:32px;line-height:1.15}.card{background:#111a33;border:1px solid #23305a;border-radius:14px;padding:20px;margin:16px 0}.score{font-size:56px;font-weight:800;color:${col}}.small{color:#94a3b8;font-size:14px}code,pre{background:#0e1530;border-radius:8px;padding:2px 6px;font-size:13px}pre{padding:12px;overflow:auto;white-space:pre-wrap;word-break:break-all}.fail{color:#ef4444}.warn{color:#eab308}.info{color:#94a3b8}.btn{display:inline-block;background:#6366f1;color:#fff;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600}</style></head>
-<body><main><nav class="small"><a href="/">MCP Readiness</a> · <a href="/#pricing">Pricing</a> · <a href="/state-of-mcp-2026-11.html">State of MCP report</a></nav>
+<style>${PAGE_CSS}.score{font-size:56px;font-weight:800;line-height:1;color:${col}}</style></head>
+<body><div class="wrap">${PAGE_NAV}<main>
 <h1>Is ${esc(name)} ready for real agents?</h1>
-<p class="small">Endpoint: <code>${esc(url)}</code>${r ? ` · last scanned ${esc(r.at.replace('T', ' ').slice(0, 16))} UTC` : ''}</p>
-${r ? `<div class="card"><div style="display:flex;gap:20px;align-items:center"><div class="score">${r.score}</div><div><b>${esc(name)}</b><div class="small">${r.authRequired ? 'Login required: OAuth discovery checked' : `${r.toolCount} tools · ~${(r.contextTokens || 0).toLocaleString('en-US')} tokens per agent turn`}</div></div></div>
-<h2>Top issues</h2><ul>${issues}</ul>
-${r.locked ? `<p>${r.locked} more issue(s) and every fix are in the full report.</p>` : ''}
-${r.fix ? `<p class="small">Heavy tool list: ${esc(r.fix.why)}. Pro writes a slimmer drop-in tools.json with <a href="${esc(r.fix.url)}">ToolSlim</a>. The lossless step is free: <code>${esc(r.fix.command)}</code></p>` : ''}
+<p class="small">Endpoint: <code>${esc(url)}</code>${r ? ` · last scanned ${esc(timeLabel)}` : ''}</p>
+${r ? `<div class="card"><div style="display:flex;gap:20px;align-items:center"><div class="score">${esc(r.score)}</div><div style="min-width:0"><b style="overflow-wrap:anywhere">${esc(name)}</b><div class="small">${r.authRequired ? 'Login required: OAuth discovery checked' : `${esc(r.toolCount)} tools · ~${(r.contextTokens || 0).toLocaleString('en-US')} tokens per agent turn`}</div></div></div>
+<h2>Top issues</h2><ul class="issues">${issues}</ul>
+${r.locked ? `<p class="small">${esc(r.locked)} more issue(s) and every fix will be in the full report.</p>` : ''}
+${r.fix ? `<p class="small">Heavy tool list: ${esc(r.fix.why)}. Pro (coming soon) writes a slimmer drop-in tools.json with ToolSlim.</p>` : ''}
 <p class="small"><b>Full report: coming soon.</b> Every finding with its fix, a ToolSlim slim tools.json, a hosted report, scans behind a test token, and monitoring. Payment will never change the score.</p></div>` : `<div class="card"><p>${esc(error || 'Not scanned yet.')}</p></div>`}
-<div class="card"><h2>Own this server? Add the badge</h2><pre>${esc(badgeMd)}</pre>
-<h3>Gate every PR with the free GitHub Action</h3><pre>- uses: Om3rr/mcp-readiness-check@v1
+<div class="card"><h2>Own this server? Add the badge</h2>
+<div class="badgebox"><img src="${esc(`${origin}/badge.svg?url=${encodeURIComponent(url)}`)}" alt="MCP readiness badge" height="20"></div>
+<div class="codebox"><pre id="badge-md">${esc(badgeMd)}</pre><button type="button" class="ghost sm copy" data-copy="badge-md" data-event="badge_copied">Copy badge</button></div>
+<h3 style="margin-top:18px">Gate every PR with the free GitHub Action</h3>
+<div class="codebox"><pre id="yaml">- uses: Om3rr/mcp-readiness-check@v1
   with:
     url: http://127.0.0.1:8787/mcp
     fail-under: 80
-    max-context-tokens: 8000</pre></div>
-<p class="small">Automated surface checks of what any MCP client sees before login: initialize, tools/list, an unknown method, a foreign Origin, a CORS preflight and OAuth discovery. No tool is called. A triage signal, not a security audit. <a href="/">Scan another server</a></p>
-</main></body></html>`;
+    max-context-tokens: 8000</pre><button type="button" class="ghost sm copy" data-copy="yaml" data-event="action_install_click">Copy</button></div>
+<div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=server-page&amp;utm_campaign=action#readme">Add the GitHub Action</a><a class="btn ghost" href="/">Scan another server</a></div></div>
+<p class="small">Automated surface checks of what any MCP client sees before login: initialize, tools/list, an unknown method, a foreign Origin, a CORS preflight and OAuth discovery. No tool is called. A triage signal, not a security audit.</p>
+</main>${PAGE_FOOT}</div><script src="/t.js" defer></script></body></html>`;
 }
 
 export async function sitemap(env, origin) {
-  const urls = [`${origin}/`, `${origin}/state-of-mcp-2026-11.html`];
+  const urls = [`${origin}/`, `${origin}/mcp-servers/`, `${origin}/state-of-mcp-2026-11.html`];
   let cursor;
   do {
     const l = await env.LICENSES.list({ prefix: 'page:', cursor, limit: 1000 });

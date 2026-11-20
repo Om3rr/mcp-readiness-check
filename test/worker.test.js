@@ -151,7 +151,9 @@ test('server pages: stable path mapping, SSR with title/meta/canonical, badge li
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /coming soon/); assert.ok(!/checkout|buy\.example/.test(html));
   assert.match(html, /\]\(https:\/\/w.test\/s\/mcp.example.com\/mcp\)/); // badge markdown links to the page
-  assert.match(html, /toolslim/);
+  assert.match(html, /ToolSlim/);
+  assert.match(html, /data-event="badge_copied"/);
+  assert.ok(!/npx toolslim/.test(html), 'no dead ToolSlim command');
   assert.ok(!html.includes('<MCP>'));
   assert.match(render({}, 'https://w.test/s/x.com/mcp', 'https://x.com/mcp', null, 'down'), /noindex/);
   const store = kv(); store.list = async ({ prefix }) => ({ keys: [...store.m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true });
