@@ -11,6 +11,7 @@
 
 ## Data
 - [Popular remote MCP servers, 20 November 2026](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/): scores and tokens per turn.
+- [CI setup guide](https://mcp-readiness.omer20sh.workers.dev/docs/ci/): badge and GitHub Action in 3 steps, local servers in CI, troubleshooting.
 - 23 popular remote MCP servers scanned unauthenticated on 20 November 2026: 8 answer tools/list without login, 15 require OAuth.
 - 14 of 15 OAuth-protected servers had no open pre-login issue (401, WWW-Authenticate, OAuth protected-resource discovery); open issues: Atlassian (Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)).
 - Tool-list cost per agent turn ranges from ~80 tokens (Astro Docs) to ~4,967 tokens (Hugging Face) among the open servers.

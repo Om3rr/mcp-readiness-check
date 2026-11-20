@@ -95,3 +95,26 @@ test('OG/meta: scan pages get a dynamic, escaped og:title with server name and s
   assert.match(h, /name="twitter:card" content="summary_large_image"/);
   assert.match(h, /property="og:image" content="https:\/\/w\.test\/og\.png"/);
 });
+
+test('CI docs: inputs and outputs match action.yml, page is linked and in the sitemap', async () => {
+  const yml = readFileSync(new URL('../action.yml', import.meta.url), 'utf8');
+  const docs = await import('../reports/build-docs-ci.mjs');
+  const inputsBlock = yml.split(/^inputs:/m)[1].split(/^outputs:/m)[0];
+  const outputsBlock = yml.split(/^outputs:/m)[1].split(/^runs:/m)[0];
+  for (const [name, , def] of docs.INPUTS) {
+    const m = inputsBlock.match(new RegExp(`^  ${name}:\\n([\\s\\S]*?)(?=^  [a-z-]+:|$(?![\\s\\S]))`, 'm'));
+    assert.ok(m, `input ${name} not in action.yml`);
+    const d = m[1].match(/default: '([^']*)'/);
+    if (d) assert.equal(d[1], def, `default for ${name}`);
+  }
+  for (const o of docs.OUTPUTS) assert.match(outputsBlock, new RegExp(`^  ${o}:`, 'm'));
+  for (const wf of [docs.WORKFLOW, docs.LOCAL]) {
+    for (const k of wf.matchAll(/^ {10}([a-z-]+):/gm)) if (!['node-version'].includes(k[1])) assert.match(inputsBlock, new RegExp(`^  ${k[1]}:`, 'm'), k[1]);
+    assert.match(wf, /fail-under: 80/); assert.match(wf, /max-context-tokens: 8000/);
+  }
+  const page = read('docs/ci/index.html');
+  assert.match(page, /Troubleshooting/); assert.match(page, /OAuth/); assert.match(page, /Origin/); assert.match(page, /times out/);
+  assert.match(read('index.html'), /href="\/docs\/ci\/"/);
+  const readme = readFileSync(new URL('../README.md', import.meta.url), 'utf8');
+  assert.match(readme, /## CI quick start/); assert.match(readme, /\/docs\/ci\//);
+});

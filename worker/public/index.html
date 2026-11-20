@@ -69,7 +69,7 @@ form.waitlist,form.sub{display:flex;gap:8px;flex-wrap:wrap;max-width:560px;margi
     fail-under: 80
     max-context-tokens: 8000</pre><button type="button" class="ghost sm copy" data-copy="yaml" data-event="action_install_click">Copy</button></div>
 <div><ul class="bul"><li>Fails the PR when the readiness score drops under your threshold.</li><li>Fails when the tool list goes over your token budget.</li><li>Scans localhost inside your own runner, so nothing has to be public.</li></ul>
-<div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=landing&amp;utm_campaign=action#readme">Add the GitHub Action</a><a class="btn ghost" href="https://github.com/Om3rr/mcp-readiness-cli">Open-source CLI</a></div></div>
+<div class="actions"><a class="btn" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=landing&amp;utm_campaign=action#readme">Add the GitHub Action</a><a class="btn ghost" href="/docs/ci/">CI setup guide</a><a class="btn ghost" href="https://github.com/Om3rr/mcp-readiness-cli">Open-source CLI</a></div></div>
 </div>
 <div class="grid g2" style="margin-top:20px">
 <div class="card"><h3>README badge</h3><p class="small">Your live score, linked to your server's public page. Swap in your own URL. It refreshes at most every 6 hours.</p>
@@ -138,7 +138,7 @@ form.waitlist,form.sub{display:flex;gap:8px;flex-wrap:wrap;max-width:560px;margi
 <form id="sub" class="sub"><label class="hp" for="em">Email (optional)</label><input id="em" type="email" placeholder="you@company.com (optional)" autocomplete="email"><button>Read the report</button></form>
 <p class="small">The email is optional and only used to send you the next edition. No marketing list, no sharing, delete on request.</p></div></section>
 
-<footer>MCP Readiness · <a href="https://github.com/Om3rr/mcp-readiness-check">Source (MIT)</a> · <a href="https://github.com/Om3rr/mcp-readiness-cli">CLI</a> · <a href="/mcp-servers/">Popular servers</a> · <a href="/llms.txt">llms.txt</a> · <a href="/stats.html">Public traffic stats</a> · Scores are automated surface checks, not a security audit. Payment never changes a score.<p class="contact" style="margin:10px 0 0">Contact: <a href="mailto:omer20sh@gmail.com">omer20sh@gmail.com</a></p></footer>
+<footer>MCP Readiness · <a href="https://github.com/Om3rr/mcp-readiness-check">Source (MIT)</a> · <a href="https://github.com/Om3rr/mcp-readiness-cli">CLI</a> · <a href="/mcp-servers/">Popular servers</a> · <a href="/docs/ci/">CI setup guide</a> · <a href="/llms.txt">llms.txt</a> · <a href="/stats.html">Public traffic stats</a> · Scores are automated surface checks, not a security audit. Payment never changes a score.<p class="contact" style="margin:10px 0 0">Contact: <a href="mailto:omer20sh@gmail.com">omer20sh@gmail.com</a></p></footer>
 </div>
 <script>
 const $=(s)=>document.querySelector(s);const esc=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
