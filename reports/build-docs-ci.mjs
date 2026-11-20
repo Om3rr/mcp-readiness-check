@@ -73,7 +73,7 @@ const ld = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'FAQPage', mainEntity: TROUBLE.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a.replace(/<[^>]+>/g, '') } })) },
 ] };
 
-const box = (id, text, ev, label = 'Copy') => `<div class="codebox"><pre id="${id}">${esc(text)}</pre><button type="button" class="ghost sm copy" data-copy="${id}" data-event="${ev}">${label}</button></div>`;
+const box = (id, text, ev, label = 'Copy') => `<div class="codebox"><pre id="${id}"${id === 'badge' ? '' : ' class="code-pre"'}>${esc(text)}</pre><button type="button" class="ghost sm copy" data-copy="${id}" data-event="${ev}">${label}</button></div>`;
 
 const body = `<h1>Badge and CI gate for your MCP server in 3 steps</h1>
 <p>The free <a href="${esc(README)}" data-event="action_install_click">MCP Readiness GitHub Action</a> connects to your server the way agents do and fails the PR when the score drops or the tool list gets too expensive.</p>
