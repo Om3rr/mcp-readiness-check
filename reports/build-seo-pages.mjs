@@ -4,6 +4,7 @@
 // Re-scan: for each URL, `npx mcp-readiness-cli --json <url>` (or bin/mcp-readiness-check.js --json) and rebuild the JSON.
 import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { PAGE_CSS, PAGE_NAV, PAGE_FOOT , ogTags } from '../worker/src/pages.js';
+import { BLOG_POSTS } from '../worker/src/blog-paths.js';
 
 const SITE = process.env.SITE_URL || 'https://mcp-readiness.omer20sh.workers.dev';
 const REPO = 'https://github.com/Om3rr/mcp-readiness-check';
@@ -179,6 +180,10 @@ ${STATS.map((s) => `- ${s}`).join('\n')}
 
 ## Server pages
 ${ALL.map((r) => `- [${r.name} MCP server](${SITE}${slugPage(r)}): ${r.authRequired ? `login required, pre-login readiness ${r.score}/100` : `~${fmt(r.contextTokens)} tokens per turn, ${r.toolCount} tools, readiness ${r.score}/100`}`).join('\n')}
+
+## Blog
+- [Blog](${SITE}/blog/): guides for shipping MCP servers.
+${BLOG_POSTS.map((p) => `- [${p.title}](${SITE}${p.path}): ${p.description}`).join('\n')}
 
 ## Reports
 - State of public MCP servers (official registry scan, 13 Nov 2026): ${st.ok.toLocaleString('en-US')} live servers reached; ${st.pub_origin}% of public servers accept a foreign Origin.

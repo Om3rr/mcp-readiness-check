@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { readFileSync, readdirSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, statSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import worker from '../worker/src/index.js';
 import { ALLOWED_EVENTS } from '../worker/src/metrics.js';
@@ -151,4 +151,30 @@ test('content rules: no per-server Origin/CORS claims, scan line on every server
   const { render } = await import('../worker/src/pages.js');
   const h = render({}, 'https://w.test/s/a.example/mcp', 'https://a.example/mcp', { score: 70, server: 'A', toolCount: 1, contextTokens: 10, top: [{ level: 'warn', id: 'http.origin', title: 'Requests with a foreign Origin header are accepted' }], at: '2026-11-20T10:00:00Z' });
   assert.doesNotMatch(h, /foreign Origin header are accepted/);
+});
+
+test('blog: safe markdown, Article + FAQPage JSON-LD, sitemap and llms, empty-safe', async () => {
+  const b = await import('../reports/build-blog.mjs');
+  const { html } = b.renderMarkdown('# T\n\nHi <script>alert(1)</script> **b** [x](javascript:alert(1)) [ok](https://a.example/?q="1") `<i>`\n\n| a | b |\n| --- | --- |\n| <b> | 2 |');
+  assert.ok(!html.includes('<script>')); assert.ok(!html.includes('javascript:')); assert.ok(!html.includes('<b>'));
+  assert.match(html, /<strong>b<\/strong>/); assert.match(html, /href="https:\/\/a\.example\/\?q=&quot;1&quot;"/); assert.match(html, /<code>&lt;i&gt;<\/code>/);
+  assert.deepEqual(b.loadPosts('/nonexistent-dir'), []);
+  const posts = b.loadPosts();
+  assert.equal(posts.length, 5);
+  const { BLOG_PATHS } = await import('../worker/src/blog-paths.js');
+  for (const p of posts) {
+    const h = read(`blog/${p.slug}/index.html`);
+    assert.equal((h.match(/<h1>/g) || []).length, 1);
+    assert.match(h, new RegExp(`<link rel="canonical" href="https://mcp-readiness\\.omer20sh\\.workers\\.dev/blog/${p.slug}/">`));
+    const ld = JSON.parse(h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
+    const types = ld['@graph'].map((g) => g['@type']);
+    assert.ok(types.includes('Article'));
+    if (/^## FAQ/m.test(p.body)) assert.ok(types.includes('FAQPage'), p.slug);
+    assert.ok(!/<script>(?!.*ld\+json)/.test(h.replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>/, '')));
+    assert.ok(BLOG_PATHS.includes(`/blog/${p.slug}/`));
+    assert.match(read('llms.txt'), new RegExp(`/blog/${p.slug}/`));
+  }
+  assert.match(read('blog/index.html'), /<h1>Blog<\/h1>/);
+  assert.match(await (await call('/sitemap.xml')).text(), /\/blog\/mcp-oauth-discovery-checklist\//);
+  assert.ok(!existsSync(new URL('../docs/submission-targets.md', import.meta.url)));
 });
