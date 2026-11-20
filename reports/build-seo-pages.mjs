@@ -33,7 +33,8 @@ for (const x of expRaw) {
   expansion.push({ id: slug, name: x.name, url: x.url, score: x.score, authRequired: x.tools == null, toolCount: x.tools, contextTokens: x.tokens_per_turn,
     issues: (x.warnings || []).map((t) => ({ level: 'warn', title: String(t) })), info: [], scannedAt: x.scanned_at, summary: x.summary, faqs: x.faqs || [], expansion: true });
 }
-const ALL = [...d.results.map((r) => ({ ...r, scannedAt: d.recorded })), ...expansion];
+const NO_ORIGIN = (i) => !/origin|cors/i.test(`${i.id || ''} ${i.title || ''}`);
+const ALL = [...d.results.map((r) => ({ ...r, scannedAt: d.recorded })), ...expansion].map((r) => ({ ...r, issues: (r.issues || []).filter(NO_ORIGIN) }));
 const open = d.results.filter((r) => !r.authRequired);
 const auth = d.results.filter((r) => r.authRequired);
 const openAll = ALL.filter((r) => !r.authRequired).sort((a, b) => (a.contextTokens ?? 0) - (b.contextTokens ?? 0));
@@ -48,9 +49,8 @@ const authClean = auth.filter((r) => !r.issues.length).length;
 const authIssues = auth.filter((r) => r.issues.length).map((r) => `${r.name} (${r.issues.map((i) => i.title).join('; ')})`);
 const STATS = [
   `${d.results.length} popular remote MCP servers scanned unauthenticated on ${dayLabel}: ${open.length} answer tools/list without login, ${auth.length} require OAuth.`,
-  `${authClean} of ${auth.length} OAuth-protected servers had no open pre-login issue (401, WWW-Authenticate, OAuth protected-resource discovery)${authIssues.length ? `; open issues: ${authIssues.join(', ')}` : ''}.`,
+  `${authClean} of ${auth.length} OAuth-protected servers had no pre-login readiness notes (401, WWW-Authenticate, OAuth protected-resource discovery)${authIssues.length ? `; spec notes: ${authIssues.join(', ')}` : ''}.`,
   `Tool-list cost per agent turn ranges from ~${byTok[0].contextTokens.toLocaleString('en-US')} tokens (${byTok[0].name}) to ~${byTok.at(-1).contextTokens.toLocaleString('en-US')} tokens (${byTok.at(-1).name}) among the open servers.`,
-  `${anyOrigin} of ${open.length} open servers accept requests with a foreign Origin header; the spec says servers MUST validate Origin (this matters most for localhost servers).`,
   `${noAnnot} of ${open.length} open servers declare no tool annotations (readOnlyHint / destructiveHint); ${longDesc} of ${open.length} have at least one tool description that is too long.`,
   ...(expansion.length ? [`${expansion.length} more remote servers scanned on ${dayLabel}: ${expOpen.length} open, ${expansion.length - expOpen.length} require login. Heaviest open tool lists: ${expOpen.slice(0, 3).map((r) => `${r.name} ~${r.contextTokens.toLocaleString('en-US')} tokens (${r.toolCount} tools)`).join(', ')}.`] : []),
   `The long tail is different: see the State of public MCP servers report (official registry scan, 13 Nov 2026), where the longest single tool description was ${st.d_max.toLocaleString('en-US')} characters.`,
@@ -61,7 +61,7 @@ const faq = [
   ['Why do OAuth servers show no token cost?', 'Without a login we can only see the pre-login surface: the 401, the WWW-Authenticate header and the OAuth protected-resource metadata. Pro (coming soon) scans behind a test token.'],
   ['How do I get my server listed or re-scanned?', `Scan it on ${SITE}/ and it gets a public page at /s/<host>/<path>. Add the README badge and the free GitHub Action to keep it from drifting.`],
 ];
-const row = (r) => `<tr><td><a href="${slugPage(r)}">${esc(r.name)}</a><div class="small"><code class="nw">${esc(r.url)}</code></div></td><td class="n">${esc(r.score)}</td><td>${r.authRequired ? 'Login required' : `${esc(r.toolCount)} tools`}</td><td>${r.authRequired ? 'n/a (behind login)' : `~${(r.contextTokens ?? 0).toLocaleString('en-US')}`}</td><td class="small iss">${esc(r.issues.map((i) => i.title).join('; ') || 'none')}</td></tr>`;
+const row = (r) => `<tr><td><a href="${slugPage(r)}">${esc(r.name)}</a><div class="small"><code class="nw">${esc(r.url)}</code></div></td><td class="n">${esc(r.score)}</td><td>${r.authRequired ? 'Login required' : `${esc(r.toolCount)} tools`}</td><td>${r.authRequired ? 'n/a (behind login)' : `~${(r.contextTokens ?? 0).toLocaleString('en-US')}`}</td><td class="small iss">${esc(r.issues.filter(NO_ORIGIN).map((i) => i.title).join('; ') || 'none')}</td></tr>`;
 const ld = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'Dataset', name: `Readiness and context cost of ${d.results.length} popular remote MCP servers (${dayLabel})`, description: STATS.join(' '), url: `${SITE}/mcp-servers/`, dateModified: day, license: 'https://opensource.org/licenses/MIT', creator: { '@type': 'Person', name: 'Omer Shacham' }, distribution: { '@type': 'DataDownload', encodingFormat: 'application/json', contentUrl: `${REPO}/blob/main/${file}` } },
   { '@type': 'ItemList', itemListElement: ALL.map((r, i) => ({ '@type': 'ListItem', position: i + 1, name: `${r.name} MCP server: ${r.score}/100`, url: `${SITE}${slugPage(r)}` })) },
@@ -81,9 +81,9 @@ ${ogTags(title, desc, `${SITE}/mcp-servers/`)}
 <p class="small">Live, unauthenticated scans of ${ALL.length} well-known remote MCP servers on ${esc(dayLabel)} with the open-source scanner. Click a server for its public page and badge.</p>
 <div class="card"><h2 style="margin-top:0">Key numbers</h2><ul class="key">${STATS.map((s) => `<li>${esc(s)}</li>`).join('')}</ul><p class="small">Cite as: “MCP Readiness, popular remote MCP servers, ${esc(dayLabel)}, ${SITE}/mcp-servers/”. Raw data: <a href="${REPO}/blob/main/${file}">${file}</a>.</p></div>
 <h2>Open servers (tool list visible without login)</h2>
-<div class="tablewrap"><table class="data"><thead><tr><th>Server</th><th>Score</th><th>Tools</th><th>Tokens per turn</th><th>Open issues</th></tr></thead><tbody>${openAll.map(row).join('')}</tbody></table></div>
+<div class="tablewrap"><table class="data"><thead><tr><th>Server</th><th>Score</th><th>Tools</th><th>Tokens per turn</th><th>Readiness notes</th></tr></thead><tbody>${openAll.map(row).join('')}</tbody></table></div>
 <h2>Login-protected servers (pre-login surface only)</h2>
-<div class="tablewrap"><table class="data"><thead><tr><th>Server</th><th>Score</th><th>Auth</th><th>Tokens per turn</th><th>Open issues</th></tr></thead><tbody>${authAll.map(row).join('')}</tbody></table></div>
+<div class="tablewrap"><table class="data"><thead><tr><th>Server</th><th>Score</th><th>Auth</th><th>Tokens per turn</th><th>Readiness notes</th></tr></thead><tbody>${authAll.map(row).join('')}</tbody></table></div>
 ${[...(d.failed || []), ...expFailed].length ? `<p class="small">Not scored this run: ${[...new Set([...(d.failed || []), ...expFailed].map((f) => f.name))].map(esc).join(', ')} (connection timed out or the endpoint has moved).</p>` : ''}
 <div class="card"><h2 style="margin-top:0">Scan your own server</h2><p class="small">Free, no sign-up. You get a public page, a README badge, and a CI gate.</p><div class="actions"><a class="btn" href="/?utm_source=mcp-readiness&amp;utm_medium=leaderboard&amp;utm_campaign=scan">Scan my MCP server</a><a class="btn ghost" href="${ACTION('leaderboard')}" data-event="action_install_click">Add the GitHub Action</a></div></div>
 <h2>FAQ</h2>${faq.map(([q, a]) => `<h3>${esc(q)}</h3><p class="small">${esc(a)}</p>`).join('')}
@@ -104,7 +104,7 @@ function serverFaqs(r) {
     ? `Not visible without login. The ${r.name} tool list sits behind authentication, so this unauthenticated scan could not count tools or tokens.`
     : `About ${fmt(r.contextTokens)} tokens per agent turn for ${r.toolCount} tools, measured by a live unauthenticated scan on ${dateLabel(r.scannedAt)}. The tool list is sent to the model on every turn.`);
   const oauthA = pick(/OAuth/i) || (r.authRequired
-    ? (r.issues.length ? `It requires login, and the pre-login scan found: ${r.issues.map((i) => i.title).join('; ')}.` : `Yes. The scan reached a login wall (401) and found no open pre-login OAuth discovery issue.`)
+    ? (r.issues.length ? `It requires login. The pre-login scan left these readiness notes: ${r.issues.map((i) => i.title).join('; ')}.` : `Yes. The scan reached a login wall (401) and found no open pre-login OAuth discovery issue.`)
     : `It does not need OAuth to list tools: tools/list answers without login, which is common for public read-only servers.`);
   return [
     [`How many tokens does ${r.name} MCP server add?`, tokA],
@@ -125,7 +125,7 @@ for (const r of ALL) {
     { '@type': 'WebPage', name: t, description: m, url, dateModified: String(r.scannedAt).slice(0, 10), about: { '@type': 'SoftwareApplication', name: `${r.name} MCP server`, applicationCategory: 'DeveloperApplication', url: r.url } },
     { '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
   ] };
-  const checks = r.issues.length ? r.issues.map((i) => `<tr><td>${esc(i.level === 'fail' ? 'Fail' : 'Warn')}</td><td>${esc(i.title)}</td></tr>`).join('') : `<tr><td>Pass</td><td>No open issues in the ${r.authRequired ? 'pre-login ' : ''}checks</td></tr>`;
+  const checks = r.issues.length ? r.issues.map((i) => `<tr><td>Readiness note</td><td>${esc(i.title)}</td></tr>`).join('') : `<tr><td>Pass</td><td>No readiness notes in the ${r.authRequired ? 'pre-login ' : ''}checks</td></tr>`;
   const base = r.authRequired
     ? `<tr><td>Pass</td><td>Unauthenticated requests are rejected (login required)</td></tr>`
     : `<tr><td>Pass</td><td>initialize and tools/list answer without login (${esc(r.toolCount)} tools)</td></tr>`;
@@ -139,6 +139,7 @@ ${ogTags(t, m, url)}
 <p class="small"><a href="/mcp-servers/">Popular MCP servers</a> / ${esc(r.name)}</p>
 <h1>${esc(r.name)} MCP server: token cost, tools and readiness</h1>
 <p class="small">Endpoint: <code>${esc(r.url)}</code></p>
+<p class="small"><time datetime="${esc(r.scannedAt)}">Scanned ${esc(day2)}</time>, unauthenticated surface scan</p>
 <div class="card"><h2>TL;DR</h2><div class="tldr">
 <div><b>${r.authRequired ? 'Behind login' : `~${esc(fmt(r.contextTokens))}`}</b><span>Tokens per turn</span></div>
 <div><b>${r.authRequired ? 'Behind login' : esc(r.toolCount)}</b><span>Tools</span></div>

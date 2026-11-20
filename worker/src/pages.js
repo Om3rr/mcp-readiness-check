@@ -99,7 +99,8 @@ export function render(env, canonical, url, r, error) {
   const col = !r ? '#94a3b8' : r.score >= 90 ? '#22c55e' : r.score >= 70 ? '#eab308' : '#ef4444';
   const badgeMd = `[![MCP readiness](${origin}/badge.svg?url=${encodeURIComponent(url)})](${canonical})`;
   const ld = r && { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description: desc, url: canonical, dateModified: r.at, about: { '@type': 'SoftwareApplication', name, applicationCategory: 'DeveloperApplication', url } };
-  const issues = r ? (r.top || []).map((f) => `<li><b class="${esc(f.level)}">${esc(f.level)}</b> ${esc(f.title)}</li>`).join('') || '<li>No issues found in the free checks.</li>' : '';
+  // Public pages name real servers: Origin/CORS findings stay out of them (spec notes only, no security claims).
+  const issues = r ? (r.top || []).filter((f) => !/origin|cors/i.test(`${f.id || ''} ${f.title || ''}`)).map((f) => `<li><b class="${esc(f.level)}">${esc(f.level)}</b> ${esc(f.title)}</li>`).join('') || '<li>No issues found in the free checks.</li>' : '';
   const timeLabel = r ? `${r.at.replace('T', ' ').slice(0, 16)} UTC` : '';
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(canonical)}">${r ? '' : '\n<meta name="robots" content="noindex">'}
