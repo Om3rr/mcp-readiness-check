@@ -38,3 +38,9 @@ LEMON_PLAN_BY_VARIANT = "{}"
 #   STRIPE_WEBHOOK_SECRET   whsec_... from the Stripe webhook endpoint
 #   LEMON_WEBHOOK_SECRET    signing secret from Lemon Squeezy > Settings > Webhooks
 #   CF_ACCOUNT_ID, CF_BROWSER_TOKEN   optional, enables PDF via Browser Rendering
+
+# CTA events (see MEASUREMENT.md). Workers Analytics Engine is included in the Workers Free plan
+# (100k data points/day). The dataset is created on first write; nothing to provision.
+[[analytics_engine_datasets]]
+binding = "EVENTS"
+dataset = "mcp_readiness_events"

@@ -179,3 +179,42 @@ test('/api/license contract used by ToolSlim: plan + status active for a Pro key
   assert.equal(j.plan, 'pro'); assert.equal(j.status, 'active');
   assert.equal((await call(env, '/api/license', { headers: { authorization: 'Bearer mrc_live_nope' } })).status, 401);
 });
+
+test('cta: allow-listed client events only; server-only events rejected', async () => {
+  const points = [];
+  const env = { LICENSES: kv(), EVENTS: { writeDataPoint: (p) => points.push(p) } };
+  const ok = await call(env, '/api/event', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ event: 'action_install_click', utm_source: 'hn', label: 'hero' }) });
+  assert.equal(ok.status, 204);
+  assert.equal(points[0].indexes[0], 'action_install_click');
+  assert.equal(points[0].blobs[4], 'hn');
+  for (const event of ['nope', 'scan_completed', 'waitlist_signup', 'badge_served', 'action_run']) {
+    const r = await call(env, '/api/event', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ event }) });
+    assert.equal(r.status, 400, event);
+  }
+});
+
+test('cta: Pro waitlist stores once in KV and never logs the email', async () => {
+  const points = [];
+  const env = { LICENSES: kv(), EVENTS: { writeDataPoint: (p) => points.push(p) } };
+  const init = () => ({ method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ email: 'Dev@Example.com', plan: 'team', utm_source: 'producthunt' }) });
+  assert.equal((await (await call(env, '/api/waitlist', init())).json()).ok, true);
+  assert.equal((await (await call(env, '/api/waitlist', init())).json()).already, true);
+  assert.ok(env.LICENSES.m.has('waitlist:pro:dev@example.com'));
+  assert.equal(points.filter((p) => p.indexes[0] === 'waitlist_signup').length, 1);
+  assert.equal(JSON.stringify(points).includes('example.com'), false);
+  assert.equal((await call(env, '/api/waitlist', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{"email":"x"}' })).status, 400);
+});
+
+test('seo: robots allows AI crawlers and points at llms.txt; static pages have no checkout or prices on CTAs', async () => {
+  const r = await call({ LICENSES: kv() }, '/robots.txt');
+  const txt = await r.text();
+  for (const bot of ['GPTBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended']) assert.match(txt, new RegExp(`User-agent: ${bot}`));
+  assert.match(txt, /llms\.txt/);
+  assert.match(txt, /Disallow: \/api\//);
+  const { readFileSync } = await import('node:fs');
+  const lb = readFileSync(new URL('../worker/public/mcp-servers/index.html', import.meta.url), 'utf8');
+  assert.match(lb, /application\/ld\+json/);
+  assert.doesNotMatch(lb, /\$\d|buy\.stripe|checkout\.stripe|lemonsqueezy/i);
+  const landing = readFileSync(new URL('../worker/public/index.html', import.meta.url), 'utf8');
+  assert.doesNotMatch(landing, /buy\.stripe|checkout\.stripe|lemonsqueezy\.com\/checkout/i);
+});

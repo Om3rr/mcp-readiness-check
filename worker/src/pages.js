@@ -85,7 +85,7 @@ ${r.fix ? `<p class="small">Heavy tool list: ${esc(r.fix.why)}. Pro writes a sli
 }
 
 export async function sitemap(env, origin) {
-  const urls = [`${origin}/`, `${origin}/state-of-mcp-2026-11.html`];
+  const urls = [`${origin}/`, `${origin}/state-of-mcp-2026-11.html`, `${origin}/mcp-servers/`];
   let cursor;
   do {
     const l = await env.LICENSES.list({ prefix: 'page:', cursor, limit: 1000 });

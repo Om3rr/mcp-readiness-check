@@ -8,6 +8,7 @@ import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
 import { registerMonitor, runMonitors } from './monitor.js';
 import { serverPage, savePage, pagePath, sitemap } from './pages.js';
+import { handleEvent, handleWaitlist, logEvent, hostOf } from './cta.js';
 
 const VERSION = '0.5.0';
 const ORDER = { fail: 0, warn: 1, info: 2, pass: 3 };
@@ -96,6 +97,12 @@ async function mcpEndpoint(req, env, url) {
   }
 }
 
+// Search engines and AI answer engines are welcome on pages; the API is not for crawling.
+export function robotsTxt(origin) {
+  const bots = ['*', 'GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'PerplexityBot', 'Google-Extended', 'Bingbot'];
+  return `${bots.map((b) => `User-agent: ${b}\nAllow: /\nDisallow: /api/\n`).join('\n')}\n# Curated map for LLMs: ${origin}/llms.txt\nSitemap: ${origin}/sitemap.xml\n`;
+}
+
 export default {
   async fetch(req, env, ctx) {
     const url = new URL(req.url);
@@ -120,6 +127,7 @@ export default {
         if (!(await rateLimit(env, req, 'scan', Number(env.FREE_SCANS_PER_HOUR || 10)))) return json({ error: 'rate_limited', detail: 'Free scans are limited per hour. A license removes the limit.' }, 429);
         const r = await scan(env, t.url);
         const view = limited(r, env);
+        logEvent(env, { event: 'scan_completed', path: '/api/scan', label: hostOf(t.url), value: r.score, server: true });
         await savePage(env, t.url, view).catch(() => {});
         return json({ url: t.url, page: pagePath(t.url), ...view });
       }
@@ -148,6 +156,7 @@ export default {
           return json({ mode: 'full', plan: c.lic.plan, remaining: c.lic.remaining });
         }
         const repo = String(body.repo || 'unknown').slice(0, 140);
+        logEvent(env, { event: 'action_run', path: '/api/ci/run', label: repo.split('/')[0], server: true });
         const k = `ci:${repo}:${new Date().toISOString().slice(0, 10)}`;
         const n = Number((await env.LICENSES.get(k)) || 0);
         const cap = Number(env.FREE_ACTION_RUNS_PER_DAY || 50);
@@ -172,6 +181,7 @@ export default {
         const cache = caches.default;
         const ck = new Request(`https://badge.cache/${encodeURIComponent(t.url || 'invalid')}`);
         const hit = await cache.match(ck);
+        logEvent(env, { event: 'badge_served', path: p, label: hostOf(t.url || ''), value: hit ? 1 : 0, server: true });
         if (hit) return hit;
         let score = null;
         if (t.ok && (await rateLimit(env, req, 'badge', Number(env.BADGE_MISSES_PER_HOUR || 30)))) { try { score = (await scan(env, t.url)).score; } catch {} }
@@ -197,7 +207,10 @@ export default {
         return thanksPage(key, env);
       }
       // Indexable per-server pages (README badges link here). No sign-up.
+      if (p === '/api/event' && req.method === 'POST') return handleEvent(req, env);
+      if (p === '/api/waitlist' && req.method === 'POST') return handleWaitlist(req, env, () => rateLimit(env, req, 'wl', 5));
       if (p.startsWith('/s/') && req.method === 'GET') {
+        logEvent(env, { event: 'server_page_view', path: p.slice(0, 120), ref: hostOf(req.headers.get('referer') || ''), server: true });
         return serverPage(req, env, {
           scanLimited: async (u) => limited(await scan(env, u), env),
           canScan: () => rateLimit(env, req, 'page', Number(env.PAGE_SCANS_PER_HOUR || 20)),
@@ -209,7 +222,7 @@ export default {
         if (env.ASSETS) return env.ASSETS.fetch(new Request(new URL('/', url), req));
       }
       if (p === '/sitemap.xml') return sitemap(env, env.PUBLIC_URL || url.origin);
-      if (p === '/robots.txt') return new Response(`User-agent: *\nAllow: /\nDisallow: /api/\nSitemap: ${env.PUBLIC_URL || url.origin}/sitemap.xml\n`, { headers: { 'content-type': 'text/plain' } });
+      if (p === '/robots.txt') return new Response(robotsTxt(env.PUBLIC_URL || url.origin), { headers: { 'content-type': 'text/plain' } });
       if (env.ASSETS) return env.ASSETS.fetch(req);
       return json({ error: 'not_found' }, 404);
     } catch (e) {

@@ -1,0 +1,529 @@
+{
+ "recorded": "2026-11-20T16:30:00Z",
+ "recordedLocal": "20 November 2026, about 18:30 Israel time",
+ "tool": "mcp-readiness-cli 0.1.0 (same probe as the hosted scanner), unauthenticated",
+ "failed": [
+  {
+   "id": "gitmcp",
+   "name": "GitMCP (docs)",
+   "url": "https://gitmcp.io/docs",
+   "error": "scan failed: timeout after 20s"
+  },
+  {
+   "id": "asana",
+   "name": "Asana",
+   "url": "https://mcp.asana.com/sse",
+   "error": "scan failed: initialize failed: HTTP 410 {\"jsonrpc\":\"2.0\",\"id\":null,\"error\":{\"code\":-32600,\"message\":\"Asana MCP v1 has b"
+  }
+ ],
+ "results": [
+  {
+   "id": "cloudflare-docs",
+   "name": "Cloudflare Docs",
+   "url": "https://docs.mcp.cloudflare.com/mcp",
+   "server": {
+    "name": "docs-ai-search",
+    "version": "0.5.0"
+   },
+   "protocolVersion": "2025-06-18",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 434,
+   "issues": [],
+   "info": [
+    "init.instructions",
+    "http.auth",
+    "http.cors",
+    "http.session"
+   ]
+  },
+  {
+   "id": "mslearn",
+   "name": "Microsoft Learn",
+   "url": "https://learn.microsoft.com/api/mcp",
+   "server": {
+    "name": "Microsoft Learn MCP Server",
+    "version": "1.0.0"
+   },
+   "protocolVersion": "2025-06-18",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 3,
+   "contextTokens": 1215,
+   "issues": [],
+   "info": [
+    "schema.required",
+    "http.auth",
+    "http.origin"
+   ]
+  },
+  {
+   "id": "exa",
+   "name": "Exa Search",
+   "url": "https://mcp.exa.ai/mcp",
+   "server": {
+    "name": "exa-search-server",
+    "title": "Exa",
+    "version": "3.5.1",
+    "description": "Official Exa MCP for web search, content fetching, and multi-step research.",
+    "websiteUrl": "https://exa.ai",
+    "icons": [
+     {
+      "src": "https://exa.ai/images/logo/exa-logomark-blue.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+       "any"
+      ]
+     },
+     {
+      "src": "https://exa.ai/images/favicon-32x32.png",
+      "mimeType": "image/png",
+      "sizes": [
+       "32x32"
+      ]
+     }
+    ]
+   },
+   "protocolVersion": "2025-06-18",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 605,
+   "issues": [],
+   "info": [
+    "http.auth",
+    "http.cors",
+    "http.origin"
+   ]
+  },
+  {
+   "id": "context7",
+   "name": "Context7",
+   "url": "https://mcp.context7.com/mcp",
+   "server": {
+    "name": "Context7",
+    "title": "Context7",
+    "version": "4.7.3",
+    "websiteUrl": "https://context7.com",
+    "description": "Context7 provides up-to-date documentation and code examples for libraries and frameworks.",
+    "icons": [
+     {
+      "src": "https://context7.com/context7-icon-green.svg",
+      "mimeType": "image/svg+xml",
+      "sizes": [
+       "any"
+      ]
+     },
+     {
+      "src": "https://context7.com/context7-icon-green.png",
+      "mimeType": "image/png",
+      "sizes": [
+       "512x512"
+      ]
+     }
+    ]
+   },
+   "protocolVersion": "2025-06-18",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 1304,
+   "issues": [
+    {
+     "level": "warn",
+     "id": "tools.description_long",
+     "title": "\"resolve-library-id\" description is 2006 chars"
+    }
+   ],
+   "info": [
+    "http.auth",
+    "http.cors",
+    "http.origin",
+    "http.session"
+   ]
+  },
+  {
+   "id": "deepwiki",
+   "name": "DeepWiki",
+   "url": "https://mcp.deepwiki.com/mcp",
+   "server": {
+    "name": "DeepWiki",
+    "version": "4.0.2"
+   },
+   "protocolVersion": "2025-06-18",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 3,
+   "contextTokens": 427,
+   "issues": [
+    {
+     "level": "warn",
+     "id": "annotations.none",
+     "title": "No tool declares annotations"
+    }
+   ],
+   "info": [
+    "http.auth",
+    "http.origin",
+    "http.session"
+   ]
+  },
+  {
+   "id": "huggingface",
+   "name": "Hugging Face",
+   "url": "https://huggingface.co/mcp",
+   "server": {
+    "name": "huggingface.co/mcp",
+    "version": "0.4.38",
+    "title": "Hugging Face",
+    "websiteUrl": "https://huggingface.co/mcp",
+    "icons": [
+     {
+      "src": "https://huggingface.co/favicon.ico"
+     }
+    ]
+   },
+   "protocolVersion": "2025-06-18",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 4,
+   "contextTokens": 4967,
+   "issues": [
+    {
+     "level": "warn",
+     "id": "tools.description_long",
+     "title": "\"hf_fs\" description is 3674 chars"
+    }
+   ],
+   "info": [
+    "schema.required",
+    "http.auth",
+    "http.cors",
+    "http.origin"
+   ]
+  },
+  {
+   "id": "astro-docs",
+   "name": "Astro Docs",
+   "url": "https://mcp.docs.astro.build/mcp",
+   "server": {
+    "name": "Astro Docs server",
+    "version": "1.0.0"
+   },
+   "protocolVersion": "2025-06-18",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 1,
+   "contextTokens": 80,
+   "issues": [
+    {
+     "level": "warn",
+     "id": "annotations.none",
+     "title": "No tool declares annotations"
+    }
+   ],
+   "info": [
+    "init.instructions",
+    "http.auth",
+    "http.origin",
+    "http.session"
+   ]
+  },
+  {
+   "id": "aws-knowledge",
+   "name": "AWS Knowledge",
+   "url": "https://knowledge-mcp.global.api.aws",
+   "server": {
+    "name": "AWSKnowledgeMCP",
+    "version": "1.0.0"
+   },
+   "protocolVersion": "2025-03-26",
+   "score": 90,
+   "authRequired": false,
+   "toolCount": 5,
+   "contextTokens": 1978,
+   "issues": [
+    {
+     "level": "warn",
+     "id": "tools.description_long",
+     "title": "\"aws___read_documentation\" description is 2118 chars"
+    },
+    {
+     "level": "warn",
+     "id": "rpc.method_not_found",
+     "title": "Unknown methods do not return JSON-RPC -32601"
+    }
+   ],
+   "info": [
+    "init.instructions",
+    "tools.title",
+    "http.auth",
+    "http.origin"
+   ]
+  },
+  {
+   "id": "semgrep",
+   "name": "Semgrep",
+   "url": "https://mcp.semgrep.ai/mcp",
+   "server": {
+    "name": "mcp.semgrep.ai/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "globalping",
+   "name": "Globalping",
+   "url": "https://mcp.globalping.dev/mcp",
+   "server": {
+    "name": "mcp.globalping.dev/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "linear",
+   "name": "Linear",
+   "url": "https://mcp.linear.app/mcp",
+   "server": {
+    "name": "mcp.linear.app/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "notion",
+   "name": "Notion",
+   "url": "https://mcp.notion.com/mcp",
+   "server": {
+    "name": "mcp.notion.com/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "sentry",
+   "name": "Sentry",
+   "url": "https://mcp.sentry.dev/mcp",
+   "server": {
+    "name": "mcp.sentry.dev/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "stripe",
+   "name": "Stripe",
+   "url": "https://mcp.stripe.com",
+   "server": {
+    "name": "mcp.stripe.com/"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "supabase",
+   "name": "Supabase",
+   "url": "https://mcp.supabase.com/mcp",
+   "server": {
+    "name": "mcp.supabase.com/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "vercel",
+   "name": "Vercel",
+   "url": "https://mcp.vercel.com",
+   "server": {
+    "name": "mcp.vercel.com/"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "github",
+   "name": "GitHub",
+   "url": "https://api.githubcopilot.com/mcp/",
+   "server": {
+    "name": "api.githubcopilot.com/mcp/"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.dcr",
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "paypal",
+   "name": "PayPal",
+   "url": "https://mcp.paypal.com/mcp",
+   "server": {
+    "name": "mcp.paypal.com/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "square",
+   "name": "Square",
+   "url": "https://mcp.squareup.com/sse",
+   "server": {
+    "name": "mcp.squareup.com/sse"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "neon",
+   "name": "Neon",
+   "url": "https://mcp.neon.tech/mcp",
+   "server": {
+    "name": "mcp.neon.tech/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "cloudflare-bindings",
+   "name": "Cloudflare Workers Bindings",
+   "url": "https://bindings.mcp.cloudflare.com/mcp",
+   "server": {
+    "name": "bindings.mcp.cloudflare.com/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "webflow",
+   "name": "Webflow",
+   "url": "https://mcp.webflow.com/mcp",
+   "server": {
+    "name": "mcp.webflow.com/mcp"
+   },
+   "protocolVersion": null,
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [],
+   "info": [
+    "auth.scope"
+   ]
+  },
+  {
+   "id": "atlassian",
+   "name": "Atlassian",
+   "url": "https://mcp.atlassian.com/v1/mcp",
+   "server": {
+    "name": "mcp.atlassian.com/v1/mcp"
+   },
+   "protocolVersion": null,
+   "score": 95,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "issues": [
+    {
+     "level": "warn",
+     "id": "auth.legacy_discovery",
+     "title": "Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)"
+    }
+   ],
+   "info": [
+    "auth.resource_metadata_hint",
+    "auth.scope"
+   ]
+  }
+ ]
+}
