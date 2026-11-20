@@ -7,6 +7,9 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 | Route | What it does | Access |
 |---|---|---|
 | `GET /` | Landing page with a scan form, pricing and the report magnet | public |
+| `GET /stats` / `GET /stats.html` | Public last-30-days traffic (requests, uniques, scans, badge hits, events, waitlist counts, outside scans). No emails or IPs. | public |
+| `POST /api/event` | CTA events from `sendBeacon` (known event names only, rate-limited) | public |
+| `POST /api/waitlist` | Pro waitlist (emails stored privately in D1, never shown on `/stats`) | public |
 | `GET /s/<host>/<path>` | Indexable server page (server-rendered, stable URL, title/meta/canonical, JSON-LD). Badges link here. Runs a free scan if the cached one is older than 24 h | public |
 | `GET /scan?url=…` | 301 to the server page | public |
 | `GET /sitemap.xml`, `/robots.txt` | Every scanned server page, for search engines | public |
