@@ -66,9 +66,6 @@ If you work through the five sections above and the CI gate is green, you have a
 **We scored 100 on a hosted scan. Are we done?**
 No. A 100 on a surface scan means the handshake, discovery, Origin, annotations, and list-size checks we run did not fail. It does not mean your tools are safe or correct. Call them with Inspector, and run a security review if the tools take untrusted input or perform writes.
 
-**Why do so many high-scoring servers still accept a foreign Origin?**
-Because the check is easy to skip on a public API, and many servers treat Origin as a browser-only concern. The MCP transport specification still requires validation to prevent DNS rebinding, and it requires a 403 when the header is present and invalid. Public and authenticated servers should allow-list the origins they intend to serve.
-
 **Should a documentation MCP require OAuth?**
 Not necessarily. Several of the open servers in the 20 November 2026 set are docs or search endpoints that answer `tools/list` without login and score 95–100 on surface checks. If the data is public, that can be appropriate. You still need HTTPS, Origin handling, a slim tool list, and clean JSON-RPC errors.
 
