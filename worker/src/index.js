@@ -7,6 +7,9 @@ import { consume, getLicense, PLANS } from './license.js';
 import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
 import { registerMonitor, runMonitors } from './monitor.js';
+import { bucketRoute, handleStats, scheduleTrack } from './metrics.js';
+
+const WORKER_NAME = 'mcp-readiness';
 
 const VERSION = '0.3.0';
 const ORDER = { fail: 0, warn: 1, info: 2, pass: 3 };
@@ -95,8 +98,7 @@ async function mcpEndpoint(req, env, url) {
   }
 }
 
-export default {
-  async fetch(req, env, ctx) {
+async function route(req, env, ctx) {
     const url = new URL(req.url);
     const p = url.pathname;
     try {
@@ -200,6 +202,25 @@ export default {
     } catch (e) {
       return json({ error: 'scan_failed', detail: String(e?.message || e).slice(0, 200) }, 502);
     }
+}
+
+export default {
+  async fetch(req, env, ctx) {
+    const url = new URL(req.url);
+    const p = url.pathname.replace(/\/+$/, '') || '/';
+    if ((req.method === 'GET' || req.method === 'HEAD') && (p === '/stats' || p === '/stats.json' || p === '/stats.html')) {
+      return handleStats(env, WORKER_NAME, p === '/stats.json' ? '/stats' : p, 'MCP Readiness');
+    }
+    const res = await route(req, env, ctx);
+    let scan = null;
+    let badge = false;
+    if (p === '/api/scan' || p === '/api/report') {
+      if (res.status === 200) scan = 'success';
+      else if (res.status === 502) scan = 'fail';
+    }
+    if (p === '/badge' || p === '/badge.svg') badge = true;
+    scheduleTrack(ctx, env, req, { worker: WORKER_NAME, route: bucketRoute(url.pathname), scan, badge });
+    return res;
   },
   async scheduled(_event, env, ctx) {
     ctx.waitUntil(runMonitors(env, scan));

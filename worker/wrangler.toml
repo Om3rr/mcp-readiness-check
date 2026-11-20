@@ -38,3 +38,10 @@ LEMON_PLAN_BY_VARIANT = "{}"
 #   STRIPE_WEBHOOK_SECRET   whsec_... from the Stripe webhook endpoint
 #   LEMON_WEBHOOK_SECRET    signing secret from Lemon Squeezy > Settings > Webhooks
 #   CF_ACCOUNT_ID, CF_BROWSER_TOKEN   optional, enables PDF via Browser Rendering
+
+# Shared free D1 for public /stats (hashed unique visitors, never raw IPs).
+# Same database as agent-ready-score. Writes go through ctx.waitUntil and fail open.
+[[d1_databases]]
+binding = "METRICS"
+database_name = "studio-metrics"
+database_id = "3448df02-bdfb-4f45-8279-6dbf1ae9f83f"

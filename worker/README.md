@@ -7,6 +7,7 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 | Route | What it does | Access |
 |---|---|---|
 | `GET /` | Landing page with a scan form, pricing and the report magnet | public |
+| `GET /stats` / `GET /stats.html` | Public last-30-days traffic (requests, unique visitors, scans, badge hits, referrer hosts). No personal data. Stored in the shared free D1 database `studio-metrics` | public |
 | `GET /scan?url=…` | Public scan page that badges link to (auto-runs the scan) | public |
 | `POST /api/scan {url}` | Free: score, context tokens, top 3 issues. With `Authorization: Bearer <key>`: full findings with fixes (1 unit) | public, 10/h per IP |
 | `GET /api/report?url=…&format=html\|pdf` | Full report | license |
