@@ -15,7 +15,7 @@ This is a shipping checklist for *remote* Streamable HTTP (or HTTP+SSE) servers,
 
 Serve the public endpoint on HTTPS. A remote server that only answers plain HTTP is not ready for real clients.
 
-Validate the `Origin` header on incoming connections. The transport specification says servers **must** do this to prevent DNS rebinding, and **must** respond with HTTP 403 Forbidden when the header is present and invalid. The response body may be a JSON-RPC error with no `id`. This matters most for servers that also run on localhost, but the MUST is not limited to local dev: seven of the eight open popular servers in the 20 November 2026 scan accepted a foreign `Origin`. Do not confuse "our API is public" with "any website may drive this endpoint from a browser." If you deliberately allow a set of web clients, allow-list those origins; do not silently accept everything.
+Validate the `Origin` header on incoming connections. The transport specification says servers **must** do this to prevent DNS rebinding, and **must** respond with HTTP 403 Forbidden when the header is present and invalid. The response body may be a JSON-RPC error with no `id`. This matters most for servers that also run on localhost, but the MUST is not limited to local dev. Do not confuse "our API is public" with "any website may drive this endpoint from a browser." If you deliberately allow a set of web clients, allow-list those origins; do not silently accept everything.
 
 When you run the same server on a laptop, bind to `127.0.0.1` rather than `0.0.0.0`, as the transport specification recommends. Confirm CORS is not a wildcard next to an unauthenticated write tool.
 
