@@ -7,6 +7,7 @@
 <p class="small"><a href="/mcp-servers/">Popular MCP servers</a> / Google Sheets</p>
 <h1>Google Sheets MCP server: token cost, tools and readiness</h1>
 <p class="small">Endpoint: <code>https://sheetsmcp.googleapis.com/mcp/v1</code></p>
+<p class="small"><time datetime="2026-11-20T18:15:51Z">Scanned 20 November 2026</time>, unauthenticated surface scan</p>
 <div class="card"><h2>TL;DR</h2><div class="tldr">
 <div><b>~7,860</b><span>Tokens per turn</span></div>
 <div><b>6</b><span>Tools</span></div>
@@ -15,7 +16,7 @@
 <div><b>20 November 2026</b><span>Scan date</span></div></div>
 
 <p style="margin-top:14px">An unauthenticated MCP Readiness scan of the Google Sheets MCP server (https://sheetsmcp.googleapis.com/mcp/v1) on 20 November 2026 scored 85/100. The public tool list exposes 6 tools and adds about 7860 tokens per agent turn. Open issues: &quot;update_spreadsheet&quot; description is 20139 chars; &quot;update_spreadsheet&quot; has untyped args: writeControl.</p></div>
-<div class="card"><h2>Checks</h2><div class="tablewrap"><table><thead><tr><th>Result</th><th>Check</th></tr></thead><tbody><tr><td>Pass</td><td>initialize and tools/list answer without login (6 tools)</td></tr><tr><td>Warn</td><td>&quot;update_spreadsheet&quot; description is 20139 chars</td></tr><tr><td>Warn</td><td>&quot;update_spreadsheet&quot; has untyped args: writeControl</td></tr></tbody></table></div>
+<div class="card"><h2>Checks</h2><div class="tablewrap"><table><thead><tr><th>Result</th><th>Check</th></tr></thead><tbody><tr><td>Pass</td><td>initialize and tools/list answer without login (6 tools)</td></tr><tr><td>Readiness note</td><td>&quot;update_spreadsheet&quot; description is 20139 chars</td></tr><tr><td>Readiness note</td><td>&quot;update_spreadsheet&quot; has untyped args: writeControl</td></tr></tbody></table></div>
 <p class="small">Live, unauthenticated surface checks on 20 November 2026. No tool was called. Not a security audit and not affiliated with Google Sheets. <a href="/s/sheetsmcp.googleapis.com/mcp/v1">Live page with a fresh scan</a>.</p></div>
 <div class="card"><h2>Scan your own server</h2><p class="small">Free, no sign-up: a score, the token cost of your tool list and the top issues. Then keep it from slipping in CI.</p>
 <div class="actions"><a class="btn" href="/?utm_source=mcp-readiness&amp;utm_medium=server-seo&amp;utm_campaign=scan">Scan my MCP server</a><a class="btn ghost" data-event="action_install_click" href="https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&amp;utm_medium=server-seo&amp;utm_campaign=action#readme">Add the GitHub Action</a><a class="btn ghost" href="/docs/ci/">CI setup guide</a></div></div>

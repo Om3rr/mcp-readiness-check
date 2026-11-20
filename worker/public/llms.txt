@@ -13,9 +13,8 @@
 - [Popular remote MCP servers, 20 November 2026](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/): scores and tokens per turn.
 - [CI setup guide](https://mcp-readiness.omer20sh.workers.dev/docs/ci/): badge and GitHub Action in 3 steps, local servers in CI, troubleshooting.
 - 23 popular remote MCP servers scanned unauthenticated on 20 November 2026: 8 answer tools/list without login, 15 require OAuth.
-- 14 of 15 OAuth-protected servers had no open pre-login issue (401, WWW-Authenticate, OAuth protected-resource discovery); open issues: Atlassian (Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)).
+- 14 of 15 OAuth-protected servers had no pre-login readiness notes (401, WWW-Authenticate, OAuth protected-resource discovery); spec notes: Atlassian (Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)).
 - Tool-list cost per agent turn ranges from ~80 tokens (Astro Docs) to ~4,967 tokens (Hugging Face) among the open servers.
-- 7 of 8 open servers accept requests with a foreign Origin header; the spec says servers MUST validate Origin (this matters most for localhost servers).
 - 2 of 8 open servers declare no tool annotations (readOnlyHint / destructiveHint); 3 of 8 have at least one tool description that is too long.
 - 52 more remote servers scanned on 20 November 2026: 17 open, 35 require login. Heaviest open tool lists: Gmail ~11,282 tokens (23 tools), Google Docs ~10,011 tokens (2 tools), Google Slides ~8,957 tokens (4 tools).
 - The long tail is different: see the State of public MCP servers report (official registry scan, 13 Nov 2026), where the longest single tool description was 27,638 characters.

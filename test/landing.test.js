@@ -139,3 +139,16 @@ test('per-server SEO pages: CMO spec, auth note, escaping, sitemap', async () =>
   assert.match(await r.text(), /\/mcp-servers\/gmail\//);
   assert.match(read('llms.txt'), /\/mcp-servers\/google-slides\//);
 });
+
+test('content rules: no per-server Origin/CORS claims, scan line on every server page', async () => {
+  const list = read('mcp-servers/index.html').replace(/Automated surface checks[\s\S]*?<\/p>/, '');
+  assert.doesNotMatch(list, /origin|cors/i);
+  for (const f of htmlFiles().filter((p) => /mcp-servers\/[^/]+\/index\.html$/.test(p))) {
+    const h = readFileSync(f, 'utf8');
+    assert.match(h, /Scanned [^<]+<\/time>, unauthenticated surface scan/, f);
+    assert.doesNotMatch(h, /origin|cors/i, f);
+  }
+  const { render } = await import('../worker/src/pages.js');
+  const h = render({}, 'https://w.test/s/a.example/mcp', 'https://a.example/mcp', { score: 70, server: 'A', toolCount: 1, contextTokens: 10, top: [{ level: 'warn', id: 'http.origin', title: 'Requests with a foreign Origin header are accepted' }], at: '2026-11-20T10:00:00Z' });
+  assert.doesNotMatch(h, /foreign Origin header are accepted/);
+});
