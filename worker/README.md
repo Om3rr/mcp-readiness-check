@@ -1,6 +1,6 @@
 # MCP Readiness: hosted service (Cloudflare Worker)
 
-Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Browser Rendering is set up), a README badge, GitHub Action metering, and a pay-per-scan remote MCP tool (`scan_mcp`). Payments arrive through **Stripe Payment Links** or **Lemon Squeezy** webhooks. Both are ready to connect and both are off until their env vars are set. Nothing is deployed and no payment accounts exist yet.
+Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Browser Rendering is set up), a README badge, GitHub Action metering, and a pay-per-scan remote MCP tool (`scan_mcp`). Payments arrive through **Stripe Payment Links** or **Lemon Squeezy** webhooks. Both are ready to connect and both are off until their env vars are set. The Worker is live on the free tier at https://mcp-readiness.omer20sh.workers.dev. No payment accounts exist yet; checkout URLs and webhook secrets are unset.
 
 ## Routes
 

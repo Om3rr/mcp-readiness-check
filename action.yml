@@ -27,7 +27,7 @@ inputs:
   api-url:
     description: 'Hosted MCP Readiness API used for licensing and metering.'
     required: false
-    default: 'https://mcp-readiness.example.workers.dev'
+    default: 'https://mcp-readiness.omer20sh.workers.dev'
   report-path:
     description: 'Where to write the HTML report (written only when a license key is set).'
     required: false

@@ -1,12 +1,16 @@
 # MCP Readiness: hosted scanner + landing page.
-# Deploy: see worker/README.md. Nothing here is deployed yet.
+# Deployed on the free tier at https://mcp-readiness.omer20sh.workers.dev
+# (no custom domain, no Workers Paid plan). See worker/README.md.
 name = "mcp-readiness"
 main = "src/index.js"
 compatibility_date = "2026-11-01"
 workers_dev = true
 
-[triggers]
-crons = ["17 6 * * *"]   # daily monitoring re-scan (06:17 UTC)
+# Cron is defined here to match main, but it is NOT registered on this account:
+# the Workers Free plan allows 5 cron triggers per account, and that cap is
+# already used by existing workers we must not change. Do not upgrade to Paid.
+# [triggers]
+# crons = ["17 6 * * *"]   # daily monitoring re-scan (06:17 UTC)
 
 [assets]
 directory = "./public"
@@ -15,10 +19,10 @@ binding = "ASSETS"
 # Create with: npx wrangler kv namespace create LICENSES  (then paste the id)
 [[kv_namespaces]]
 binding = "LICENSES"
-id = "REPLACE_WITH_KV_NAMESPACE_ID"
+id = "152ddf7a351547409d119ec351698d68"
 
 [vars]
-PUBLIC_URL = "https://mcp-readiness.example.workers.dev"
+PUBLIC_URL = "https://mcp-readiness.omer20sh.workers.dev"
 FREE_SCANS_PER_HOUR = "10"
 SCAN_TIMEOUT_MS = "12000"
 # Payment Links / Lemon Squeezy checkout URLs (public, safe as vars):

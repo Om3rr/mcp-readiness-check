@@ -16,8 +16,8 @@
 
 Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
 
-**Badge** (links to your server's own public report page; the hosted service is not live yet, so `<service>` is a placeholder): `[![MCP Readiness Scan](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/s/your-server/mcp)`
-**Hosted scan service and `scan_mcp` remote tool** (not deployed yet): [worker/](worker/README.md)
+**Badge** (links to your server's own public report page): `[![MCP Readiness Scan](https://mcp-readiness.omer20sh.workers.dev/badge.svg?url=https://your-server/mcp)](https://mcp-readiness.omer20sh.workers.dev/s/your-server/mcp)`
+**Hosted scan service and `scan_mcp` remote tool** (live on the free `workers.dev` subdomain): https://mcp-readiness.omer20sh.workers.dev — see [worker/](worker/README.md)
 
 **Free tier:** score gate, context-token budget, top 3 issues per run, 50 runs/day per repo, plus this CLI (unlimited, local).
 
