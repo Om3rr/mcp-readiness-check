@@ -67,7 +67,15 @@ export async function probeHttp(url, { token, timeoutMs = 15000, fetchImpl = glo
 export function report(init, tools, transport) {
   const findings = [...checkInit(init), ...checkTools(tools), ...transport];
   const contextBytes = JSON.stringify(tools).length;
-  return { server: init?.serverInfo, protocolVersion: init?.protocolVersion, toolCount: tools.length, contextBytes, contextTokens: Math.round(contextBytes / 4), score: score(findings), findings };
+  const res = { server: init?.serverInfo, protocolVersion: init?.protocolVersion, toolCount: tools.length, contextBytes, contextTokens: Math.round(contextBytes / 4), score: score(findings), findings };
+  // Raw tools/list, kept out of default serialisation (hosted API, batch files). withTools() adds it for the ToolSlim fix step.
+  Object.defineProperty(res, 'tools', { value: tools, enumerable: false });
+  return res;
+}
+
+// Report for the ToolSlim fix step: includes the target and the raw tool list so ToolSlim never re-connects.
+export function withTools(r, target) {
+  return { ...r, target, url: target, ...(r.tools ? { tools: r.tools } : {}) };
 }
 
 export function toMarkdown(r, target) {

@@ -23,3 +23,11 @@ test('toolslim hook appears only for heavy tool lists', () => {
   assert.match(summaryMarkdown({ ...r, contextTokens: 9100 }, 'u', 'free'), /toolslim/);
   assert.ok(!summaryMarkdown({ ...r, contextTokens: 300 }, 'u', 'free').includes('toolslim'));
 });
+
+test('JSON report for ToolSlim carries target and raw tools; default serialisation does not', async () => {
+  const { report, withTools } = await import('../src/probe.js');
+  const rr = report({ serverInfo: { name: 's' }, protocolVersion: '2025-06-18' }, [{ name: 'list_x', description: 'd', inputSchema: { type: 'object' } }], []);
+  assert.ok(!('tools' in JSON.parse(JSON.stringify(rr))));
+  const j = JSON.parse(JSON.stringify(withTools(rr, 'http://127.0.0.1:8787/mcp')));
+  assert.equal(j.target, 'http://127.0.0.1:8787/mcp'); assert.equal(j.tools[0].name, 'list_x'); assert.equal(j.toolCount, 1);
+});

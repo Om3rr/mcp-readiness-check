@@ -23,7 +23,7 @@ Live readiness + context-cost scan for MCP servers: OAuth discovery, annotations
 >
 > **Free:** score gate, token budget, top 3 issues, 50 runs/day per repo.
 >
-> Heavy tool list? Pair it with [ToolSlim](https://github.com/Om3rr/toolslim) to write a slimmer drop-in version and gate the token budget.
+> Heavy tool list? Set `fix: safe` to run [ToolSlim](https://github.com/Om3rr/toolslim) after the scan and write a slimmer drop-in tools.json. Its free lossless optimizer cut Notion's official server from 17,477 to 5,213 tokens per call (70.2%, 13 Nov 2026).
 
 **Usage:**
 

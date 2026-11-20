@@ -2,9 +2,10 @@
 // Usage:
 //   mcp-readiness-check https://host/mcp [--token T] [--json] [--html report.html]
 //   mcp-readiness-check --stdio node server.js [--json] [--html report.html]
+//   --json includes `target` and the raw `tools` list (for `toolslim --report`); --no-tools drops it; --json-out FILE writes it to a file
 //   mcp-readiness-check --batch servers.txt --out reports/     (one URL per line, "# comments" ok)
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
-import { probeHttp, toMarkdown } from '../src/probe.js';
+import { probeHttp, toMarkdown, withTools } from '../src/probe.js';
 import { probeStdio } from '../src/stdio.js';
 import { toHtml, toSummaryHtml } from '../src/html.js';
 const argv = process.argv.slice(2);
@@ -36,10 +37,12 @@ try {
     console.log(`wrote ${out}/index.html (${rows.length} servers)`);
   } else {
     let r, target;
-    if (argv[0] === '--stdio') { const cmd = argv.slice(1).filter((a, i, all) => !a.startsWith('--') && all[i - 1] !== '--html'); target = cmd.join(' '); r = await probeStdio(cmd[0], cmd.slice(1)); }
+    if (argv[0] === '--stdio') { const cmd = argv.slice(1).filter((a, i, all) => !a.startsWith('--') && all[i - 1] !== '--html' && all[i - 1] !== '--json-out'); target = cmd.join(' '); r = await probeStdio(cmd[0], cmd.slice(1)); }
     else { target = argv.find((a) => /^https?:/.test(a)); if (!target) throw new Error('usage: mcp-readiness-check <url> | --stdio <cmd...> | --batch <file>'); r = await probeHttp(target, { token }); }
     if (opt('--html')) { writeFileSync(opt('--html'), toHtml(r, target)); console.error(`wrote ${opt('--html')}`); }
-    console.log(json ? JSON.stringify(r, null, 2) : toMarkdown(r, target));
+    const full = argv.includes('--no-tools') ? { ...r, target } : withTools(r, target);
+    if (opt('--json-out')) { writeFileSync(opt('--json-out'), JSON.stringify(full, null, 2)); console.error(`wrote ${opt('--json-out')}`); }
+    console.log(json ? JSON.stringify(full, null, 2) : toMarkdown(r, target));
     process.exitCode = r.findings.some((f) => f.level === 'fail') ? 1 : 0;
   }
 } catch (e) { console.error(String(e.message || e)); process.exitCode = 2; }

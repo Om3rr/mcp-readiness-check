@@ -2,7 +2,9 @@
 
 **Live MCP readiness and context-cost scanning.** It connects to your running MCP server the way Claude, ChatGPT and Cursor do, then scores OAuth discovery, safety annotations, Origin/CORS, schemas, and the tokens your tool list costs on every agent turn. It is built on a scan of 12,900+ live servers from the official MCP registry ([State of public MCP servers, Nov 2026](reports/state-of-mcp-2026-11.pdf)).
 
-## GitHub Action (free tier, 50 runs/day per repo)
+> **Is your MCP server ready for real agents?**
+
+## GitHub Action: MCP Readiness Scan (free tier, 50 runs/day per repo)
 
 ```yaml
 - uses: Om3rr/mcp-readiness-check@v1
@@ -14,12 +16,24 @@
 
 Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
 
-**Badge** (links to the public scan page; the hosted service is not live yet, so `<service>` is a placeholder): `[![MCP readiness](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/scan?url=https://your-server/mcp)`
+**Badge** (links to your server's own public report page; the hosted service is not live yet, so `<service>` is a placeholder): `[![MCP Readiness Scan](https://<service>/badge.svg?url=https://your-server/mcp)](https://<service>/s/your-server/mcp)`
 **Hosted scan service and `scan_mcp` remote tool** (not deployed yet): [worker/](worker/README.md)
 
 **Free tier:** score gate, context-token budget, top 3 issues per run, 50 runs/day per repo, plus this CLI (unlimited, local).
 
-Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim): `npx toolslim <url> --fix`.
+Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim). Its free lossless optimizer cut Notion's official server from 17,477 to 5,213 tokens per call (70.2%, 13 Nov 2026): `npx toolslim <url> --fix`.
+
+### Fix step: ToolSlim, in the same Action
+
+```yaml
+- uses: Om3rr/mcp-readiness-check@v1
+  with:
+    url: http://127.0.0.1:8787/mcp
+    fix: safe                 # off | safe (lossless) | standard | aggressive
+    fix-out: tools.slim.json
+```
+
+The CLI's `--json` (and `--json-out FILE`, or the Action's `json-path` input) includes `target` and the raw `tools` list, so `toolslim --report scan.json` never re-connects to your server. See [ToolSlim INTEGRATION.md](https://github.com/Om3rr/toolslim/blob/main/INTEGRATION.md).
 
 ## CLI
 
