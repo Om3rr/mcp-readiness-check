@@ -130,6 +130,7 @@ test('per-server SEO pages: CMO spec, auth note, escaping, sitemap', async () =>
   const faq = ld['@graph'].find((g) => g['@type'] === 'FAQPage');
   assert.deepEqual(faq.mainEntity.map((q) => q.name), ['How many tokens does Google Docs MCP server add?', 'Does Google Docs support OAuth discovery?', 'How do I test my own MCP server like Google Docs?']);
   assert.equal((docs.match(/<a href="\/mcp-servers\/[a-z0-9-]+\/">/g) || []).length >= 3, true);
+  assert.ok(ld['@graph'].some((g) => g['@type'] === 'BreadcrumbList'));
   for (const s of ['gmail', 'google-slides']) assert.match(read(`mcp-servers/${s}/index.html`), /tokens per turn with \d+ tools/);
   const air = read('mcp-servers/airtable/index.html');
   assert.match(air, /The score covers only the public surface/);

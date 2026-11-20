@@ -125,6 +125,7 @@ for (const r of ALL) {
   const sld = { '@context': 'https://schema.org', '@graph': [
     { '@type': 'WebPage', name: t, description: m, url, dateModified: String(r.scannedAt).slice(0, 10), about: { '@type': 'SoftwareApplication', name: `${r.name} MCP server`, applicationCategory: 'DeveloperApplication', url: r.url } },
     { '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) },
+    { '@type': 'BreadcrumbList', itemListElement: [{ '@type': 'ListItem', position: 1, name: 'MCP Readiness', item: `${SITE}/` }, { '@type': 'ListItem', position: 2, name: 'Popular MCP servers', item: `${SITE}/mcp-servers/` }, { '@type': 'ListItem', position: 3, name: r.name, item: url }] },
   ] };
   const checks = r.issues.length ? r.issues.map((i) => `<tr><td>Readiness note</td><td>${esc(i.title)}</td></tr>`).join('') : `<tr><td>Pass</td><td>No readiness notes in the ${r.authRequired ? 'pre-login ' : ''}checks</td></tr>`;
   const base = r.authRequired
