@@ -1,0 +1,77 @@
+{
+ "eaa compliance,llms.txt,eu ai act compliance,openapi linter,dmarc checker|eaa compliance": {
+  "first_13w": 0.1,
+  "last_13w": 0.7,
+  "mean": 1.1
+ },
+ "eaa compliance,llms.txt,eu ai act compliance,openapi linter,dmarc checker|llms.txt": {
+  "first_13w": 30.3,
+  "last_13w": 24.6,
+  "mean": 44.4
+ },
+ "eaa compliance,llms.txt,eu ai act compliance,openapi linter,dmarc checker|eu ai act compliance": {
+  "first_13w": 27.5,
+  "last_13w": 10.4,
+  "mean": 29.4
+ },
+ "eaa compliance,llms.txt,eu ai act compliance,openapi linter,dmarc checker|openapi linter": {
+  "first_13w": 0.2,
+  "last_13w": 0.1,
+  "mean": 0.2
+ },
+ "eaa compliance,llms.txt,eu ai act compliance,openapi linter,dmarc checker|dmarc checker": {
+  "first_13w": 6.7,
+  "last_13w": 6.1,
+  "mean": 7.1
+ },
+ "llms.txt,ai crawler,mcp server security,security headers,vpat|llms.txt": {
+  "first_13w": 30.3,
+  "last_13w": 24.6,
+  "mean": 44.4
+ },
+ "llms.txt,ai crawler,mcp server security,security headers,vpat|ai crawler": {
+  "first_13w": 20.5,
+  "last_13w": 21.4,
+  "mean": 30.9
+ },
+ "llms.txt,ai crawler,mcp server security,security headers,vpat|mcp server security": {
+  "first_13w": 21.2,
+  "last_13w": 11.8,
+  "mean": 26.9
+ },
+ "llms.txt,ai crawler,mcp server security,security headers,vpat|security headers": {
+  "first_13w": 34.5,
+  "last_13w": 16.2,
+  "mean": 38.6
+ },
+ "llms.txt,ai crawler,mcp server security,security headers,vpat|vpat": {
+  "first_13w": 12.1,
+  "last_13w": 10.4,
+  "mean": 13.4
+ },
+ "llms.txt,github actions security,sbom generator,accessibility statement,cookie consent checker|llms.txt": {
+  "first_13w": 19.9,
+  "last_13w": 16.1,
+  "mean": 29.0
+ },
+ "llms.txt,github actions security,sbom generator,accessibility statement,cookie consent checker|github actions security": {
+  "first_13w": 20.1,
+  "last_13w": 6.4,
+  "mean": 24.2
+ },
+ "llms.txt,github actions security,sbom generator,accessibility statement,cookie consent checker|sbom generator": {
+  "first_13w": 0.3,
+  "last_13w": 0.4,
+  "mean": 0.8
+ },
+ "llms.txt,github actions security,sbom generator,accessibility statement,cookie consent checker|accessibility statement": {
+  "first_13w": 26.4,
+  "last_13w": 17.3,
+  "mean": 29.0
+ },
+ "llms.txt,github actions security,sbom generator,accessibility statement,cookie consent checker|cookie consent checker": {
+  "first_13w": 0.0,
+  "last_13w": 0.0,
+  "mean": 0.0
+ }
+}

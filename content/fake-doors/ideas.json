@@ -1,0 +1,242 @@
+[
+  {
+    "slug": "ai-chatbot-disclosure-check",
+    "title": "AI Chatbot Disclosure Check (EU AI Act Article 50)",
+    "meta_description": "Check whether your website chatbot tells visitors they're talking to an AI, as EU AI Act Article 50 requires. Free check, one-time evidence report.",
+    "headline": "Does your website chatbot say it's an AI?",
+    "subhead": "A free check of your public pages for AI chat widgets and a visible AI disclosure, plus an optional dated evidence report for your compliance file.",
+    "problem_bullets": [
+      "Many support tools now switch on AI answers inside the same chat widget, so the duty to disclose can land on you without anyone noticing.",
+      "Article 50 of the EU AI Act has applied to AI systems that talk to people since 2 August 2026, including for non-EU companies serving EU users.",
+      "A screenshot in someone's inbox is not a record. You need a dated, repeatable check of what visitors actually see."
+    ],
+    "what_it_will_do": [
+      "Load the public pages you list (home, contact, help) and detect known chat and voice-AI widgets.",
+      "Look for AI-disclosure wording in the launcher, header and first message.",
+      "Flag widgets it can't open or read as 'not checked' instead of guessing.",
+      "Suggest plain disclosure wording and where it usually goes for your chat vendor."
+    ],
+    "price_tiers": [
+      {
+        "label": "Free check",
+        "price": "$0"
+      },
+      {
+        "label": "Evidence report, one site",
+        "price": "$49 one-time"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Is this legal advice?",
+        "a": "No. It records what your public pages show and suggests wording. For a legal view of your obligations, ask a qualified adviser."
+      },
+      {
+        "q": "Does it apply if a human answers our chat?",
+        "a": "Article 50(1) is about AI systems that interact with people. If only humans answer, it doesn't bite, but check whether your vendor's AI mode is on."
+      },
+      {
+        "q": "Can it see logged-in areas or what the bot says later?",
+        "a": "No. It checks public pages and the first visible message only, and it says so in the report."
+      },
+      {
+        "q": "Is it a subscription?",
+        "a": "No. The planned report is a one-time payment per site. Re-checks would be priced separately."
+      }
+    ],
+    "target_keyword": "ai act article 50 chatbot disclosure"
+  },
+  {
+    "slug": "mcp-security-report",
+    "title": "MCP Server Security Report for Remote Servers",
+    "meta_description": "Free security check for your remote MCP server: auth, OAuth metadata, transport and risky tool definitions. Optional one-time report for security reviews.",
+    "headline": "A security report for your remote MCP server",
+    "subhead": "Run a free check on your own MCP endpoint, then get a one-time report you can hand to a customer's security review.",
+    "problem_bullets": [
+      "Enterprise buyers now ask MCP vendors security questions, and a CLI log is not something you can attach to a questionnaire.",
+      "The free scanners are CLIs that need local setup, an account token or a paid engine for some checks.",
+      "Auth details like the WWW-Authenticate header and OAuth protected-resource metadata are easy to miss and hard to explain later."
+    ],
+    "what_it_will_do": [
+      "Check transport and TLS on your remote endpoint (Streamable HTTP or SSE).",
+      "Check auth behaviour: 401 responses, WWW-Authenticate, OAuth protected-resource metadata.",
+      "Read tool definitions for missing destructive/read-only annotations and instruction-like text inside descriptions.",
+      "Check CORS and origin handling on the MCP endpoint.",
+      "Show each finding with severity and the spec section it relates to."
+    ],
+    "price_tiers": [
+      {
+        "label": "Free check",
+        "price": "$0"
+      },
+      {
+        "label": "Security report, one server",
+        "price": "$79 one-time"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Can I scan someone else's server?",
+        "a": "The report is meant for servers you own or run. Checks only read what the endpoint exposes publicly or with the auth header you provide."
+      },
+      {
+        "q": "Is this a penetration test?",
+        "a": "No. It's an automated configuration and definition review. It doesn't attempt exploits and doesn't replace a pentest."
+      },
+      {
+        "q": "Do you store my auth header?",
+        "a": "The plan is to use it for that single check and never write it to storage or logs."
+      },
+      {
+        "q": "Does it cover local stdio servers?",
+        "a": "Not at first. It targets remote servers reachable over HTTP."
+      }
+    ],
+    "target_keyword": "mcp server security audit"
+  },
+  {
+    "slug": "vpat-acr-draft",
+    "title": "VPAT / ACR Draft Generator for SaaS Products",
+    "meta_description": "Free accessibility scan of your SaaS pages, then a pre-filled VPAT 2.5 (WCAG) draft with every manual criterion flagged. One-time price, no subscription.",
+    "headline": "A pre-filled VPAT draft from a scan of your product",
+    "subhead": "Scan a few pages free. Then get a VPAT 2.5 (WCAG edition) draft filled with what automated checks can show, and a clear list of what still needs a human.",
+    "problem_bullets": [
+      "Buyers in education, government and larger companies ask for a VPAT or Accessibility Conformance Report before they sign.",
+      "Consultant-written ACRs commonly cost thousands of dollars, and subscription tools charge every month.",
+      "Automated scans cover only part of WCAG, so a 'finished' report from a scanner alone would be misleading."
+    ],
+    "what_it_will_do": [
+      "Scan up to 5 public pages against WCAG 2.2 A and AA machine-checkable rules.",
+      "Show issues grouped by WCAG criterion with the failing element.",
+      "Show which criteria automated testing can't judge.",
+      "Estimate how much of the VPAT can be pre-filled from your results."
+    ],
+    "price_tiers": [
+      {
+        "label": "Free scan (5 pages)",
+        "price": "$0"
+      },
+      {
+        "label": "VPAT draft, one product",
+        "price": "$149 one-time"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Is the draft ready to send to a buyer?",
+        "a": "Not on its own. It fills what automated checks can show and flags the rest. Someone on your team must review it and complete the manual criteria."
+      },
+      {
+        "q": "Which VPAT edition?",
+        "a": "The plan is the VPAT 2.5 WCAG edition first. Section 508 and EU (EN 301 549) editions may follow if people ask."
+      },
+      {
+        "q": "How much of WCAG can a scan check?",
+        "a": "Only part of it. Things like meaningful alt text and full keyboard flows need a person, and the draft says so."
+      },
+      {
+        "q": "Is it a subscription?",
+        "a": "No. The planned price is one payment per product."
+      }
+    ],
+    "target_keyword": "vpat report generator"
+  },
+  {
+    "slug": "github-actions-hardening",
+    "title": "GitHub Actions Security Scan and One-Time Fix PR",
+    "meta_description": "Free scan of your GitHub Actions workflows for unpinned actions, broad token permissions and script injection. Optional one-time fix PR, no subscription.",
+    "headline": "Find and fix risky GitHub Actions workflows",
+    "subhead": "A free scan of your workflow files, then an optional pull request that pins actions to commit SHAs and tightens permissions. One-time price, private repos included.",
+    "problem_bullets": [
+      "Actions referenced by a tag can change under you. Pinning to a full commit SHA is the usual fix, and it's tedious by hand.",
+      "Many workflows still run with broad GITHUB_TOKEN permissions they never use.",
+      "Free hardening tools often cover public repos only, and private-repo plans are usually per-developer subscriptions."
+    ],
+    "what_it_will_do": [
+      "Find actions referenced by tag or branch instead of a full commit SHA.",
+      "Flag workflows with missing or overly broad permissions blocks.",
+      "Flag untrusted event data used inside run: steps (script injection risk).",
+      "Flag risky pull_request_target and checkout patterns, and persisted credentials."
+    ],
+    "price_tiers": [
+      {
+        "label": "Free scan",
+        "price": "$0"
+      },
+      {
+        "label": "Fix PR, one repo",
+        "price": "$19 one-time"
+      },
+      {
+        "label": "Fix PRs, up to 10 repos",
+        "price": "$49 one-time"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Will the fix break my workflows?",
+        "a": "Every change arrives as a pull request with an explanation, so your CI runs on it before you merge."
+      },
+      {
+        "q": "Do you need write access to my code?",
+        "a": "The scan only reads workflow files. The planned fix PR would need permission to open a pull request on the repos you choose."
+      },
+      {
+        "q": "Does it work for private repos?",
+        "a": "That's the plan: the same one-time price for public and private repos."
+      },
+      {
+        "q": "Is this a subscription?",
+        "a": "No. You pay once per repo or per 10-repo pack."
+      }
+    ],
+    "target_keyword": "github actions security scanner"
+  },
+  {
+    "slug": "ai-crawler-fix",
+    "title": "AI Crawler Access Check and llms.txt Fix Pack",
+    "meta_description": "Free check of which AI crawlers your robots.txt allows or blocks and whether your llms.txt is valid. Optional one-time fix pack you can paste in.",
+    "headline": "See which AI crawlers can read your site, then fix it",
+    "subhead": "A free check of your robots.txt, llms.txt and bot responses, then an optional one-time pack of ready-to-paste files that match the policy you choose.",
+    "problem_bullets": [
+      "One robots.txt line or a CDN bot setting can quietly block the crawlers behind AI answers, or let in ones you meant to block.",
+      "llms.txt is new, and small format mistakes make it useless to the tools that read it.",
+      "Most monitoring tools are monthly subscriptions when you only need the files done right once."
+    ],
+    "what_it_will_do": [
+      "Read robots.txt and resolve, per known AI crawler, whether it's allowed or blocked.",
+      "Validate llms.txt and llms-full.txt format and check their links.",
+      "Check whether your CDN or firewall returns blocks or challenges to AI crawler user-agents.",
+      "Check sitemap and X-Robots-Tag signals that conflict with robots.txt."
+    ],
+    "price_tiers": [
+      {
+        "label": "Free check",
+        "price": "$0"
+      },
+      {
+        "label": "Fix pack, one domain",
+        "price": "$19 one-time"
+      }
+    ],
+    "faqs": [
+      {
+        "q": "Do AI crawlers have to obey robots.txt?",
+        "a": "No. Well-behaved crawlers follow it, but it's voluntary. The check shows what your site asks for, not what every bot does."
+      },
+      {
+        "q": "Should I block AI crawlers?",
+        "a": "It depends on your goals. The fix pack lets you choose, for example allow answer crawlers and block training crawlers."
+      },
+      {
+        "q": "Does llms.txt help?",
+        "a": "It's an emerging convention and support varies by tool. The pack makes sure that if you publish one, it's valid."
+      },
+      {
+        "q": "Is it a subscription?",
+        "a": "No. The planned fix pack is a one-time payment per domain."
+      }
+    ],
+    "target_keyword": "block ai crawlers robots txt"
+  }
+]
