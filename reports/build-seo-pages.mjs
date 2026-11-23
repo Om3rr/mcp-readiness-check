@@ -174,7 +174,7 @@ ${ogTags(t, m, url)}
 ${r.authRequired ? `<p class="note small" style="margin-top:14px">This server needs a login. The score covers only the public surface an MCP client sees before login (the 401, WWW-Authenticate and OAuth discovery). Tools and token cost behind the login were not scanned.</p>` : ''}
 ${r.summary ? `<p style="margin-top:14px">${esc(r.summary)}</p>` : ''}</div>
 <div class="card"><h2>Checks</h2><div class="tablewrap"><table><thead><tr><th>Result</th><th>Check</th></tr></thead><tbody>${base}${checks}</tbody></table></div>
-<p class="small">Live, unauthenticated surface checks on ${esc(day2)}. No tool was called. Not a security audit and not affiliated with ${esc(r.name)}. <a href="${pageOf(r.url)}">Live page with a fresh scan</a>.</p></div>
+<p class="small">Live, unauthenticated surface checks on ${esc(day2)}. No tool was called. Not a security audit and not affiliated with ${esc(r.name)}. <a href="${pageOf(r.url)}" rel="nofollow">Live page with a fresh scan</a>.</p></div>
 <div class="card"><h2>Scan your own server</h2><p class="small">Free, no sign-up: a score, the token cost of your tool list and the top issues. Then keep it from slipping in CI.</p>
 <div class="actions"><a class="btn" href="/?utm_source=mcp-readiness&amp;utm_medium=server-seo&amp;utm_campaign=scan">Scan my MCP server</a><a class="btn ghost" data-event="action_install_click" href="${ACTION('server-seo')}">Add the GitHub Action</a><a class="btn ghost" href="/docs/ci/">CI setup guide</a></div></div>
 <div class="card"><h2>${esc(r.name)} readiness badge</h2><div class="badgebox"><img src="${esc(`${SITE}/badge.svg?url=${encodeURIComponent(r.url)}`)}" alt="MCP readiness badge for ${esc(r.name)}" height="20" loading="lazy"></div>

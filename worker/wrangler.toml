@@ -31,6 +31,8 @@ PUBLIC_URL = "https://mcp.pacerai.fit"
 # One-line GSC HTML-tag hook. Leave empty until Omer pastes the token from his GSC account.
 GOOGLE_SITE_VERIFICATION = ""
 FREE_SCANS_PER_HOUR = "10"
+PAGE_SCANS_PER_HOUR = "20"
+PAGE_SCANS_GLOBAL_PER_HOUR = "30"
 SCAN_TIMEOUT_MS = "12000"
 # Payment Links / Lemon Squeezy checkout URLs (public, safe as vars):
 CHECKOUT_URL_PRO = ""
@@ -57,3 +59,12 @@ binding = "METRICS"
 database_name = "studio-metrics"
 database_id = "3448df02-bdfb-4f45-8279-6dbf1ae9f83f"
 
+# Workers Logs (Free plan: 200k events/day, 3-day retention). Invocation logs are
+# off so request URLs, IPs and full user-agents are not persisted. Custom logs
+# emit only target host, UA class and ASN. Do not enable traces (not needed).
+[observability]
+enabled = true
+
+[observability.logs]
+enabled = true
+invocation_logs = false

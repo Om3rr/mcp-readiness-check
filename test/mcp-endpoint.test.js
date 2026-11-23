@@ -64,10 +64,19 @@ function memD1() {
             return { meta: { changes: 1 } };
           }
           if (/INSERT INTO badges_daily/.test(s)) return bump('badges_daily', binds.slice(0, 2), { worker: binds[0], day: binds[1] });
+          if (/INSERT INTO page_refresh_daily/.test(s)) return bump('page_refresh_daily', binds.slice(0, 2), { worker: binds[0], day: binds[1] });
+          if (/INSERT INTO badge_refresh_daily/.test(s)) return bump('badge_refresh_daily', binds.slice(0, 2), { worker: binds[0], day: binds[1] });
           if (/INSERT INTO referrers_daily/.test(s)) return bump('referrers_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], host: binds[2] });
           if (/INSERT INTO events_daily/.test(s)) return bump('events_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], event: binds[2] });
           if (/INSERT INTO outside_scans_daily/.test(s)) return bump('outside_scans_daily', binds.slice(0, 2), { worker: binds[0], day: binds[1] });
           if (/INSERT INTO outside_scan_sources_daily/.test(s)) return bump('outside_scan_sources_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], source: binds[2] });
+          if (/INSERT OR IGNORE INTO outside_scan_seen/.test(s)) {
+            const t = table('outside_scan_seen');
+            const k = keyOf(binds);
+            const fresh = !t.has(k);
+            if (fresh) t.set(k, binds);
+            return { meta: { changes: fresh ? 1 : 0 } };
+          }
           if (/INSERT INTO internal_daily/.test(s)) return bump('internal_daily', binds.slice(0, 2), { worker: binds[0], day: binds[1] });
           if (/INSERT INTO crawlers_daily/.test(s)) return bump('crawlers_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], crawler: binds[2] });
           return { meta: { changes: 0 } };
@@ -76,6 +85,10 @@ function memD1() {
           if (/SELECT salt FROM daily_salts/.test(s)) {
             const row = table('daily_salts').get(binds[0]);
             return row ? { salt: row.salt } : null;
+          }
+          if (/SELECT 1 AS ok FROM outside_scan_seen/.test(s)) {
+            const t = table('outside_scan_seen');
+            return t.has(keyOf(binds)) ? { ok: 1 } : null;
           }
           if (/SELECT COUNT\(\*\) AS count FROM waitlist/.test(s)) return { count: 0 };
           if (/SELECT count FROM internal_daily/.test(s) || /FROM internal_daily/.test(s)) {
@@ -110,6 +123,8 @@ function memD1() {
                 scans_fail: find('scans_daily', day, 'fail'),
                 badge_hits: find('badges_daily', day, 'count'),
                 outside_scans: find('outside_scans_daily', day, 'count'),
+                page_refresh: find('page_refresh_daily', day, 'count'),
+                badge_refresh: find('badge_refresh_daily', day, 'count'),
               });
             }
           } else if (/FROM requests_daily/.test(s) && /GROUP BY route/.test(s)) {
@@ -407,4 +422,36 @@ test('server.json describes the streamable-http remote', () => {
   assert.equal(j.repository.source, 'github');
   assert.equal(j.remotes[0].type, 'streamable-http');
   assert.equal(j.remotes[0].url, 'https://mcp.pacerai.fit/mcp');
+});
+
+test('stats: page and badge refreshes are not outside; api/mcp are, once per IP and target per day', async () => {
+  const { recordVisit, readStats } = await import('../worker/src/metrics.js');
+  const env = { METRICS: memD1() };
+  const human = (ip = '203.0.113.40') => new Request('https://w.test/', { headers: { 'user-agent': 'Mozilla/5.0', 'cf-connecting-ip': ip } });
+  const target = 'https://mcp.athena.example/mcp';
+
+  await recordVisit(env, human(), { worker: 'mcp-readiness', route: '/s/*', scan: 'success', source: 'page', refresh: 'page', targetUrl: target });
+  await recordVisit(env, human(), { worker: 'mcp-readiness', route: '/badge', scan: 'success', source: 'badge', refresh: 'badge', targetUrl: target, badge: true });
+  let stats = await readStats(env, 'mcp-readiness');
+  assert.equal(stats.totals.scans.success, 2);
+  assert.equal(stats.totals.page_refresh, 1);
+  assert.equal(stats.totals.badge_refresh, 1);
+  assert.equal(stats.totals.outside_scans, 0);
+  assert.deepEqual(stats.totals.outside_scan_sources, {});
+  assert.ok('outside_scans' in stats.totals);
+  assert.ok('requests' in stats.totals);
+
+  await recordVisit(env, human(), { worker: 'mcp-readiness', route: '/api/scan', scan: 'success', source: 'api', targetUrl: target });
+  await recordVisit(env, human(), { worker: 'mcp-readiness', route: '/api/scan', scan: 'success', source: 'api', targetUrl: target });
+  stats = await readStats(env, 'mcp-readiness');
+  assert.equal(stats.totals.outside_scans, 1);
+  assert.equal(stats.totals.outside_scan_sources.api, 1);
+  assert.equal(stats.totals.scans.success, 4);
+
+  await recordVisit(env, human('203.0.113.41'), { worker: 'mcp-readiness', route: '/mcp', scan: 'success', source: 'mcp', targetUrl: target });
+  stats = await readStats(env, 'mcp-readiness');
+  assert.equal(stats.totals.outside_scans, 2);
+  assert.equal(stats.totals.outside_scan_sources.mcp, 1);
+  assert.equal(stats.daily[0].page_refresh, 1);
+  assert.equal(stats.daily[0].badge_refresh, 1);
 });

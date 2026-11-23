@@ -8,8 +8,8 @@ import { consume, getLicense, PLANS } from './license.js';
 import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
 import { registerMonitor, runMonitors } from './monitor.js';
-import { serverPage, savePage, pagePath, sitemap, withGoogleVerification } from './pages.js';
-import { bucketRoute, handleEvent, handleStats, handleWaitlist, scheduleTrack } from './metrics.js';
+import { serverPage, savePage, loadPage, pagePath, sitemap, withGoogleVerification } from './pages.js';
+import { bucketRoute, handleEvent, handleStats, handleWaitlist, scheduleTrack, isBot } from './metrics.js';
 
 const WORKER_NAME = 'mcp-readiness';
 
@@ -58,6 +58,21 @@ async function rateLimit(env, req, bucket, limit) {
   if (n >= limit) return false;
   await env.LICENSES.put(k, String(n + 1), { expirationTtl: 3700 });
   return true;
+}
+
+async function rateLimitGlobal(env, bucket, limit) {
+  const k = `rl:${bucket}:global:${new Date().toISOString().slice(0, 13)}`;
+  const n = Number((await env.LICENSES.get(k)) || 0);
+  if (n >= limit) return false;
+  await env.LICENSES.put(k, String(n + 1), { expirationTtl: 3700 });
+  return true;
+}
+
+/** Per-IP plus a global hourly cap for page-triggered scans (POST /s/ rescans and badge cache misses). */
+async function canPageTriggeredScan(env, req, bucket, perIpLimit) {
+  const globalLimit = Number(env.PAGE_SCANS_GLOBAL_PER_HOUR || 30);
+  if (!(await rateLimitGlobal(env, 'page-triggered', globalLimit))) return false;
+  return rateLimit(env, req, bucket, perIpLimit);
 }
 
 export async function scan(env, target, opts = {}) {
@@ -117,6 +132,7 @@ async function route(req, env, ctx, mark) {
         if (!t.ok) return json({ error: t.error }, 400);
         mark.targetUrl = t.url;
         mark.events = ['scan_started'];
+        mark.source = 'api';
         const key = bearer(req, url);
         if (key) {
           const c = await consume(env, key);
@@ -185,10 +201,17 @@ async function route(req, env, ctx, mark) {
         const hit = await cache.match(ck);
         if (hit) return hit;
         let score = null;
-        if (t.ok && (await rateLimit(env, req, 'badge', Number(env.BADGE_MISSES_PER_HOUR || 30)))) {
+        const rec = t.ok ? await loadPage(env, t.url) : null;
+        if (t.ok && isBot(req)) {
+          if (rec && Number.isFinite(Number(rec.score))) score = rec.score;
+        } else if (t.ok && (await canPageTriggeredScan(env, req, 'badge', Number(env.BADGE_MISSES_PER_HOUR || 30)))) {
           mark.targetUrl = t.url;
           mark.events = ['scan_started'];
+          mark.source = 'badge';
+          mark.refresh = 'badge';
           try { score = (await scan(env, t.url)).score; mark.scan = 'success'; } catch { mark.scan = 'fail'; }
+        } else if (rec && Number.isFinite(Number(rec.score))) {
+          score = rec.score;
         }
         const res = new Response(badge(score), { headers: { 'content-type': 'image/svg+xml', 'cache-control': 'public, max-age=21600' } });
         ctx?.waitUntil?.(cache.put(ck, res.clone()));
@@ -211,12 +234,14 @@ async function route(req, env, ctx, mark) {
         if (key) await env.LICENSES.delete(`claim:${sid}`);
         return thanksPage(key, env);
       }
-      // Indexable per-server pages (README badges link here). No sign-up.
-      if (p.startsWith('/s/') && req.method === 'GET') {
+      // Public per-server pages: GET is cache-only; POST Rescan runs a live scan.
+      if (p.startsWith('/s/') && (req.method === 'GET' || req.method === 'HEAD' || req.method === 'POST')) {
         return serverPage(req, env, {
           scanLimited: async (u) => {
             mark.targetUrl = u;
             mark.events = ['scan_started'];
+            mark.source = 'page';
+            mark.refresh = 'page';
             try {
               const view = limited(await scan(env, u), env);
               mark.scan = 'success';
@@ -226,7 +251,7 @@ async function route(req, env, ctx, mark) {
               throw e;
             }
           },
-          canScan: () => rateLimit(env, req, 'page', Number(env.PAGE_SCANS_PER_HOUR || 20)),
+          canScan: () => canPageTriggeredScan(env, req, 'page', Number(env.PAGE_SCANS_PER_HOUR || 20)),
         });
       }
       if (p === '/scan') {
@@ -247,7 +272,7 @@ async function route(req, env, ctx, mark) {
 // Search engines and AI answer engines are welcome on the pages; the API is not for crawling.
 const AI_AGENTS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'PerplexityBot', 'Google-Extended', 'Bingbot'];
 export function robotsTxt(origin) {
-  const block = (ua) => `User-agent: ${ua}\nAllow: /\nDisallow: /api/\n`;
+  const block = (ua) => `User-agent: ${ua}\nAllow: /\nDisallow: /api/\nDisallow: /s/\n`;
   return `# MCP Readiness. A summary for language models is at ${origin}/llms.txt\n${['*', ...AI_AGENTS].map(block).join('\n')}\nSitemap: ${origin}/sitemap.xml\n`;
 }
 
@@ -273,6 +298,7 @@ export default {
       targetUrl: mark.targetUrl,
       events: mark.events || [],
       source: mark.source || null,
+      refresh: mark.refresh || null,
     });
     return res;
   },

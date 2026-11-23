@@ -115,3 +115,27 @@ CREATE TABLE IF NOT EXISTS outside_scan_sources_daily (
   count INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (worker, day, source)
 );
+
+CREATE TABLE IF NOT EXISTS page_refresh_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day)
+);
+
+CREATE TABLE IF NOT EXISTS badge_refresh_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day)
+);
+
+-- Dedupes user-initiated outside scans: one per IP hash per target per day.
+-- ip_hash is sha256(daily_salt || IP) and target_hash is sha256 of the target URL; no raw IPs or URLs.
+CREATE TABLE IF NOT EXISTS outside_scan_seen (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  ip_hash TEXT NOT NULL,
+  target_hash TEXT NOT NULL,
+  PRIMARY KEY (worker, day, ip_hash, target_hash)
+);

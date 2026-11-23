@@ -1,6 +1,6 @@
 // Indexable per-server pages: /s/<host>/<path> <-> https://<host>/<path>.
 // Server-rendered HTML with a stable URL, title, meta description, canonical and JSON-LD.
-// README badges link here. No sign-up: a visit runs a free scan when the cached one is missing or older than 24 h.
+// README badges link here. GET serves the cached scan only; a Rescan button POSTs to run a live scan.
 import { checkTarget } from './guard.js';
 import { SEO_PATHS } from './seo-paths.js';
 import { BLOG_PATHS } from './blog-paths.js';
@@ -69,12 +69,17 @@ export async function serverPage(req, env, { scanLimited, canScan }) {
   if (decodeURI(u.pathname) + u.search !== pagePath(t.url)) return Response.redirect(canonical, 301);
   let rec = await loadPage(env, t.url);
   let error = null;
-  const stale = !rec || Date.now() - Date.parse(rec.at) > TTL_MS;
-  if (stale && (await canScan())) {
-    try { rec = await savePage(env, t.url, await scanLimited(t.url)); } catch (e) { error = `Could not reach the server: ${String(e.message || e).slice(0, 160)}`; }
+  if (req.method === 'POST') {
+    if (await canScan()) {
+      try { rec = await savePage(env, t.url, await scanLimited(t.url)); } catch (e) { error = `Could not reach the server: ${String(e.message || e).slice(0, 160)}`; }
+    } else {
+      error = rec
+        ? 'Rescan limit reached for now. Showing the last cached result.'
+        : 'The free scan limit is reached for now. Refresh in a few minutes.';
+    }
   }
-  if (!rec) return html(render(env, canonical, t.url, null, error || 'The free scan limit is reached for now. Refresh in a few minutes.'), 200);
-  return html(render(env, canonical, t.url, rec), 200, 'public, max-age=3600');
+  if (!rec) return html(render(env, canonical, t.url, null, error || 'Not scanned yet. Use Rescan to run a live scan.'), 200, 'no-store');
+  return html(render(env, canonical, t.url, rec, error), 200, req.method === 'POST' ? 'no-store' : 'public, max-age=3600');
 }
 
 function html(body, status, cache = 'no-store') {
@@ -132,6 +137,8 @@ ${ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\
 <body><div class="wrap">${PAGE_NAV}<main>
 <h1>Is ${esc(name)} ready for real agents?</h1>
 <p class="small">Endpoint: <code>${esc(url)}</code>${r ? ` · last scanned ${esc(timeLabel)}` : ''}</p>
+<form method="post" action="${esc(canonical)}"><button type="submit" class="btn ghost">Rescan</button></form>
+${error ? `<p class="small">${esc(error)}</p>` : ''}
 ${r ? `<div class="card"><div style="display:flex;gap:20px;align-items:center"><div class="score">${esc(r.score)}</div><div style="min-width:0"><b style="overflow-wrap:anywhere">${esc(name)}</b><div class="small">${r.authRequired ? 'Login required: OAuth discovery checked' : `${esc(r.toolCount)} tools · ~${(r.contextTokens || 0).toLocaleString('en-US')} tokens per agent turn`}</div></div></div>
 <h2>Top issues</h2><ul class="issues">${issues}</ul>
 ${r.locked ? `<p class="small">${esc(r.locked)} more issue(s) and every fix will be in the full report.</p>` : ''}
