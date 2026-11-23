@@ -4,7 +4,7 @@
 import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync } from 'node:fs';
 import { PAGE_CSS, PAGE_NAV, PAGE_FOOT, ogTags } from '../worker/src/pages.js';
 
-const SITE = process.env.SITE_URL || 'https://mcp-readiness.omer20sh.workers.dev';
+const SITE = process.env.SITE_URL || 'https://mcp.pacerai.fit';
 const DIR = 'content/blog';
 export const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const safeHref = (u) => (/^(https?:\/\/|mailto:|\/(?!\/)|#)/i.test(u) ? u : '#');

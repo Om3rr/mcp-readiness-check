@@ -183,3 +183,34 @@ test('/api/license contract used by ToolSlim: plan + status active for a Pro key
   assert.equal(j.plan, 'pro'); assert.equal(j.status, 'active');
   assert.equal((await call(env, '/api/license', { headers: { authorization: 'Bearer mrc_live_nope' } })).status, 401);
 });
+
+test('workers.dev GET/HEAD HTML pages 301 to mcp.pacerai.fit and keep the query; API, stats, badge, key file do not', async () => {
+  const { stayOnWorkersDev, workersDevContentRedirect } = await import('../worker/src/index.js');
+  const env = { PUBLIC_URL: 'https://mcp.pacerai.fit', LICENSES: { get: async () => null, put: async () => {}, list: async () => ({ keys: [], list_complete: true }) } };
+  const go = (path, init = {}, host = 'mcp-readiness.omer20sh.workers.dev') =>
+    worker.fetch(new Request(`https://${host}${path}`, init), env, { waitUntil() {} });
+
+  const page = await go('/mcp-servers/?utm_source=reddit&utm_medium=post');
+  assert.equal(page.status, 301);
+  assert.equal(page.headers.get('location'), 'https://mcp.pacerai.fit/mcp-servers/?utm_source=reddit&utm_medium=post');
+
+  const head = await go('/blog/test-mcp-server-before-shipping/', { method: 'HEAD' });
+  assert.equal(head.status, 301);
+  assert.equal(head.headers.get('location'), 'https://mcp.pacerai.fit/blog/test-mcp-server-before-shipping/');
+
+  assert.equal((await go('/api/health')).status, 200);
+  assert.equal((await go('/api/ci/run', { method: 'POST', headers: { 'content-type': 'application/json' }, body: '{}' })).status !== 301, true);
+  assert.notEqual((await go('/stats')).status, 301);
+  assert.notEqual((await go('/stats.html')).status, 301);
+  const badge = await go('/badge.svg?url=https://example.com/mcp');
+  assert.notEqual(badge.status, 301);
+  const key = await go('/374bdcd16f6846c698b95588e74afe47.txt');
+  assert.notEqual(key.status, 301);
+  assert.notEqual((await go('/', { method: 'POST' })).status, 301);
+
+  const same = workersDevContentRedirect(new Request('https://mcp.pacerai.fit/'), env);
+  assert.equal(same, null);
+  assert.equal(stayOnWorkersDev('/api/ci/run'), true);
+  assert.equal(stayOnWorkersDev('/374bdcd16f6846c698b95588e74afe47.txt'), true);
+  assert.equal(stayOnWorkersDev('/mcp-servers/'), false);
+});

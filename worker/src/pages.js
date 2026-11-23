@@ -11,7 +11,7 @@ export const PAGE_NAV = `<nav aria-label="Main"><a class="brand" href="/"><img s
 export const PAGE_FOOT = `<footer>MCP Readiness · <a href="https://github.com/Om3rr/mcp-readiness-check">Source (MIT)</a> · <a href="https://github.com/Om3rr/mcp-readiness-cli">CLI</a> · <a href="/mcp-servers/">Popular servers</a> · <a href="/docs/ci/">CI setup guide</a> · <a href="/blog/">Blog</a> · <a href="/llms.txt">llms.txt</a> · <a href="/stats.html">Public traffic stats</a> · Scores are automated surface checks, not a security audit.<p class="contact" style="margin:10px 0 0">Contact: <a href="mailto:omer20sh@gmail.com">omer20sh@gmail.com</a></p></footer>`;
 
 // Open Graph + Twitter card tags. The image is a static 1200x630 PNG served from worker/public/og.png.
-export function ogTags(title, desc, url, origin = 'https://mcp-readiness.omer20sh.workers.dev') {
+export function ogTags(title, desc, url, origin = 'https://mcp.pacerai.fit') {
   const img = `${origin}/og.png`;
   return `<meta property="og:type" content="website"><meta property="og:site_name" content="MCP Readiness"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(desc)}"><meta property="og:url" content="${esc(url)}"><meta property="og:image" content="${esc(img)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="MCP Readiness: is your MCP server ready for real agents?"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(desc)}"><meta name="twitter:image" content="${esc(img)}">`;
 }

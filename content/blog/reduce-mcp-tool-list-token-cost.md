@@ -15,7 +15,7 @@ That is the token cost people underestimate. The tool list is not a one-time han
 
 ## What popular servers actually cost
 
-These figures are from the live comparison page [Popular MCP servers: readiness scores and token cost](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/), based on unauthenticated scans on 20 November 2026. Token counts are estimates (about ±10%). Only the eight servers that answered `tools/list` without login have a token number; the fifteen OAuth-protected servers on that page do not, because we did not log in.
+These figures are from the live comparison page [Popular MCP servers: readiness scores and token cost](https://mcp.pacerai.fit/mcp-servers/), based on unauthenticated scans on 20 November 2026. Token counts are estimates (about ±10%). Only the eight servers that answered `tools/list` without login have a token number; the fifteen OAuth-protected servers on that page do not, because we did not log in.
 
 | Server | Tools | Tokens per turn | Notes on the list |
 | --- | ---: | ---: | --- |
@@ -30,9 +30,9 @@ These figures are from the live comparison page [Popular MCP servers: readiness 
 
 Three of those eight servers have at least one tool description the scanner flags as too long. Hugging Face's four tools cost roughly sixty times what Astro Docs costs, mostly because one description is 3,674 characters — around 900 tokens at four characters per token, before the schema or the other tools.
 
-The long tail is worse. The same comparison page points to our [State of public MCP servers](https://mcp-readiness.omer20sh.workers.dev/state-of-mcp-2026-11.html) report (official registry scan, 13 November 2026), where the longest single tool description was 27,638 characters.
+The long tail is worse. The same comparison page points to our [State of public MCP servers](https://mcp.pacerai.fit/state-of-mcp-2026-11.html) report (official registry scan, 13 November 2026), where the longest single tool description was 27,638 characters.
 
-Cite as: MCP Readiness, popular remote MCP servers, 20 November 2026, [https://mcp-readiness.omer20sh.workers.dev/mcp-servers/](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/).
+Cite as: MCP Readiness, popular remote MCP servers, 20 November 2026, [https://mcp.pacerai.fit/mcp-servers/](https://mcp.pacerai.fit/mcp-servers/).
 
 ## Why descriptions and schemas dominate
 
@@ -44,7 +44,7 @@ Annotations such as `readOnlyHint` and `destructiveHint` are small, useful hints
 
 ## A practical reduction sequence
 
-**1. Measure the live list, not the source file.** What the model sees is the `tools/list` response after initialize, not your TypeScript comments. Paste the server URL into the [free MCP Readiness scan](https://mcp-readiness.omer20sh.workers.dev/?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) and read the tokens-per-turn figure. If the server requires login, scan from CI against a local process, or with a test-tenant token, so you see the same list a signed-in client would get.
+**1. Measure the live list, not the source file.** What the model sees is the `tools/list` response after initialize, not your TypeScript comments. Paste the server URL into the [free MCP Readiness scan](https://mcp.pacerai.fit/?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) and read the tokens-per-turn figure. If the server requires login, scan from CI against a local process, or with a test-tenant token, so you see the same list a signed-in client would get.
 
 **2. Rewrite descriptions as routing text.** A good tool description answers two questions: what does this tool do, and when should the model choose it instead of a sibling tool? One or two short paragraphs are enough. Move tutorials and copy-pasted API docs out of `tools/list`. If a tool truly needs a long contract, put that contract behind a resource or a doc URL the model can fetch when it needs it.
 
@@ -68,7 +68,7 @@ Annotations such as `readOnlyHint` and `destructiveHint` are small, useful hints
 
 Shrinking `tools/list` does not reduce the tokens in a large *tool result*, and it does not replace authorization or Origin checks. The public numbers are surface measurements, not a security audit. Token figures can move when a vendor ships a new list.
 
-If you want a first measurement today, [scan your MCP server](https://mcp-readiness.omer20sh.workers.dev/?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) (free, no sign-up) and add the [GitHub Action](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) so the next bloated description fails the PR instead of the agent's context window.
+If you want a first measurement today, [scan your MCP server](https://mcp.pacerai.fit/?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) (free, no sign-up) and add the [GitHub Action](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=reduce-mcp-tool-list-token-cost) so the next bloated description fails the PR instead of the agent's context window.
 
 ## FAQ
 

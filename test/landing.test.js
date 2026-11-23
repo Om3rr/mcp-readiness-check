@@ -17,7 +17,7 @@ test('landing: no placeholders, no prices, no checkout, contact is a real mailto
   assert.match(html, /Contact: <a href="mailto:omer20sh@gmail\.com">omer20sh@gmail\.com<\/a>/);
   assert.doesNotMatch(html, /\$\d/);
   assert.doesNotMatch(html, /lemonsqueezy|buy\.stripe|checkout\.|Buy \d|Cancel anytime/i);
-  assert.match(html, /https:\/\/mcp-readiness\.omer20sh\.workers\.dev\/badge\.svg\?url=/);
+  assert.match(html, /https:\/\/mcp.pacerai.fit\/badge\.svg\?url=/);
 });
 
 test('landing: hero numbers match the stats file', () => {
@@ -82,7 +82,7 @@ test('scan result page: next steps with badge, prefilled Action and Pro CTA, sco
 test('OG/meta: every public page has title, description, canonical, og:* and a large twitter card', () => {
   for (const f of htmlFiles()) {
     const html = readFileSync(f, 'utf8');
-    for (const re of [/<title>[^<]+<\/title>/, /<meta name="description" content="[^"]+"/, /<link rel="canonical" href="https:\/\/mcp-readiness\.omer20sh\.workers\.dev\//, /property="og:title"/, /property="og:description"/, /property="og:url"/, /property="og:image" content="https:\/\/mcp-readiness\.omer20sh\.workers\.dev\/og\.png"/, /name="twitter:card" content="summary_large_image"/]) assert.match(html, re, `${f} missing ${re}`);
+    for (const re of [/<title>[^<]+<\/title>/, /<meta name="description" content="[^"]+"/, /<link rel="canonical" href="https:\/\/mcp.pacerai.fit\//, /property="og:title"/, /property="og:description"/, /property="og:url"/, /property="og:image" content="https:\/\/mcp.pacerai.fit\/og\.png"/, /name="twitter:card" content="summary_large_image"/]) assert.match(html, re, `${f} missing ${re}`);
   }
   const png = readFileSync(join(pub, 'og.png'));
   assert.equal(png.readUInt32BE(16), 1200); assert.equal(png.readUInt32BE(20), 630);
@@ -123,7 +123,7 @@ test('per-server SEO pages: CMO spec, auth note, escaping, sitemap', async () =>
   const docs = read('mcp-servers/google-docs/index.html');
   assert.match(docs, /<title>Google Docs MCP server: token cost, tools &amp; readiness score<\/title>/);
   assert.match(docs, /<meta name="description" content="Google Docs adds ~10,011 tokens per turn with 2 tools\. Readiness 85\/100\. Free live scan and GitHub Action\.">/);
-  assert.match(docs, /<link rel="canonical" href="https:\/\/mcp-readiness\.omer20sh\.workers\.dev\/mcp-servers\/google-docs\/">/);
+  assert.match(docs, /<link rel="canonical" href="https:\/\/mcp.pacerai.fit\/mcp-servers\/google-docs\/">/);
   assert.equal((docs.match(/<h1>/g) || []).length, 1);
   assert.match(docs, /TL;DR/); assert.match(docs, /Scan your own server/); assert.match(docs, /data-event="badge_copied"/);
   const ld = JSON.parse(docs.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
@@ -166,7 +166,7 @@ test('blog: safe markdown, Article + FAQPage JSON-LD, sitemap and llms, empty-sa
   for (const p of posts) {
     const h = read(`blog/${p.slug}/index.html`);
     assert.equal((h.match(/<h1>/g) || []).length, 1);
-    assert.match(h, new RegExp(`<link rel="canonical" href="https://mcp-readiness\\.omer20sh\\.workers\\.dev/blog/${p.slug}/">`));
+    assert.match(h, new RegExp(`<link rel="canonical" href="https://mcp.pacerai.fit/blog/${p.slug}/">`));
     const ld = JSON.parse(h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/)[1]);
     const types = ld['@graph'].map((g) => g['@type']);
     assert.ok(types.includes('Article'));

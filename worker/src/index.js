@@ -12,6 +12,39 @@ import { bucketRoute, handleEvent, handleStats, handleWaitlist, scheduleTrack } 
 
 const WORKER_NAME = 'mcp-readiness';
 
+const WORKERS_DEV_HOST = 'mcp-readiness.omer20sh.workers.dev';
+const INDEXNOW_KEY = '374bdcd16f6846c698b95588e74afe47';
+
+/** Paths that must keep working on workers.dev (API, Action, badges, stats, key file, non-HTML assets). */
+export function stayOnWorkersDev(pathname) {
+  const p = pathname.replace(/\/+$/, '') || '/';
+  if (p === '/stats' || p === '/stats.html' || p === '/stats.json') return true;
+  if (p === '/badge' || p === '/badge.svg' || p === '/badge.json') return true;
+  if (p === '/mcp') return true;
+  if (p === `/${INDEXNOW_KEY}.txt`) return true;
+  if (p.startsWith('/api/')) return true;
+  if (p.startsWith('/webhooks/')) return true;
+  if (/\.(svg|png|ico|js|txt|xml|json|map|css|woff2?)$/i.test(p)) return true;
+  return false;
+}
+
+/** 301 GET/HEAD HTML pages from workers.dev to the canonical host, keeping path and query. */
+export function workersDevContentRedirect(req, env) {
+  const canonical = String(env?.PUBLIC_URL || '').trim().replace(/\/+$/, '');
+  if (!canonical) return null;
+  let dest;
+  try { dest = new URL(canonical); } catch { return null; }
+  const url = new URL(req.url);
+  if (url.host.toLowerCase() !== WORKERS_DEV_HOST) return null;
+  if (url.host.toLowerCase() === dest.host.toLowerCase()) return null;
+  const method = req.method.toUpperCase();
+  if (method !== 'GET' && method !== 'HEAD') return null;
+  if (stayOnWorkersDev(url.pathname)) return null;
+  const location = new URL(`${url.pathname}${url.search}`, dest.origin).toString();
+  return new Response(null, { status: 301, headers: { location, 'cache-control': 'public, max-age=3600' } });
+}
+
+
 const VERSION = '0.5.0';
 const ORDER = { fail: 0, warn: 1, info: 2, pass: 3 };
 const json = (o, status = 200, extra = {}) => new Response(JSON.stringify(o, null, 1), { status, headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*', ...extra } });
@@ -251,6 +284,8 @@ export function robotsTxt(origin) {
 
 export default {
   async fetch(req, env, ctx) {
+    const redirected = workersDevContentRedirect(req, env);
+    if (redirected) return redirected;
     const url = new URL(req.url);
     const p = url.pathname.replace(/\/+$/, '') || '/';
     if ((req.method === 'GET' || req.method === 'HEAD') && (p === '/stats' || p === '/stats.json' || p === '/stats.html')) {

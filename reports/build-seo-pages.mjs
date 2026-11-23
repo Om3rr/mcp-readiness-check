@@ -6,7 +6,7 @@ import { readFileSync, writeFileSync, mkdirSync, existsSync } from 'node:fs';
 import { PAGE_CSS, PAGE_NAV, PAGE_FOOT , ogTags } from '../worker/src/pages.js';
 import { BLOG_POSTS } from '../worker/src/blog-paths.js';
 
-const SITE = process.env.SITE_URL || 'https://mcp-readiness.omer20sh.workers.dev';
+const SITE = process.env.SITE_URL || 'https://mcp.pacerai.fit';
 const REPO = 'https://github.com/Om3rr/mcp-readiness-check';
 // The Marketplace listing is not published yet, so Action links go to the repo README.
 const ACTION = (medium) => `${REPO}?utm_source=mcp-readiness&amp;utm_medium=${medium}&amp;utm_campaign=action#readme`;

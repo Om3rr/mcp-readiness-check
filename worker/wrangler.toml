@@ -1,10 +1,14 @@
 # MCP Readiness: hosted scanner + landing page.
-# Deployed on the free tier at https://mcp-readiness.omer20sh.workers.dev
-# (no custom domain, no Workers Paid plan). See worker/README.md.
+# Canonical host: https://mcp.pacerai.fit
+# workers.dev stays up for the API, badges, GitHub Action, and /stats. See worker/README.md.
 name = "mcp-readiness"
 main = "src/index.js"
 compatibility_date = "2026-11-01"
 workers_dev = true
+
+[[routes]]
+pattern = "mcp.pacerai.fit"
+custom_domain = true
 
 # Cron is defined here to match main, but it is NOT registered on this account:
 # the Workers Free plan allows 5 cron triggers per account, and that cap is
@@ -23,7 +27,7 @@ binding = "LICENSES"
 id = "152ddf7a351547409d119ec351698d68"
 
 [vars]
-PUBLIC_URL = "https://mcp-readiness.omer20sh.workers.dev"
+PUBLIC_URL = "https://mcp.pacerai.fit"
 # One-line GSC HTML-tag hook. Leave empty until Omer pastes the token from his GSC account.
 GOOGLE_SITE_VERIFICATION = ""
 FREE_SCANS_PER_HOUR = "10"
