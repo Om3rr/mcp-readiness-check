@@ -3,7 +3,7 @@
 import { writeFileSync, mkdirSync } from 'node:fs';
 import { PAGE_CSS, PAGE_NAV, PAGE_FOOT, ogTags } from '../worker/src/pages.js';
 
-const SITE = 'https://mcp-readiness.omer20sh.workers.dev';
+const SITE = 'https://mcp.pacerai.fit';
 const README = 'https://github.com/Om3rr/mcp-readiness-check?utm_source=mcp-readiness&utm_medium=docs&utm_campaign=action#readme';
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 const title = 'Add an MCP readiness badge and CI gate in 3 steps | MCP Readiness';
@@ -66,7 +66,7 @@ const TROUBLE = [
 
 const ld = { '@context': 'https://schema.org', '@graph': [
   { '@type': 'HowTo', name: 'Add an MCP readiness badge and CI gate', url: `${SITE}/docs/ci/`, step: [
-    { '@type': 'HowToStep', name: 'Scan your MCP server', text: 'Paste your public MCP URL into the free scan at mcp-readiness.omer20sh.workers.dev.' },
+    { '@type': 'HowToStep', name: 'Scan your MCP server', text: 'Paste your public MCP URL into the free scan at mcp.pacerai.fit.' },
     { '@type': 'HowToStep', name: 'Add the README badge', text: 'Copy the badge markdown with your server URL into your README.' },
     { '@type': 'HowToStep', name: 'Add the GitHub Action', text: 'Add Om3rr/mcp-readiness-check@v1 to a workflow with fail-under and max-context-tokens.' },
   ] },

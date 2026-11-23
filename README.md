@@ -6,12 +6,12 @@
 
 ## CI quick start: badge and PR gate in 3 steps
 
-Full guide with troubleshooting: https://mcp-readiness.omer20sh.workers.dev/docs/ci/
+Full guide with troubleshooting: https://mcp.pacerai.fit/docs/ci/
 
-1. **Scan** your server free at https://mcp-readiness.omer20sh.workers.dev (no sign-up).
+1. **Scan** your server free at https://mcp.pacerai.fit (no sign-up).
 2. **Add the badge** to your README (swap in your URL):
    ```markdown
-   [![MCP readiness](https://mcp-readiness.omer20sh.workers.dev/badge.svg?url=https://your-server.example.com/mcp)](https://mcp-readiness.omer20sh.workers.dev/s/your-server.example.com/mcp)
+   [![MCP readiness](https://mcp.pacerai.fit/badge.svg?url=https://your-server.example.com/mcp)](https://mcp.pacerai.fit/s/your-server.example.com/mcp)
    ```
 3. **Add the Action** as `.github/workflows/mcp-readiness.yml`:
    ```yaml
@@ -73,8 +73,8 @@ Outputs: `score`, `context-tokens`, `findings`, `mode`.
 
 Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
 
-**Badge** (links to your server's own public report page): `[![MCP Readiness Scan](https://mcp-readiness.omer20sh.workers.dev/badge.svg?url=https://your-server/mcp)](https://mcp-readiness.omer20sh.workers.dev/s/your-server/mcp)`
-**Hosted scan service and `scan_mcp` remote tool** (live on the free `workers.dev` subdomain): https://mcp-readiness.omer20sh.workers.dev — see [worker/](worker/README.md)
+**Badge** (links to your server's own public report page): `[![MCP Readiness Scan](https://mcp.pacerai.fit/badge.svg?url=https://your-server/mcp)](https://mcp.pacerai.fit/s/your-server/mcp)`
+**Hosted scan service and `scan_mcp` remote tool:** https://mcp.pacerai.fit — the Worker also stays at https://mcp-readiness.omer20sh.workers.dev for the API, badges, and GitHub Action. See [worker/](worker/README.md)
 
 **Free tier:** score gate, context-token budget, top 3 issues per run, 50 runs/day per repo, plus this CLI (unlimited, local).
 

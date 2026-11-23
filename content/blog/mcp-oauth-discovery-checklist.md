@@ -66,7 +66,7 @@ The legacy flow advertised authorization-server metadata on the MCP host and ski
 
 ## What the popular-server scan shows
 
-On 20 November 2026 we scanned 23 well-known remote MCP servers without logging in, and published the results at [Popular MCP servers](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/). Fifteen of the 23 require OAuth, so the public scan can only see the pre-login surface: the 401, `WWW-Authenticate`, and protected-resource discovery. Fourteen of those fifteen had no open pre-login issue on that surface. The one open issue was Atlassian (`https://mcp.atlassian.com/v1/mcp`), which scored 95 and "uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)."
+On 20 November 2026 we scanned 23 well-known remote MCP servers without logging in, and published the results at [Popular MCP servers](https://mcp.pacerai.fit/mcp-servers/). Fifteen of the 23 require OAuth, so the public scan can only see the pre-login surface: the 401, `WWW-Authenticate`, and protected-resource discovery. Fourteen of those fifteen had no open pre-login issue on that surface. The one open issue was Atlassian (`https://mcp.atlassian.com/v1/mcp`), which scored 95 and "uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)."
 
 That is a useful baseline: the well-known vendors mostly get discovery right, and the remaining miss is the exact legacy shape this checklist tells you to avoid. These are automated surface checks, not a security audit and not an endorsement of any listed vendor.
 
@@ -74,7 +74,7 @@ That is a useful baseline: the well-known vendors mostly get discovery right, an
 
 Walk the path a client walks. Request the MCP endpoint with no `Authorization` header and read the status and `WWW-Authenticate` value. Fetch the `resource_metadata` URL and the well-known fallbacks. Confirm `authorization_servers`, then fetch RFC 8414 or OpenID Connect Discovery from the issuer. Only then try a token.
 
-To catch regressions, [scan the server](https://mcp-readiness.omer20sh.workers.dev/?utm_source=blog&utm_medium=content&utm_campaign=mcp-oauth-discovery-checklist) and add the [MCP Readiness Scan GitHub Action](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=mcp-oauth-discovery-checklist) to the pull request that changes auth. The Action connects the way a client does and checks the 401, `resource_metadata`, RFC 9728, RFC 8414, and whether the server is still on the 2025-03-26 flow.
+To catch regressions, [scan the server](https://mcp.pacerai.fit/?utm_source=blog&utm_medium=content&utm_campaign=mcp-oauth-discovery-checklist) and add the [MCP Readiness Scan GitHub Action](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=mcp-oauth-discovery-checklist) to the pull request that changes auth. The Action connects the way a client does and checks the 401, `resource_metadata`, RFC 9728, RFC 8414, and whether the server is still on the 2025-03-26 flow.
 
 ## FAQ
 

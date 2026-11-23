@@ -9,7 +9,7 @@ slug: test-mcp-server-before-shipping
 
 > **TL;DR:** "It works in my chat client" is not a shipping test for an MCP server. Before you release, confirm initialize and `tools/list`, unknown-method errors, Origin checks, and — if the server is protected — OAuth discovery. Use the official [MCP Inspector](https://modelcontextprotocol.io/docs/2026-07-28/tools/inspector) to call tools and inspect JSON-RPC by hand. Add a CI gate so a pull request fails when the readiness score drops or the tool list blows a token budget. The free [MCP Readiness Scan GitHub Action](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=test-mcp-server-before-shipping) does that against a server you start on localhost in the job, or against a public URL.
 
-A surprising number of issues never show up in a happy-path chat. In our unauthenticated scans of 23 popular remote MCP servers on 20 November 2026 ([comparison page](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/)), every server in the list still scored 90 or more on live surface checks — and the remaining misses were exactly the kind of thing a CI scan catches: missing tool annotations, long descriptions, a legacy OAuth discovery flow, and unknown methods that do not return JSON-RPC `-32601`.
+A surprising number of issues never show up in a happy-path chat. In our unauthenticated scans of 23 popular remote MCP servers on 20 November 2026 ([comparison page](https://mcp.pacerai.fit/mcp-servers/)), every server in the list still scored 90 or more on live surface checks — and the remaining misses were exactly the kind of thing a CI scan catches: missing tool annotations, long descriptions, a legacy OAuth discovery flow, and unknown methods that do not return JSON-RPC `-32601`.
 
 Those are automated surface checks, not a security audit. They are also cheap to run on every PR.
 
@@ -68,7 +68,7 @@ Point `url` at a public HTTPS endpoint if that is what you ship, or pass `token`
 
 The Action connects the way Claude, ChatGPT, and Cursor do and checks OAuth discovery, annotations, Origin and CORS, schemas, JSON-RPC hygiene, and the token cost of the tool list. It does not replace Inspector's tool calls, and it is not a penetration test.
 
-If you do not use GitHub Actions, the same checks are available as a [CLI](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=test-mcp-server-before-shipping) against a URL or a stdio server, or as a [free hosted scan](https://mcp-readiness.omer20sh.workers.dev/?utm_source=blog&utm_medium=content&utm_campaign=test-mcp-server-before-shipping) for a public HTTPS endpoint.
+If you do not use GitHub Actions, the same checks are available as a [CLI](https://github.com/Om3rr/mcp-readiness-check?utm_source=blog&utm_medium=content&utm_campaign=test-mcp-server-before-shipping) against a URL or a stdio server, or as a [free hosted scan](https://mcp.pacerai.fit/?utm_source=blog&utm_medium=content&utm_campaign=test-mcp-server-before-shipping) for a public HTTPS endpoint.
 
 Ship with both layers: Inspector for the behavior of your tools, and a CI scan for the surface every client will see on the next release.
 

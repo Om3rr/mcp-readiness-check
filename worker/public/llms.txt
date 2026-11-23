@@ -3,15 +3,15 @@
 > Free, open-source live scanner for Model Context Protocol (MCP) servers. It connects like Claude, ChatGPT and Cursor do and scores OAuth discovery (RFC 9728), tool annotations, Origin/CORS, JSON-RPC conformance, schemas, and the token cost of the tool list on every agent turn. Web scan, public page per server, README badge, CLI and a GitHub Action. Paid plans are coming soon; there is no checkout today.
 
 ## Use it
-- [Scan a public MCP server](https://mcp-readiness.omer20sh.workers.dev/): paste an https URL, no sign-up, 10 scans/hour.
-- [Server pages](https://mcp-readiness.omer20sh.workers.dev/s/mcp.context7.com/mcp): /s/<host>/<path> shows the latest score, token cost, top issues and the badge.
+- [Scan a public MCP server](https://mcp.pacerai.fit/): paste an https URL, no sign-up, 10 scans/hour.
+- [Server pages](https://mcp.pacerai.fit/s/mcp.context7.com/mcp): /s/<host>/<path> shows the latest score, token cost, top issues and the badge.
 - [GitHub Action](https://github.com/Om3rr/mcp-readiness-check#readme): fail a PR under a score or over a token budget; works on localhost in CI.
 - [CLI](https://github.com/Om3rr/mcp-readiness-cli): scan a remote or stdio MCP server from the terminal.
 - [Source (MIT)](https://github.com/Om3rr/mcp-readiness-check)
 
 ## Data
-- [Popular remote MCP servers, 20 November 2026](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/): scores and tokens per turn.
-- [CI setup guide](https://mcp-readiness.omer20sh.workers.dev/docs/ci/): badge and GitHub Action in 3 steps, local servers in CI, troubleshooting.
+- [Popular remote MCP servers, 20 November 2026](https://mcp.pacerai.fit/mcp-servers/): scores and tokens per turn.
+- [CI setup guide](https://mcp.pacerai.fit/docs/ci/): badge and GitHub Action in 3 steps, local servers in CI, troubleshooting.
 - 23 popular remote MCP servers scanned unauthenticated on 20 November 2026: 8 answer tools/list without login, 15 require OAuth.
 - 14 of 15 OAuth-protected servers had no pre-login readiness notes (401, WWW-Authenticate, OAuth protected-resource discovery); spec notes: Atlassian (Uses the older 2025-03-26 discovery (AS metadata on the MCP host, no RFC 9728)).
 - Tool-list cost per agent turn ranges from ~80 tokens (Astro Docs) to ~4,967 tokens (Hugging Face) among the open servers.
@@ -20,93 +20,93 @@
 - The long tail is different: see the State of public MCP servers report (official registry scan, 13 Nov 2026), where the longest single tool description was 27,638 characters.
 
 ## Server pages
-- [Cloudflare Docs MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-docs/): ~434 tokens per turn, 2 tools, readiness 100/100
-- [Microsoft Learn MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/mslearn/): ~1,215 tokens per turn, 3 tools, readiness 100/100
-- [Exa Search MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/exa/): ~605 tokens per turn, 2 tools, readiness 100/100
-- [Context7 MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/context7/): ~1,304 tokens per turn, 2 tools, readiness 95/100
-- [DeepWiki MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/deepwiki/): ~427 tokens per turn, 3 tools, readiness 95/100
-- [Hugging Face MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/huggingface/): ~4,967 tokens per turn, 4 tools, readiness 95/100
-- [Astro Docs MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/astro-docs/): ~80 tokens per turn, 1 tools, readiness 95/100
-- [AWS Knowledge MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/aws-knowledge/): ~1,978 tokens per turn, 5 tools, readiness 90/100
-- [Semgrep MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/semgrep/): login required, pre-login readiness 100/100
-- [Globalping MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/globalping/): login required, pre-login readiness 100/100
-- [Linear MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/linear/): login required, pre-login readiness 100/100
-- [Notion MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/notion/): login required, pre-login readiness 100/100
-- [Sentry MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/sentry/): login required, pre-login readiness 100/100
-- [Stripe MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/stripe/): login required, pre-login readiness 100/100
-- [Supabase MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/supabase/): login required, pre-login readiness 100/100
-- [Vercel MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/vercel/): login required, pre-login readiness 100/100
-- [GitHub MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/github/): login required, pre-login readiness 100/100
-- [PayPal MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/paypal/): login required, pre-login readiness 100/100
-- [Square MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/square/): login required, pre-login readiness 100/100
-- [Neon MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/neon/): login required, pre-login readiness 100/100
-- [Cloudflare Workers Bindings MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-bindings/): login required, pre-login readiness 100/100
-- [Webflow MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/webflow/): login required, pre-login readiness 100/100
-- [Atlassian MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/atlassian/): login required, pre-login readiness 95/100
-- [Airtable MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/airtable/): login required, pre-login readiness 100/100
-- [Apify MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/apify/): login required, pre-login readiness 100/100
-- [Asana MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/asana-v2/): login required, pre-login readiness 100/100
-- [Asana Command MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/asana-command/): login required, pre-login readiness 100/100
-- [Atlassian Rovo MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/atlassian-rovo/): login required, pre-login readiness 100/100
-- [Box MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/box/): login required, pre-login readiness 100/100
-- [Browserbase MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/browserbase/): ~752 tokens per turn, 6 tools, readiness 85/100
-- [Buffer MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/buffer/): login required, pre-login readiness 100/100
-- [Canva MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/canva/): login required, pre-login readiness 100/100
-- [ClickUp MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/clickup/): login required, pre-login readiness 100/100
-- [Cloudflare Agents SDK Docs MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-agents-sdk-docs/): ~101 tokens per turn, 1 tools, readiness 95/100
-- [Cloudflare API MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-api/): login required, pre-login readiness 100/100
-- [Cloudflare Blog MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-blog/): ~464 tokens per turn, 4 tools, readiness 100/100
-- [Cloudflare Browser Run MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-browser-run/): login required, pre-login readiness 100/100
-- [Cloudflare Containers MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-containers/): login required, pre-login readiness 100/100
-- [Cloudflare Demo Day MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-demo-day/): ~52 tokens per turn, 1 tools, readiness 90/100
-- [Cloudflare DEX MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-dex/): login required, pre-login readiness 100/100
-- [Cloudflare One CASB MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/cloudflare-casb/): login required, pre-login readiness 100/100
-- [CoinGecko MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/coingecko/): ~439 tokens per turn, 2 tools, readiness 100/100
-- [fal MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/fal/): login required, pre-login readiness 100/100
-- [Figma MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/figma/): login required, pre-login readiness 100/100
-- [Firecrawl MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/firecrawl/): ~3,869 tokens per turn, 3 tools, readiness 95/100
-- [GitLab MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/gitlab/): login required, pre-login readiness 100/100
-- [Gmail MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/gmail/): ~11,282 tokens per turn, 23 tools, readiness 85/100
-- [Google Calendar MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-calendar/): ~5,765 tokens per turn, 9 tools, readiness 80/100
-- [Google Chat MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-chat/): ~3,792 tokens per turn, 4 tools, readiness 85/100
-- [Google Classroom MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-classroom/): ~0 tokens per turn, 0 tools, readiness 90/100
-- [Google Docs MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-docs/): ~10,011 tokens per turn, 2 tools, readiness 85/100
-- [Google Drive MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-drive/): ~4,609 tokens per turn, 9 tools, readiness 85/100
-- [Google People MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-people/): ~607 tokens per turn, 3 tools, readiness 100/100
-- [Google Sheets MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-sheets/): ~7,860 tokens per turn, 6 tools, readiness 85/100
-- [Google Slides MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/google-slides/): ~8,957 tokens per turn, 4 tools, readiness 80/100
-- [Higgsfield AI MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/higgsfield/): login required, pre-login readiness 100/100
-- [Hostinger MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/hostinger/): login required, pre-login readiness 100/100
-- [HubSpot MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/hubspot/): login required, pre-login readiness 100/100
-- [Intercom MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/intercom/): login required, pre-login readiness 100/100
-- [Jam MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/jam/): login required, pre-login readiness 100/100
-- [Klaviyo MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/klaviyo/): login required, pre-login readiness 100/100
-- [Miro MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/miro/): login required, pre-login readiness 100/100
-- [monday.com MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/monday/): login required, pre-login readiness 100/100
-- [MongoDB MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/mongodb/): login required, pre-login readiness 100/100
-- [Netlify MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/netlify/): login required, pre-login readiness 100/100
-- [Perplexity MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/perplexity/): login required, pre-login readiness 100/100
-- [Plaid MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/plaid/): login required, pre-login readiness 90/100
-- [PostHog MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/posthog/): login required, pre-login readiness 100/100
-- [Prisma MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/prisma/): login required, pre-login readiness 100/100
-- [Slack MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/slack/): login required, pre-login readiness 100/100
-- [Square MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/square-http/): login required, pre-login readiness 100/100
-- [Svelte MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/svelte/): ~1,186 tokens per turn, 4 tools, readiness 100/100
-- [TickTick MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/ticktick/): login required, pre-login readiness 100/100
-- [Twilio Docs MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/twilio-docs/): ~1,035 tokens per turn, 2 tools, readiness 100/100
-- [Wix MCP server](https://mcp-readiness.omer20sh.workers.dev/mcp-servers/wix/): login required, pre-login readiness 100/100
+- [Cloudflare Docs MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-docs/): ~434 tokens per turn, 2 tools, readiness 100/100
+- [Microsoft Learn MCP server](https://mcp.pacerai.fit/mcp-servers/mslearn/): ~1,215 tokens per turn, 3 tools, readiness 100/100
+- [Exa Search MCP server](https://mcp.pacerai.fit/mcp-servers/exa/): ~605 tokens per turn, 2 tools, readiness 100/100
+- [Context7 MCP server](https://mcp.pacerai.fit/mcp-servers/context7/): ~1,304 tokens per turn, 2 tools, readiness 95/100
+- [DeepWiki MCP server](https://mcp.pacerai.fit/mcp-servers/deepwiki/): ~427 tokens per turn, 3 tools, readiness 95/100
+- [Hugging Face MCP server](https://mcp.pacerai.fit/mcp-servers/huggingface/): ~4,967 tokens per turn, 4 tools, readiness 95/100
+- [Astro Docs MCP server](https://mcp.pacerai.fit/mcp-servers/astro-docs/): ~80 tokens per turn, 1 tools, readiness 95/100
+- [AWS Knowledge MCP server](https://mcp.pacerai.fit/mcp-servers/aws-knowledge/): ~1,978 tokens per turn, 5 tools, readiness 90/100
+- [Semgrep MCP server](https://mcp.pacerai.fit/mcp-servers/semgrep/): login required, pre-login readiness 100/100
+- [Globalping MCP server](https://mcp.pacerai.fit/mcp-servers/globalping/): login required, pre-login readiness 100/100
+- [Linear MCP server](https://mcp.pacerai.fit/mcp-servers/linear/): login required, pre-login readiness 100/100
+- [Notion MCP server](https://mcp.pacerai.fit/mcp-servers/notion/): login required, pre-login readiness 100/100
+- [Sentry MCP server](https://mcp.pacerai.fit/mcp-servers/sentry/): login required, pre-login readiness 100/100
+- [Stripe MCP server](https://mcp.pacerai.fit/mcp-servers/stripe/): login required, pre-login readiness 100/100
+- [Supabase MCP server](https://mcp.pacerai.fit/mcp-servers/supabase/): login required, pre-login readiness 100/100
+- [Vercel MCP server](https://mcp.pacerai.fit/mcp-servers/vercel/): login required, pre-login readiness 100/100
+- [GitHub MCP server](https://mcp.pacerai.fit/mcp-servers/github/): login required, pre-login readiness 100/100
+- [PayPal MCP server](https://mcp.pacerai.fit/mcp-servers/paypal/): login required, pre-login readiness 100/100
+- [Square MCP server](https://mcp.pacerai.fit/mcp-servers/square/): login required, pre-login readiness 100/100
+- [Neon MCP server](https://mcp.pacerai.fit/mcp-servers/neon/): login required, pre-login readiness 100/100
+- [Cloudflare Workers Bindings MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-bindings/): login required, pre-login readiness 100/100
+- [Webflow MCP server](https://mcp.pacerai.fit/mcp-servers/webflow/): login required, pre-login readiness 100/100
+- [Atlassian MCP server](https://mcp.pacerai.fit/mcp-servers/atlassian/): login required, pre-login readiness 95/100
+- [Airtable MCP server](https://mcp.pacerai.fit/mcp-servers/airtable/): login required, pre-login readiness 100/100
+- [Apify MCP server](https://mcp.pacerai.fit/mcp-servers/apify/): login required, pre-login readiness 100/100
+- [Asana MCP server](https://mcp.pacerai.fit/mcp-servers/asana-v2/): login required, pre-login readiness 100/100
+- [Asana Command MCP server](https://mcp.pacerai.fit/mcp-servers/asana-command/): login required, pre-login readiness 100/100
+- [Atlassian Rovo MCP server](https://mcp.pacerai.fit/mcp-servers/atlassian-rovo/): login required, pre-login readiness 100/100
+- [Box MCP server](https://mcp.pacerai.fit/mcp-servers/box/): login required, pre-login readiness 100/100
+- [Browserbase MCP server](https://mcp.pacerai.fit/mcp-servers/browserbase/): ~752 tokens per turn, 6 tools, readiness 85/100
+- [Buffer MCP server](https://mcp.pacerai.fit/mcp-servers/buffer/): login required, pre-login readiness 100/100
+- [Canva MCP server](https://mcp.pacerai.fit/mcp-servers/canva/): login required, pre-login readiness 100/100
+- [ClickUp MCP server](https://mcp.pacerai.fit/mcp-servers/clickup/): login required, pre-login readiness 100/100
+- [Cloudflare Agents SDK Docs MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-agents-sdk-docs/): ~101 tokens per turn, 1 tools, readiness 95/100
+- [Cloudflare API MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-api/): login required, pre-login readiness 100/100
+- [Cloudflare Blog MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-blog/): ~464 tokens per turn, 4 tools, readiness 100/100
+- [Cloudflare Browser Run MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-browser-run/): login required, pre-login readiness 100/100
+- [Cloudflare Containers MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-containers/): login required, pre-login readiness 100/100
+- [Cloudflare Demo Day MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-demo-day/): ~52 tokens per turn, 1 tools, readiness 90/100
+- [Cloudflare DEX MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-dex/): login required, pre-login readiness 100/100
+- [Cloudflare One CASB MCP server](https://mcp.pacerai.fit/mcp-servers/cloudflare-casb/): login required, pre-login readiness 100/100
+- [CoinGecko MCP server](https://mcp.pacerai.fit/mcp-servers/coingecko/): ~439 tokens per turn, 2 tools, readiness 100/100
+- [fal MCP server](https://mcp.pacerai.fit/mcp-servers/fal/): login required, pre-login readiness 100/100
+- [Figma MCP server](https://mcp.pacerai.fit/mcp-servers/figma/): login required, pre-login readiness 100/100
+- [Firecrawl MCP server](https://mcp.pacerai.fit/mcp-servers/firecrawl/): ~3,869 tokens per turn, 3 tools, readiness 95/100
+- [GitLab MCP server](https://mcp.pacerai.fit/mcp-servers/gitlab/): login required, pre-login readiness 100/100
+- [Gmail MCP server](https://mcp.pacerai.fit/mcp-servers/gmail/): ~11,282 tokens per turn, 23 tools, readiness 85/100
+- [Google Calendar MCP server](https://mcp.pacerai.fit/mcp-servers/google-calendar/): ~5,765 tokens per turn, 9 tools, readiness 80/100
+- [Google Chat MCP server](https://mcp.pacerai.fit/mcp-servers/google-chat/): ~3,792 tokens per turn, 4 tools, readiness 85/100
+- [Google Classroom MCP server](https://mcp.pacerai.fit/mcp-servers/google-classroom/): ~0 tokens per turn, 0 tools, readiness 90/100
+- [Google Docs MCP server](https://mcp.pacerai.fit/mcp-servers/google-docs/): ~10,011 tokens per turn, 2 tools, readiness 85/100
+- [Google Drive MCP server](https://mcp.pacerai.fit/mcp-servers/google-drive/): ~4,609 tokens per turn, 9 tools, readiness 85/100
+- [Google People MCP server](https://mcp.pacerai.fit/mcp-servers/google-people/): ~607 tokens per turn, 3 tools, readiness 100/100
+- [Google Sheets MCP server](https://mcp.pacerai.fit/mcp-servers/google-sheets/): ~7,860 tokens per turn, 6 tools, readiness 85/100
+- [Google Slides MCP server](https://mcp.pacerai.fit/mcp-servers/google-slides/): ~8,957 tokens per turn, 4 tools, readiness 80/100
+- [Higgsfield AI MCP server](https://mcp.pacerai.fit/mcp-servers/higgsfield/): login required, pre-login readiness 100/100
+- [Hostinger MCP server](https://mcp.pacerai.fit/mcp-servers/hostinger/): login required, pre-login readiness 100/100
+- [HubSpot MCP server](https://mcp.pacerai.fit/mcp-servers/hubspot/): login required, pre-login readiness 100/100
+- [Intercom MCP server](https://mcp.pacerai.fit/mcp-servers/intercom/): login required, pre-login readiness 100/100
+- [Jam MCP server](https://mcp.pacerai.fit/mcp-servers/jam/): login required, pre-login readiness 100/100
+- [Klaviyo MCP server](https://mcp.pacerai.fit/mcp-servers/klaviyo/): login required, pre-login readiness 100/100
+- [Miro MCP server](https://mcp.pacerai.fit/mcp-servers/miro/): login required, pre-login readiness 100/100
+- [monday.com MCP server](https://mcp.pacerai.fit/mcp-servers/monday/): login required, pre-login readiness 100/100
+- [MongoDB MCP server](https://mcp.pacerai.fit/mcp-servers/mongodb/): login required, pre-login readiness 100/100
+- [Netlify MCP server](https://mcp.pacerai.fit/mcp-servers/netlify/): login required, pre-login readiness 100/100
+- [Perplexity MCP server](https://mcp.pacerai.fit/mcp-servers/perplexity/): login required, pre-login readiness 100/100
+- [Plaid MCP server](https://mcp.pacerai.fit/mcp-servers/plaid/): login required, pre-login readiness 90/100
+- [PostHog MCP server](https://mcp.pacerai.fit/mcp-servers/posthog/): login required, pre-login readiness 100/100
+- [Prisma MCP server](https://mcp.pacerai.fit/mcp-servers/prisma/): login required, pre-login readiness 100/100
+- [Slack MCP server](https://mcp.pacerai.fit/mcp-servers/slack/): login required, pre-login readiness 100/100
+- [Square MCP server](https://mcp.pacerai.fit/mcp-servers/square-http/): login required, pre-login readiness 100/100
+- [Svelte MCP server](https://mcp.pacerai.fit/mcp-servers/svelte/): ~1,186 tokens per turn, 4 tools, readiness 100/100
+- [TickTick MCP server](https://mcp.pacerai.fit/mcp-servers/ticktick/): login required, pre-login readiness 100/100
+- [Twilio Docs MCP server](https://mcp.pacerai.fit/mcp-servers/twilio-docs/): ~1,035 tokens per turn, 2 tools, readiness 100/100
+- [Wix MCP server](https://mcp.pacerai.fit/mcp-servers/wix/): login required, pre-login readiness 100/100
 
 ## Blog
-- [Blog](https://mcp-readiness.omer20sh.workers.dev/blog/): guides for shipping MCP servers.
-- [The MCP OAuth discovery checklist](https://mcp-readiness.omer20sh.workers.dev/blog/mcp-oauth-discovery-checklist/): A step-by-step checklist for MCP OAuth: RFC 9728 protected resource metadata, authorization server metadata, the 401 WWW-Authenticate hint, and the legacy 2025-03-26 flow to avoid.
-- [MCP server testing tools compared: Inspector, scanners, and CI gates](https://mcp-readiness.omer20sh.workers.dev/blog/mcp-server-testing-tools-comparison/): A fair comparison of MCP Inspector, hosted security scanners, and CI readiness checks — what each tool actually does, what it does not do, and how to use them together before you ship.
-- [How to reduce MCP tool-list token cost](https://mcp-readiness.omer20sh.workers.dev/blog/reduce-mcp-tool-list-token-cost/): A practical guide to shrinking the tokens an MCP server adds on every agent turn, with live measurements from 8 open popular servers and a CI budget you can enforce.
-- [A production-readiness checklist for remote MCP servers](https://mcp-readiness.omer20sh.workers.dev/blog/remote-mcp-production-readiness-checklist/): A practical checklist for shipping a remote MCP server: Origin validation, OAuth discovery, tool annotations, JSON-RPC errors, and a token budget, with figures from 23 popular servers.
-- [How to test an MCP server before shipping (CI with a GitHub Action)](https://mcp-readiness.omer20sh.workers.dev/blog/test-mcp-server-before-shipping/): A pre-ship test plan for MCP servers: what to check by hand with MCP Inspector, and how to fail a pull request with a free GitHub Action that scores readiness and tool-list token cost.
+- [Blog](https://mcp.pacerai.fit/blog/): guides for shipping MCP servers.
+- [The MCP OAuth discovery checklist](https://mcp.pacerai.fit/blog/mcp-oauth-discovery-checklist/): A step-by-step checklist for MCP OAuth: RFC 9728 protected resource metadata, authorization server metadata, the 401 WWW-Authenticate hint, and the legacy 2025-03-26 flow to avoid.
+- [MCP server testing tools compared: Inspector, scanners, and CI gates](https://mcp.pacerai.fit/blog/mcp-server-testing-tools-comparison/): A fair comparison of MCP Inspector, hosted security scanners, and CI readiness checks — what each tool actually does, what it does not do, and how to use them together before you ship.
+- [How to reduce MCP tool-list token cost](https://mcp.pacerai.fit/blog/reduce-mcp-tool-list-token-cost/): A practical guide to shrinking the tokens an MCP server adds on every agent turn, with live measurements from 8 open popular servers and a CI budget you can enforce.
+- [A production-readiness checklist for remote MCP servers](https://mcp.pacerai.fit/blog/remote-mcp-production-readiness-checklist/): A practical checklist for shipping a remote MCP server: Origin validation, OAuth discovery, tool annotations, JSON-RPC errors, and a token budget, with figures from 23 popular servers.
+- [How to test an MCP server before shipping (CI with a GitHub Action)](https://mcp.pacerai.fit/blog/test-mcp-server-before-shipping/): A pre-ship test plan for MCP servers: what to check by hand with MCP Inspector, and how to fail a pull request with a free GitHub Action that scores readiness and tool-list token cost.
 
 ## Reports
 - State of public MCP servers (official registry scan, 13 Nov 2026): 15,067 live servers reached; 44% of public servers accept a foreign Origin.
-- [State of public MCP servers, Nov 2026](https://mcp-readiness.omer20sh.workers.dev/state-of-mcp-2026-11.html): the full registry scan and a checklist for server owners.
+- [State of public MCP servers, Nov 2026](https://mcp.pacerai.fit/state-of-mcp-2026-11.html): the full registry scan and a checklist for server owners.
 
 ## Optional
-- [Public traffic stats](https://mcp-readiness.omer20sh.workers.dev/stats.html)
+- [Public traffic stats](https://mcp.pacerai.fit/stats.html)

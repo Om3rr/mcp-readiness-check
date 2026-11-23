@@ -179,6 +179,7 @@ const BOX_IP_HASHES = new Set([
 ]);
 const TEST_TARGET_HOSTS = new Set([
     "mcp-readiness.omer20sh.workers.dev",
+    "mcp.pacerai.fit",
     "agent-ready-score.omer20sh.workers.dev",
     "mcp.context7.com",
     "petstore.swagger.io",
