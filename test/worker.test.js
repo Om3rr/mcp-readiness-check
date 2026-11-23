@@ -165,7 +165,69 @@ test('server page route: serves cached scan without sign-up, redirects /scan?url
   const red = await call(env, '/scan?url=https://mcp.example.com/mcp');
   assert.equal(red.status, 301); assert.equal(red.headers.get('location'), 'https://w.test/s/mcp.example.com/mcp');
   assert.equal((await call(env, '/s/localhost/mcp')).status, 404);
-  assert.match(await (await call(env, '/robots.txt')).text(), /sitemap\.xml/);
+  const robots = await (await call(env, '/robots.txt')).text();
+  assert.match(robots, /sitemap\.xml/);
+  assert.match(robots, /Disallow: \/s\//);
+});
+
+test('server page: GET serves cache only; POST Rescan runs a scan', async () => {
+  const { serverPage } = await import('../worker/src/pages.js');
+  const store = kv();
+  const env = { LICENSES: store, PUBLIC_URL: 'https://w.test' };
+  let scans = 0;
+  const hooks = {
+    scanLimited: async () => {
+      scans += 1;
+      return { score: 80, server: 'Ex', toolCount: 1, contextTokens: 10, top: [] };
+    },
+    canScan: async () => true,
+  };
+  const miss = await serverPage(new Request('https://w.test/s/mcp.example.com/mcp'), env, hooks);
+  assert.equal(miss.status, 200);
+  assert.equal(scans, 0);
+  const missHtml = await miss.text();
+  assert.match(missHtml, /Not scanned yet/);
+  assert.match(missHtml, /<button type="submit"[^>]*>Rescan<\/button>/);
+  assert.match(missHtml, /method="post"/);
+
+  const posted = await serverPage(new Request('https://w.test/s/mcp.example.com/mcp', { method: 'POST' }), env, hooks);
+  assert.equal(posted.status, 200);
+  assert.equal(scans, 1);
+  assert.match(await posted.text(), /Ex MCP server readiness: 80\/100/);
+
+  const cached = await serverPage(new Request('https://w.test/s/mcp.example.com/mcp'), env, hooks);
+  assert.equal(scans, 1);
+  assert.match(await cached.text(), /Ex MCP server readiness: 80\/100/);
+
+  const capped = await serverPage(new Request('https://w.test/s/mcp.example.com/mcp', { method: 'POST' }), env, { ...hooks, canScan: async () => false });
+  assert.equal(scans, 1);
+  assert.match(await capped.text(), /Rescan limit reached/);
+});
+
+test('badge cache miss: bots get a cached or neutral badge and do not scan', async () => {
+  const { savePage } = await import('../worker/src/pages.js');
+  const store = kv();
+  const env = { LICENSES: store };
+  let probed = 0;
+  const orig = globalThis.fetch;
+  globalThis.fetch = async (...args) => {
+    probed += 1;
+    return orig(...args);
+  };
+  try {
+    const bot = await call(env, '/badge.svg?url=https://mcp.unscanned-example.com/mcp', { headers: { 'user-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1)' } });
+    assert.equal(bot.status, 200);
+    assert.match(await bot.text(), /n\/a/);
+    assert.equal(probed, 0);
+
+    await savePage(env, 'https://mcp.unscanned-example.com/mcp', { score: 91, server: 'Ex', toolCount: 1, contextTokens: 10, top: [] });
+    const botCached = await call(env, '/badge.svg?url=https://mcp.unscanned-example.com/mcp', { headers: { 'user-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1)' } });
+    assert.equal(botCached.status, 200);
+    assert.match(await botCached.text(), />91</);
+    assert.equal(probed, 0);
+  } finally {
+    globalThis.fetch = orig;
+  }
 });
 
 test('/api/license contract used by ToolSlim: plan + status active for a Pro key', async () => {

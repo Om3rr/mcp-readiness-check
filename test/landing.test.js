@@ -54,6 +54,7 @@ test('SEO files: robots lets AI crawlers in, sitemap lists the comparison page, 
   const robots = await (await call('/robots.txt')).text();
   for (const ua of ['GPTBot', 'ClaudeBot', 'PerplexityBot', 'OAI-SearchBot']) assert.match(robots, new RegExp(`User-agent: ${ua}`));
   assert.match(robots, /Disallow: \/api\//);
+  assert.match(robots, /Disallow: \/s\//);
   const sm = await (await call('/sitemap.xml')).text();
   assert.match(sm, /\/mcp-servers\/<\/loc>/);
   assert.match(read('llms.txt'), /^# MCP Readiness/);
@@ -209,4 +210,15 @@ test('IndexNow key file is a public asset; GSC verification meta is omitted when
   }
   const home = await (await call('/')).text();
   assert.ok(!/google-site-verification/.test(home));
+});
+
+test('live-scan links are rel=nofollow so crawlers do not follow /s/ pages', () => {
+  const square = read('mcp-servers/square/index.html');
+  assert.match(square, /<a href="\/s\/mcp\.squareup\.com\/sse" rel="nofollow">Live page with a fresh scan<\/a>/);
+  const http = read('mcp-servers/square-http/index.html');
+  assert.match(http, /rel="nofollow"/);
+  const landing = read('index.html');
+  const hrefs = [...landing.matchAll(/<a\b[^>]*href="\/s\/[^"]+"[^>]*>/g)].map((m) => m[0]);
+  assert.ok(hrefs.length >= 5);
+  for (const tag of hrefs) assert.match(tag, /rel="nofollow"/);
 });

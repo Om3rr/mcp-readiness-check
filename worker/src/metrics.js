@@ -201,6 +201,140 @@ export async function pepperedIpHash(ip) {
     const digest = await crypto.subtle.digest("SHA-256", data);
     return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
 }
+async function sha256hex(s) {
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(s));
+    return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+/** Expand a compressed IPv6 address to eight 16-bit hextets, or null if it is not IPv6. */
+export function parseIpv6Hextets(ip) {
+    let raw = String(ip || "").trim();
+    if (!raw)
+        return null;
+    if (raw.startsWith("[") && raw.endsWith("]"))
+        raw = raw.slice(1, -1);
+    const zone = raw.indexOf("%");
+    if (zone >= 0)
+        raw = raw.slice(0, zone);
+    if (!raw.includes(":"))
+        return null;
+    if (raw.includes("."))
+        return null; // IPv4-mapped or dotted tail: not used for the box /64
+    const lower = raw.toLowerCase();
+    const parts = lower.split("::");
+    if (parts.length > 2)
+        return null;
+    const parseSide = (side) => side ? side.split(":").filter(Boolean) : [];
+    let groups;
+    if (parts.length === 1) {
+        groups = parseSide(parts[0]);
+        if (groups.length !== 8)
+            return null;
+    } else {
+        const head = parseSide(parts[0]);
+        const tail = parseSide(parts[1]);
+        const missing = 8 - head.length - tail.length;
+        if (missing < 0)
+            return null;
+        groups = [...head, ...Array(missing).fill("0"), ...tail];
+    }
+    if (groups.length !== 8 || groups.some((g) => !/^[0-9a-f]{1,4}$/.test(g)))
+        return null;
+    return groups.map((g) => parseInt(g, 16));
+}
+/** True when `ip` falls inside an IPv6 prefix of `bits` (1–128). */
+export function ipv6InPrefix(ip, prefix, bits) {
+    const a = parseIpv6Hextets(ip);
+    const b = parseIpv6Hextets(prefix);
+    const n = Number(bits);
+    if (!a || !b || !Number.isInteger(n) || n < 1 || n > 128)
+        return false;
+    let left = n;
+    for (let i = 0; i < 8 && left > 0; i++) {
+        const take = Math.min(16, left);
+        const mask = take === 16 ? 0xffff : (0xffff << (16 - take)) & 0xffff;
+        if ((a[i] & mask) !== (b[i] & mask))
+            return false;
+        left -= take;
+    }
+    return true;
+}
+/** Studio box egress IPv6 /64. Compared by prefix, never stored as a client address. */
+export const BOX_IPV6_PREFIX = { prefix: "2a09:bac5:3a98:166e::", bits: 64 };
+export function isBoxIpv6(ip) {
+    return ipv6InPrefix(ip, BOX_IPV6_PREFIX.prefix, BOX_IPV6_PREFIX.bits);
+}
+/** Structured Workers Log line for a scan attempt. No raw IPs, no full UAs. */
+export function scanLogPayload(request, targetUrl) {
+    const kind = classifyTraffic(request);
+    const ua_class = kind.crawler ? `ai_crawler:${kind.crawler}` : kind.class;
+    const asnRaw = request.cf && request.cf.asn;
+    const asn = asnRaw == null || asnRaw === "" ? null : Number(asnRaw);
+    return {
+        target_host: targetHostOf(targetUrl),
+        ua_class,
+        asn: Number.isFinite(asn) ? asn : null,
+    };
+}
+export function logScanAttempt(request, targetUrl) {
+    try {
+        const payload = scanLogPayload(request, targetUrl);
+        if (!payload.target_host)
+            return;
+        console.log(JSON.stringify(payload));
+    }
+    catch {
+        /* logging must never break a scan */
+    }
+}
+const USER_INITIATED_SOURCES = new Set(["api", "mcp"]);
+const OUTSIDE_SEEN_DDL = `CREATE TABLE IF NOT EXISTS outside_scan_seen (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  ip_hash TEXT NOT NULL,
+  target_hash TEXT NOT NULL,
+  PRIMARY KEY (worker, day, ip_hash, target_hash)
+)`;
+const PAGE_REFRESH_DDL = `CREATE TABLE IF NOT EXISTS page_refresh_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day)
+)`;
+const BADGE_REFRESH_DDL = `CREATE TABLE IF NOT EXISTS badge_refresh_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day)
+)`;
+/** First successful claim of (day, IP-hash, target-hash) wins; later ones are duplicates. */
+export async function claimOutsideScan(db, worker, day, request, targetUrl) {
+    const ip = connectingIp(request) || "missing";
+    const salt = await dailySalt(db, day);
+    const ipHash = await sha256hex(`${salt}\n${ip}`);
+    const targetHash = await sha256hex(String(targetUrl || "").trim().toLowerCase());
+    await db.prepare(OUTSIDE_SEEN_DDL).run();
+    const existing = await db
+        .prepare("SELECT 1 AS ok FROM outside_scan_seen WHERE worker = ? AND day = ? AND ip_hash = ? AND target_hash = ?")
+        .bind(worker, day, ipHash, targetHash)
+        .first();
+    if (existing)
+        return false;
+    await db
+        .prepare("INSERT OR IGNORE INTO outside_scan_seen (worker, day, ip_hash, target_hash) VALUES (?, ?, ?, ?)")
+        .bind(worker, day, ipHash, targetHash)
+        .run();
+    return true;
+}
+async function bumpRefresh(db, table, worker, day) {
+    if (table === "page_refresh_daily")
+        await db.prepare(PAGE_REFRESH_DDL).run();
+    else if (table === "badge_refresh_daily")
+        await db.prepare(BADGE_REFRESH_DDL).run();
+    await db
+        .prepare(`INSERT INTO ${table} (worker, day, count) VALUES (?, ?, 1) ON CONFLICT(worker, day) DO UPDATE SET count = count + 1`)
+        .bind(worker, day)
+        .run();
+}
 export function targetHostOf(url) {
     if (!url)
         return null;
@@ -221,6 +355,8 @@ export async function isOutsideScan(request, targetUrl) {
     if (ref && TEST_REF_HOSTS.has(ref))
         return false;
     const ip = connectingIp(request);
+    if (ip && isBoxIpv6(ip))
+        return false;
     if (ip && BOX_IP_HASHES.has(await pepperedIpHash(ip)))
         return false;
     return true;
@@ -287,12 +423,20 @@ export async function recordVisit(env, request, opts) {
             .bind(worker, day)
             .run();
     }
+    if (opts.scan === "success" || opts.scan === "fail" || opts.refresh) {
+        logScanAttempt(request, opts.targetUrl);
+    }
     if (opts.scan === "success" || opts.scan === "fail") {
         const col = opts.scan === "success" ? "success" : "fail";
         await db
             .prepare(`INSERT INTO scans_daily (worker, day, success, fail) VALUES (?, ?, ?, ?) ON CONFLICT(worker, day) DO UPDATE SET ${col} = ${col} + 1`)
             .bind(worker, day, opts.scan === "success" ? 1 : 0, opts.scan === "fail" ? 1 : 0)
             .run();
+        const refresh = String(opts.refresh || "");
+        if (refresh === "page")
+            await bumpRefresh(db, "page_refresh_daily", worker, day);
+        else if (refresh === "badge")
+            await bumpRefresh(db, "badge_refresh_daily", worker, day);
     }
     if (opts.badge) {
         await db
@@ -316,13 +460,14 @@ export async function recordVisit(env, request, opts) {
         if (ALLOWED_EVENT_SET.has(ev))
             await bumpEvent(db, worker, day, ev);
     }
-    if ((opts.scan === "success" || opts.scan === "fail") && (await isOutsideScan(request, opts.targetUrl))) {
-        await db
-            .prepare("INSERT INTO outside_scans_daily (worker, day, count) VALUES (?, ?, 1) ON CONFLICT(worker, day) DO UPDATE SET count = count + 1")
-            .bind(worker, day)
-            .run();
-        const source = String(opts.source || "").trim().slice(0, 40);
-        if (source) {
+    const source = String(opts.source || "").trim().slice(0, 40);
+    if ((opts.scan === "success" || opts.scan === "fail") && USER_INITIATED_SOURCES.has(source) && (await isOutsideScan(request, opts.targetUrl))) {
+        const first = await claimOutsideScan(db, worker, day, request, opts.targetUrl);
+        if (first) {
+            await db
+                .prepare("INSERT INTO outside_scans_daily (worker, day, count) VALUES (?, ?, 1) ON CONFLICT(worker, day) DO UPDATE SET count = count + 1")
+                .bind(worker, day)
+                .run();
             await db.prepare(`CREATE TABLE IF NOT EXISTS outside_scan_sources_daily (
   worker TEXT NOT NULL,
   day TEXT NOT NULL,
@@ -348,7 +493,7 @@ const emptyStats = (worker) => ({
     timezone: WORKER_TZ,
     generated_at: israelNowIso(),
     window_days: 30,
-    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, outside_scan_sources: {}, events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
+    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, outside_scan_sources: {}, page_refresh: 0, badge_refresh: 0, events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
     daily: [],
     routes: [],
     top_referrers: [],
@@ -363,6 +508,8 @@ export async function readStats(env, worker) {
     if (!db)
         return out;
     const since = daysAgo(29);
+    await db.prepare(PAGE_REFRESH_DDL).run();
+    await db.prepare(BADGE_REFRESH_DDL).run();
     const dailyRows = await db
         .prepare(`SELECT r.day AS day,
               IFNULL(r.requests, 0) AS requests,
@@ -370,14 +517,18 @@ export async function readStats(env, worker) {
               IFNULL(s.success, 0) AS scans_success,
               IFNULL(s.fail, 0) AS scans_fail,
               IFNULL(b.count, 0) AS badge_hits,
-              IFNULL(o.count, 0) AS outside_scans
+              IFNULL(o.count, 0) AS outside_scans,
+              IFNULL(pr.count, 0) AS page_refresh,
+              IFNULL(br.count, 0) AS badge_refresh
        FROM (SELECT day, SUM(count) AS requests FROM requests_daily WHERE worker = ? AND day >= ? GROUP BY day) r
        LEFT JOIN uniques_daily u ON u.worker = ? AND u.day = r.day
        LEFT JOIN scans_daily s ON s.worker = ? AND s.day = r.day
        LEFT JOIN badges_daily b ON b.worker = ? AND b.day = r.day
        LEFT JOIN outside_scans_daily o ON o.worker = ? AND o.day = r.day
+       LEFT JOIN page_refresh_daily pr ON pr.worker = ? AND pr.day = r.day
+       LEFT JOIN badge_refresh_daily br ON br.worker = ? AND br.day = r.day
        ORDER BY r.day ASC`)
-        .bind(worker, since, worker, worker, worker, worker)
+        .bind(worker, since, worker, worker, worker, worker, worker, worker)
         .all();
     out.daily = (dailyRows.results || []).map((row) => ({
         day: String(row.day),
@@ -387,6 +538,8 @@ export async function readStats(env, worker) {
         scans_fail: Number(row.scans_fail) || 0,
         badge_hits: Number(row.badge_hits) || 0,
         outside_scans: Number(row.outside_scans) || 0,
+        page_refresh: Number(row.page_refresh) || 0,
+        badge_refresh: Number(row.badge_refresh) || 0,
     }));
     for (const row of out.daily) {
         out.totals.requests += row.requests;
@@ -395,6 +548,8 @@ export async function readStats(env, worker) {
         out.totals.scans.fail += row.scans_fail;
         out.totals.badge_hits += row.badge_hits;
         out.totals.outside_scans += row.outside_scans;
+        out.totals.page_refresh += row.page_refresh;
+        out.totals.badge_refresh += row.badge_refresh;
     }
     const routes = await db
         .prepare("SELECT route, SUM(count) AS count FROM requests_daily WHERE worker = ? AND day >= ? GROUP BY route ORDER BY count DESC, route ASC LIMIT 30")
@@ -478,8 +633,8 @@ export function statsHtmlResponse(data, title) {
     const dailyRows = data.daily
         .slice()
         .reverse()
-        .map((d) => `<tr><td>${esc(d.day)}</td><td>${d.requests}</td><td>${d.unique_visitors}</td><td>${d.scans_success}</td><td>${d.scans_fail}</td><td>${d.outside_scans}</td><td>${d.badge_hits}</td></tr>`)
-        .join("") || `<tr><td colspan="7">No traffic recorded in the last 30 days yet.</td></tr>`;
+        .map((d) => `<tr><td>${esc(d.day)}</td><td>${d.requests}</td><td>${d.unique_visitors}</td><td>${d.scans_success}</td><td>${d.scans_fail}</td><td>${d.outside_scans}</td><td>${d.page_refresh || 0}</td><td>${d.badge_refresh || 0}</td><td>${d.badge_hits}</td></tr>`)
+        .join("") || `<tr><td colspan="9">No traffic recorded in the last 30 days yet.</td></tr>`;
     const routeRows = data.routes.map((r) => `<tr><td><code>${esc(r.route)}</code></td><td>${r.count}</td></tr>`).join("") ||
         `<tr><td colspan="2">None yet.</td></tr>`;
     const refRows = data.top_referrers.map((r) => `<tr><td>${esc(r.host)}</td><td>${r.count}</td></tr>`).join("") ||
@@ -549,13 +704,15 @@ export function statsHtmlResponse(data, title) {
     <div class="card"><div class="n">${totals.scans?.fail || 0}</div><div class="l">Scans failed</div></div>
     <div class="card"><div class="n">${totals.badge_hits || 0}</div><div class="l">Badge hits</div></div>
     <div class="card"><div class="n">${totals.outside_scans || 0}</div><div class="l">Outside scans</div></div>
+    <div class="card"><div class="n">${totals.page_refresh || 0}</div><div class="l">Page refreshes</div></div>
+    <div class="card"><div class="n">${totals.badge_refresh || 0}</div><div class="l">Badge refreshes</div></div>
     <div class="card"><div class="n">${totals.waitlist_signups || 0}</div><div class="l">Pro waitlist</div></div>
     <div class="card ex"><div class="n">${internalHits}</div><div class="l">Internal hits (excluded)</div></div>
     <div class="card ex"><div class="n">${Object.values(aiCrawlers).reduce((a, b) => a + b, 0)}</div><div class="l">AI crawlers (excluded)</div></div>
   </div>
   <h2>Daily</h2>
   <div class="tablewrap"><table>
-    <thead><tr><th>Day</th><th>Requests</th><th>Uniques</th><th>Scans ok</th><th>Scans fail</th><th>Outside</th><th>Badges</th></tr></thead>
+    <thead><tr><th>Day</th><th>Requests</th><th>Uniques</th><th>Scans ok</th><th>Scans fail</th><th>Outside</th><th>Page refresh</th><th>Badge refresh</th><th>Badges</th></tr></thead>
     <tbody>${dailyRows}</tbody>
   </table></div>
   <h2>Routes</h2>
