@@ -107,3 +107,11 @@ CREATE TABLE IF NOT EXISTS event_props_daily (
   count INTEGER NOT NULL DEFAULT 0,
   PRIMARY KEY (worker, day, event, prop, value)
 );
+
+CREATE TABLE IF NOT EXISTS outside_scan_sources_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  source TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, source)
+);
