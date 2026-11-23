@@ -99,21 +99,13 @@ test('ci metering: free daily cap per repo, key gives full mode', async () => {
   assert.equal((await run({ authorization: `Bearer ${key}` })).mode, 'full');
 });
 
-test('mcp endpoint: tools/list, -32601, paid scan_mcp needs a key', async () => {
+test('mcp endpoint: tools/list is scan_mcp_server and needs no license', async () => {
   const env = { LICENSES: kv() };
   const rpc = (o, h = {}) => call(env, '/mcp', { method: 'POST', body: JSON.stringify({ jsonrpc: '2.0', id: 1, ...o }), headers: h }).then((r) => r.json());
-  assert.equal((await rpc({ method: 'tools/list' })).result.tools[0].name, 'scan_mcp');
+  assert.equal((await rpc({ method: 'tools/list' })).result.tools[0].name, 'scan_mcp_server');
   assert.equal((await rpc({ method: 'nope' })).error.code, -32601);
-  const r = await rpc({ method: 'tools/call', params: { name: 'scan_mcp', arguments: { url: 'https://x.example/mcp' } } });
-  assert.equal(r.result.isError, true); assert.match(r.result.content[0].text, /invalid_license/);
-});
-
-test('mcp endpoint rejects foreign Origin and sends no wildcard CORS', async () => {
-  const env = { LICENSES: kv() };
-  const r = await call(env, '/mcp', { method: 'POST', body: '{"jsonrpc":"2.0","id":1,"method":"ping"}', headers: { origin: 'https://evil.example' } });
-  assert.equal(r.status, 403);
-  const ok = await call(env, '/mcp', { method: 'POST', body: '{"jsonrpc":"2.0","id":1,"method":"ping"}' });
-  assert.equal(ok.headers.get('access-control-allow-origin'), null);
+  const r = await rpc({ method: 'tools/call', params: { name: 'scan_mcp_server', arguments: { url: 'https://127.0.0.1/mcp' } } });
+  assert.equal(r.result.isError, true); assert.match(r.result.content[0].text, /Rejected URL/);
 });
 
 test('monitoring: register within plan limit, drift detection, cron posts webhook', async () => {

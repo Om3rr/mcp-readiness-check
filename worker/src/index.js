@@ -3,6 +3,7 @@
 import { probeHttp } from '../../src/probe.js';
 import { toHtml } from '../../src/html.js';
 import { checkTarget } from './guard.js';
+import { handleMcp } from './mcp.js';
 import { consume, getLicense, PLANS } from './license.js';
 import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
@@ -101,41 +102,11 @@ function thanksPage(key, env) {
   return new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Thanks | MCP Readiness</title><meta name="robots" content="noindex"><style>body{font:16px/1.5 system-ui;max-width:640px;margin:60px auto;padding:0 20px}pre{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;overflow:auto}</style>${body}<p><a href="/">Back to MCP Readiness</a></p>`, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
 }
 
-const MCP_TOOLS = [{
-  name: 'scan_mcp', title: 'Scan an MCP server',
-  description: 'Live readiness + context-cost scan of a public Streamable HTTP MCP server. Returns score, every finding with its fix, and the token cost of its tool list. Uses 1 credit.',
-  inputSchema: { type: 'object', properties: { url: { type: 'string', description: 'https URL of the MCP endpoint' } }, required: ['url'] },
-  annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
-}];
-async function mcpEndpoint(req, env, url) {
-  const origin = req.headers.get('origin');
-  const allowed = String(env.MCP_ALLOWED_ORIGINS || '').split(',').map((x) => x.trim()).filter(Boolean);
-  if (origin && !allowed.includes(origin)) return new Response('Forbidden origin', { status: 403 });
-  const msg = await req.json().catch(() => null);
-  const reply = (result, error) => new Response(JSON.stringify(error ? { jsonrpc: '2.0', id: msg?.id ?? null, error } : { jsonrpc: '2.0', id: msg?.id ?? null, result }), { headers: { 'content-type': 'application/json' } });
-  if (!msg || msg.jsonrpc !== '2.0') return reply(null, { code: -32600, message: 'Invalid Request' });
-  if (msg.id === undefined) return new Response(null, { status: 202 });
-  switch (msg.method) {
-    case 'initialize': return reply({ protocolVersion: '2025-06-18', capabilities: { tools: {} }, serverInfo: { name: 'mcp-readiness', version: VERSION }, instructions: 'Call scan_mcp with a public MCP URL. Needs a license key (Authorization: Bearer mrc_live_...).' });
-    case 'ping': return reply({});
-    case 'tools/list': return reply({ tools: MCP_TOOLS });
-    case 'tools/call': {
-      if (msg.params?.name !== 'scan_mcp') return reply(null, { code: -32602, message: 'Unknown tool' });
-      const t = checkTarget(msg.params?.arguments?.url);
-      if (!t.ok) return reply({ isError: true, content: [{ type: 'text', text: `Rejected URL: ${t.error}` }] });
-      const c = await consume(env, bearer(req, url));
-      if (!c.ok) return reply({ isError: true, content: [{ type: 'text', text: `License problem: ${c.error}. Buy credits at ${env.PUBLIC_URL || ''}/#pricing` }] });
-      const r = await scan(env, t.url);
-      return reply({ content: [{ type: 'text', text: JSON.stringify({ url: t.url, ...r, remaining: c.lic.remaining }) }], structuredContent: { url: t.url, score: r.score, contextTokens: r.contextTokens, findings: r.findings } });
-    }
-    default: return reply(null, { code: -32601, message: 'Method not found' });
-  }
-}
-
 async function route(req, env, ctx, mark) {
     const url = new URL(req.url);
     const p = url.pathname;
     try {
+      if (p === '/mcp') return handleMcp(req, env, mark, scan);
       if (req.method === 'OPTIONS') return new Response(null, { headers: { 'access-control-allow-origin': '*', 'access-control-allow-headers': 'authorization, content-type', 'access-control-allow-methods': 'GET, POST' } });
       if (p === '/api/health') return json({ ok: true, version: VERSION, payments: { stripe: Boolean(env.STRIPE_WEBHOOK_SECRET), lemonsqueezy: Boolean(env.LEMON_WEBHOOK_SECRET) }, pdf: Boolean(env.CF_BROWSER_TOKEN) });
       if (p === '/api/pricing') return json({ plans: PLANS, checkout: Object.fromEntries(['pro', 'team', 'verified', 'pack', 'credits'].map((k) => [k, env[`CHECKOUT_URL_${k.toUpperCase()}`] || null])) });
@@ -198,8 +169,6 @@ async function route(req, env, ctx, mark) {
         return json({ mode: 'free', remaining: cap - n - 1, cap });
       }
 
-      // Remote MCP server exposing one paid tool, scan_mcp (pay-per-scan credits via license key).
-      if (p === '/mcp' && req.method === 'POST') return mcpEndpoint(req, env, url);
 
       if (p === '/api/monitor' && req.method === 'POST') return registerMonitor(req, env, bearer(req, url));
 
@@ -303,6 +272,7 @@ export default {
       badge,
       targetUrl: mark.targetUrl,
       events: mark.events || [],
+      source: mark.source || null,
     });
     return res;
   },

@@ -1,6 +1,6 @@
 # MCP Readiness: hosted service (Cloudflare Worker)
 
-Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Browser Rendering is set up), a README badge, GitHub Action metering, and a pay-per-scan remote MCP tool (`scan_mcp`). Payments arrive through **Stripe Payment Links** or **Lemon Squeezy** webhooks. Both are ready to connect and both are off until their env vars are set. The Worker is live at https://mcp.pacerai.fit. The workers.dev URL stays up for the API, badges, the GitHub Action, and /stats. No payment accounts exist yet; checkout URLs and webhook secrets are unset.
+Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Browser Rendering is set up), a README badge, GitHub Action metering, and a read-only remote MCP tool (`scan_mcp_server`). Payments arrive through **Stripe Payment Links** or **Lemon Squeezy** webhooks. Both are ready to connect and both are off until their env vars are set. The Worker is live at https://mcp.pacerai.fit. The workers.dev URL stays up for the API, badges, the GitHub Action, /mcp, and /stats. No payment accounts exist yet; checkout URLs and webhook secrets are unset.
 
 ## Routes
 
@@ -17,7 +17,7 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 | `GET /api/report?url=…&format=html\|pdf` | Full report | license |
 | `GET /badge.svg?url=…` | Score badge, cached 6 h | public |
 | `POST /api/ci/run {repo}` | GitHub Action metering: `free` (50/day per repo), `capped` or `full` | public / license |
-| `POST /mcp` | Remote MCP server with one tool, `scan_mcp` (1 credit per call) | license |
+| `POST /mcp` | Remote MCP server with one tool, `scan_mcp_server({url})`. Returns score, tokens per turn, key findings, and a results-page link | public, 10/min and 100/day per IP hash |
 | `POST /api/monitor {url, webhook?, remove?}` | Daily re-scan (cron 06:17 UTC). On score, findings or context-cost drift, POSTs `mcp_readiness.drift` to your webhook. Pro 10, Team 200 servers | license |
 | `GET /api/license` | Plan, status, remaining | license |
 | `POST /api/subscribe {email}` | Report-magnet email capture (KV `lead:*`) | public, 5/h per IP |
@@ -34,7 +34,7 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 | `team` | $99/mo | 20,000 hosted scans/mo, 200 monitors, multiple API keys |
 | `verified` | $79 one-time | fresh re-audit + directory listing; Verified badge only if it passes |
 | `pack` | $9 one-off | 5 full reports |
-| `credits` | $5 one-off | 100 pay-per-scan credits ($0.05 each, floor $0.03; API or `scan_mcp`) |
+| `credits` | $5 one-off | 100 pay-per-scan credits ($0.05 each, floor $0.03; API or the MCP tool) |
 | `org` | $29/mo | added later (SARIF, 5,000 CI runs, seats); not shown at launch |
 
 Paid plans are **coming soon**. GitHub Marketplace has no paid plans for Actions, so the Action stays free and any paid plan will be billed on the hosted site. No checkout is wired up yet: server pages and the landing page show "coming soon" with no links.

@@ -321,6 +321,20 @@ export async function recordVisit(env, request, opts) {
             .prepare("INSERT INTO outside_scans_daily (worker, day, count) VALUES (?, ?, 1) ON CONFLICT(worker, day) DO UPDATE SET count = count + 1")
             .bind(worker, day)
             .run();
+        const source = String(opts.source || "").trim().slice(0, 40);
+        if (source) {
+            await db.prepare(`CREATE TABLE IF NOT EXISTS outside_scan_sources_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  source TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, source)
+)`).run();
+            await db
+                .prepare("INSERT INTO outside_scan_sources_daily (worker, day, source, count) VALUES (?, ?, ?, 1) ON CONFLICT(worker, day, source) DO UPDATE SET count = count + 1")
+                .bind(worker, day, source)
+                .run();
+        }
     }
 }
 export function scheduleTrack(ctx, env, request, opts) {
@@ -334,7 +348,7 @@ const emptyStats = (worker) => ({
     timezone: WORKER_TZ,
     generated_at: israelNowIso(),
     window_days: 30,
-    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
+    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, outside_scan_sources: {}, events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
     daily: [],
     routes: [],
     top_referrers: [],
@@ -402,6 +416,21 @@ export async function readStats(env, worker) {
             continue;
         out.totals.events[name] = Number(row.count) || 0;
     }
+    try {
+        const sources = await db
+            .prepare("SELECT source, SUM(count) AS count FROM outside_scan_sources_daily WHERE worker = ? AND day >= ? GROUP BY source ORDER BY count DESC, source ASC")
+            .bind(worker, since)
+            .all();
+        for (const row of sources.results || []) {
+            const name = String(row.source || "").slice(0, 40);
+            if (!name)
+                continue;
+            out.totals.outside_scan_sources[name] = Number(row.count) || 0;
+        }
+    }
+    catch {
+        // Table may not exist yet on older D1; field stays {}.
+    }
     const wl = await db
         .prepare("SELECT COUNT(*) AS count FROM waitlist WHERE product = ? AND created_at >= ?")
         .bind(worker, `${since}T00:00:00+02:00`)
@@ -462,6 +491,10 @@ export function statsHtmlResponse(data, title) {
     const crawlerRows = Object.entries(aiCrawlers)
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name, count]) => `<tr><td>${esc(name)}</td><td>${count}</td></tr>`)
+        .join("") || `<tr><td colspan="2">None yet.</td></tr>`;
+    const sourceRows = Object.entries(totals.outside_scan_sources || {})
+        .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+        .map(([name, count]) => `<tr><td><code>${esc(name)}</code></td><td>${count}</td></tr>`)
         .join("") || `<tr><td colspan="2">None yet.</td></tr>`;
     const tierRows = Object.entries(priceTiers)
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
@@ -534,6 +567,11 @@ export function statsHtmlResponse(data, title) {
   <div class="tablewrap"><table>
     <thead><tr><th>Event</th><th>Count</th></tr></thead>
     <tbody>${eventRows}</tbody>
+  </table></div>
+  <h2>Outside scans by source</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Source</th><th>Count</th></tr></thead>
+    <tbody>${sourceRows}</tbody>
   </table></div>
   <h2>Price clicks by tier</h2>
   <div class="tablewrap"><table>

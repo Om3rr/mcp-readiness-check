@@ -1,0 +1,19 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Om3rr/mcp-readiness",
+  "description": "Scan a public MCP server: readiness score, tokens per turn, and key findings.",
+  "title": "MCP Readiness",
+  "websiteUrl": "https://mcp.pacerai.fit",
+  "repository": {
+    "url": "https://github.com/Om3rr/mcp-readiness-check",
+    "source": "github",
+    "id": "1456748087"
+  },
+  "version": "0.5.0",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://mcp.pacerai.fit/mcp"
+    }
+  ]
+}

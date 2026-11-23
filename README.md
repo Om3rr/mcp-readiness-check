@@ -74,7 +74,7 @@ Outputs: `score`, `context-tokens`, `findings`, `mode`.
 Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLACE.md](MARKETPLACE.md).
 
 **Badge** (links to your server's own public report page): `[![MCP Readiness Scan](https://mcp.pacerai.fit/badge.svg?url=https://your-server/mcp)](https://mcp.pacerai.fit/s/your-server/mcp)`
-**Hosted scan service and `scan_mcp` remote tool:** https://mcp.pacerai.fit — the Worker also stays at https://mcp-readiness.omer20sh.workers.dev for the API, badges, and GitHub Action. See [worker/](worker/README.md)
+**Hosted scan service and `scan_mcp_server` remote tool:** https://mcp.pacerai.fit — see [Use from your agent (MCP)](#use-from-your-agent-mcp). The Worker also stays at https://mcp-readiness.omer20sh.workers.dev for the API, badges, and GitHub Action. See [worker/](worker/README.md)
 
 **Free tier:** score gate, context-token budget, top 3 issues per run, 50 runs/day per repo, plus this CLI (unlimited, local).
 
@@ -118,6 +118,15 @@ npm test
 | **JSON-RPC hygiene** | `-32601` for unknown methods, no 5xx on unknown tools, `protocolVersion`, `serverInfo`, server `instructions` |
 
 Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not a substitute for an architecture review of auth, data flows and approval gates.
+
+
+## Use from your agent (MCP)
+
+The hosted scanner is also a remote MCP server at `https://mcp.pacerai.fit/mcp` (Streamable HTTP, no license key). Add that URL as a remote server in your agent, then call the `scan_mcp_server` tool with the `https` URL of an MCP server you own or are authorized to test.
+
+The tool returns a readiness score, an estimate of tokens per turn for the tool list, key findings, and a link to the full results page. Calls are rate-limited (10 per minute and 100 per day per client). This is a surface scan, not a security audit.
+
+The same endpoint is also served at `https://mcp-readiness.omer20sh.workers.dev/mcp`.
 
 ## Examples
 
