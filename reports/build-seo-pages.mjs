@@ -113,12 +113,35 @@ function serverFaqs(r) {
     [`How do I test my own MCP server like ${r.name}?`, `Paste its URL into the free scan at ${SITE}/ for a score, token cost and top issues, then add the free GitHub Action (Om3rr/mcp-readiness-check@v1) to fail PRs under a score or over a token budget. Local servers work too: start the server in CI and scan http://127.0.0.1.`],
   ];
 }
+// When two pages share a provider name (today: Square SSE vs Streamable HTTP), put the transport in the title and description.
+function transportLabel(url) {
+  try {
+    const p = new URL(url).pathname.replace(/\/+$/, '') || '/';
+    if (/(^|\/)sse$/i.test(p)) return 'SSE';
+    if (/(^|\/)mcp$/i.test(p)) return 'Streamable HTTP';
+  } catch { /* ignore */ }
+  return null;
+}
+const nameCount = ALL.reduce((acc, r) => { acc[r.name] = (acc[r.name] || 0) + 1; return acc; }, {});
+function pageTitle(r) {
+  const tr = nameCount[r.name] > 1 ? transportLabel(r.url) : null;
+  return tr
+    ? `${r.name} MCP server (${tr}): token cost, tools & readiness score`
+    : `${r.name} MCP server: token cost, tools & readiness score`;
+}
+function pageDesc(r) {
+  const tr = nameCount[r.name] > 1 ? transportLabel(r.url) : null;
+  if (r.authRequired) {
+    return tr
+      ? `${r.name}'s ${tr} MCP endpoint requires login, so tools and token cost are not public. Pre-login readiness ${r.score}/100. Free live scan and GitHub Action.`
+      : `${r.name} MCP server requires login, so tools and token cost are not public. Pre-login readiness ${r.score}/100. Free live scan and GitHub Action.`;
+  }
+  return `${r.name} adds ~${fmt(r.contextTokens)} tokens per turn with ${r.toolCount} tools. Readiness ${r.score}/100. Free live scan and GitHub Action.`;
+}
 for (const r of ALL) {
   const url = `${SITE}${slugPage(r)}`;
-  const t = `${r.name} MCP server: token cost, tools & readiness score`;
-  const m = r.authRequired
-    ? `${r.name} MCP server requires login, so tools and token cost are not public. Pre-login readiness ${r.score}/100. Free live scan and GitHub Action.`
-    : `${r.name} adds ~${fmt(r.contextTokens)} tokens per turn with ${r.toolCount} tools. Readiness ${r.score}/100. Free live scan and GitHub Action.`;
+  const t = pageTitle(r);
+  const m = pageDesc(r);
   const faqs = serverFaqs(r);
   const day2 = dateLabel(r.scannedAt);
   const badgeMd = `[![MCP readiness](${SITE}/badge.svg?url=${encodeURIComponent(r.url)})](${SITE}${pageOf(r.url)})`;
