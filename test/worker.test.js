@@ -159,7 +159,9 @@ test('server pages: stable path mapping, SSR with title/meta/canonical, badge li
   const store = kv(); store.list = async ({ prefix }) => ({ keys: [...store.m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true });
   await savePage({ LICENSES: store }, 'https://mcp.example.com/mcp', view);
   const sm = await (await sitemap({ LICENSES: store }, 'https://w.test')).text();
-  assert.match(sm, /<loc>https:\/\/w.test\/s\/mcp.example.com\/mcp<\/loc>/);
+  assert.match(sm, /<loc>https:\/\/w.test\/s\/mcp.example.com\/mcp<\/loc><lastmod>/);
+  assert.match(sm, /<lastmod>2026-11-20<\/lastmod>/);
+  assert.match(sm, /state-of-mcp-2026-11.html<\/loc><lastmod>2026-11-13<\/lastmod>/);
 });
 
 test('server page route: serves cached scan without sign-up, redirects /scan?url=, rejects private targets', async () => {

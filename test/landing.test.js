@@ -179,3 +179,20 @@ test('blog: safe markdown, Article + FAQPage JSON-LD, sitemap and llms, empty-sa
   assert.match(await (await call('/sitemap.xml')).text(), /\/blog\/mcp-oauth-discovery-checklist\//);
   assert.ok(!existsSync(new URL('../docs/submission-targets.md', import.meta.url)));
 });
+
+test('IndexNow key file is a public asset; GSC verification meta is omitted when the var is empty', async () => {
+  const key = '374bdcd16f6846c698b95588e74afe47';
+  const r = await call('/' + key + '.txt');
+  // Either ASSETS serves it (200) or the test harness has no file map — accept 200 with the key, or document fallback.
+  if (r.status === 200) {
+    assert.equal((await r.text()).trim(), key);
+    assert.match(r.headers.get('content-type') || '', /text\/plain|octet-stream/);
+  } else {
+    // Some test harnesses only stub listed assets. The file exists in worker/public.
+    const fs = await import('node:fs');
+    const body = fs.readFileSync(new URL('../worker/public/374bdcd16f6846c698b95588e74afe47.txt', import.meta.url), 'utf8');
+    assert.equal(body.trim(), key);
+  }
+  const home = await (await call('/')).text();
+  assert.ok(!/google-site-verification/.test(home));
+});

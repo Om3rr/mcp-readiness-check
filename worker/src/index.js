@@ -7,7 +7,7 @@ import { consume, getLicense, PLANS } from './license.js';
 import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
 import { registerMonitor, runMonitors } from './monitor.js';
-import { serverPage, savePage, pagePath, sitemap } from './pages.js';
+import { serverPage, savePage, pagePath, sitemap, withGoogleVerification } from './pages.js';
 import { bucketRoute, handleEvent, handleStats, handleWaitlist, scheduleTrack } from './metrics.js';
 
 const WORKER_NAME = 'mcp-readiness';
@@ -65,7 +65,7 @@ function thanksPage(key, env) {
     ? `<h1>You're in.</h1><p>Your license key (shown once, so copy it now):</p><pre id="k">${key}</pre>
 <p>Use it in the web app, the API (<code>Authorization: Bearer …</code>) or the GitHub Action (<code>api-key: \${{ secrets.MCP_READINESS_KEY }}</code>).</p>`
     : `<h1>Payment received</h1><p>Your key is being issued. Refresh in a few seconds. If it has been more than an hour, reply to your receipt email.</p>`;
-  return new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Thanks | MCP Readiness</title><style>body{font:16px/1.5 system-ui;max-width:640px;margin:60px auto;padding:0 20px}pre{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;overflow:auto}</style>${body}<p><a href="/">Back to MCP Readiness</a></p>`, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
+  return new Response(`<!doctype html><meta charset="utf-8"><meta name="viewport" content="width=device-width"><title>Thanks | MCP Readiness</title><meta name="robots" content="noindex"><style>body{font:16px/1.5 system-ui;max-width:640px;margin:60px auto;padding:0 20px}pre{background:#0f172a;color:#e2e8f0;padding:12px;border-radius:8px;overflow:auto}</style>${body}<p><a href="/">Back to MCP Readiness</a></p>`, { headers: { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-store' } });
 }
 
 const MCP_TOOLS = [{
@@ -230,11 +230,11 @@ async function route(req, env, ctx, mark) {
       if (p === '/scan') {
         const t = checkTarget(url.searchParams.get('url'));
         if (t.ok) return Response.redirect(`${env.PUBLIC_URL || url.origin}${pagePath(t.url)}`, 301);
-        if (env.ASSETS) return env.ASSETS.fetch(new Request(new URL('/', url), req));
+        if (env.ASSETS) return withGoogleVerification(env.ASSETS.fetch(new Request(new URL('/', url), req)), env);
       }
       if (p === '/sitemap.xml') return sitemap(env, env.PUBLIC_URL || url.origin);
       if (p === '/robots.txt') return new Response(robotsTxt(env.PUBLIC_URL || url.origin), { headers: { 'content-type': 'text/plain; charset=utf-8', 'cache-control': 'public, max-age=3600' } });
-      if (env.ASSETS) return env.ASSETS.fetch(req);
+      if (env.ASSETS) return withGoogleVerification(env.ASSETS.fetch(req), env);
       return json({ error: 'not_found' }, 404);
     } catch (e) {
       if (mark && mark.events && mark.events.includes('scan_started') && !mark.scan) mark.scan = 'fail';

@@ -24,6 +24,8 @@ id = "152ddf7a351547409d119ec351698d68"
 
 [vars]
 PUBLIC_URL = "https://mcp-readiness.omer20sh.workers.dev"
+# One-line GSC HTML-tag hook. Leave empty until Omer pastes the token from his GSC account.
+GOOGLE_SITE_VERIFICATION = ""
 FREE_SCANS_PER_HOUR = "10"
 SCAN_TIMEOUT_MS = "12000"
 # Payment Links / Lemon Squeezy checkout URLs (public, safe as vars):

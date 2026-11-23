@@ -19,6 +19,26 @@ export function ogTags(title, desc, url, origin = 'https://mcp-readiness.omer20s
 const TTL_MS = 24 * 3600 * 1000;
 const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
+/** One-line GSC hook: set env.GOOGLE_SITE_VERIFICATION (wrangler var) and deploy. Empty value emits nothing. */
+export function googleVerificationMeta(env) {
+  const token = String(env?.GOOGLE_SITE_VERIFICATION || '').trim();
+  if (!token) return '';
+  return `<meta name="google-site-verification" content="${esc(token)}">`;
+}
+
+export async function withGoogleVerification(res, env) {
+  const tag = googleVerificationMeta(env);
+  const resolved = await res;
+  if (!tag) return resolved;
+  const ctype = resolved.headers.get('content-type') || '';
+  if (!ctype.includes('text/html')) return resolved;
+  const html = await resolved.text();
+  if (/name=["']google-site-verification["']/i.test(html)) return new Response(html, resolved);
+  const next = html.replace(/<head([^>]*)>/i, (m) => `${m}${tag}`);
+  return new Response(next, { status: resolved.status, statusText: resolved.statusText, headers: resolved.headers });
+}
+
+
 export function pagePath(target) {
   const u = new URL(target);
   const path = u.pathname === '/' ? '' : u.pathname.replace(/\/$/, '');
@@ -32,7 +52,7 @@ export function targetFromPath(pathname, search = '') {
 
 export async function savePage(env, url, view) {
   const rec = { ...view, url, at: new Date().toISOString() };
-  await env.LICENSES.put(`page:${url}`, JSON.stringify(rec));
+  await env.LICENSES.put(`page:${url}`, JSON.stringify(rec), { metadata: { at: rec.at } });
   return rec;
 }
 export async function loadPage(env, url) {
@@ -104,7 +124,7 @@ export function render(env, canonical, url, r, error) {
   const issues = r ? (r.top || []).filter((f) => !/origin|cors/i.test(`${f.id || ''} ${f.title || ''}`)).map((f) => `<li><b class="${esc(f.level)}">${esc(f.level)}</b> ${esc(f.title)}</li>`).join('') || '<li>No issues found in the free checks.</li>' : '';
   const timeLabel = r ? `${r.at.replace('T', ' ').slice(0, 16)} UTC` : '';
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(canonical)}">${r ? '' : '\n<meta name="robots" content="noindex">'}
+<title>${esc(title)}</title><meta name="description" content="${esc(desc)}"><link rel="canonical" href="${esc(canonical)}">${googleVerificationMeta(env)}${r ? '' : '\n<meta name="robots" content="noindex">'}
 <link rel="icon" type="image/svg+xml" href="/favicon.svg">
 ${ogTags(title, desc, canonical, origin)}
 ${ld ? `<script type="application/ld+json">${JSON.stringify(ld).replace(/</g, '\\u003c')}</script>` : ''}
@@ -122,13 +142,38 @@ ${nextSteps(origin, canonical, url, r)}
 </main>${PAGE_FOOT}</div><script src="/t.js" defer></script></body></html>`;
 }
 
+const DEFAULT_LASTMOD = '2026-11-20';
+const BLOG_LASTMOD = {
+  '/blog/': '2026-11-20',
+  '/blog/mcp-oauth-discovery-checklist/': '2026-11-20',
+  '/blog/mcp-server-testing-tools-comparison/': '2026-11-20',
+  '/blog/reduce-mcp-tool-list-token-cost/': '2026-11-20',
+  '/blog/remote-mcp-production-readiness-checklist/': '2026-11-20',
+  '/blog/test-mcp-server-before-shipping/': '2026-11-20',
+};
+
+function day(iso) {
+  const d = Date.parse(iso);
+  if (!Number.isFinite(d)) return DEFAULT_LASTMOD;
+  return new Date(d).toISOString().slice(0, 10);
+}
+
 export async function sitemap(env, origin) {
-  const urls = [`${origin}/`, ...SEO_PATHS.map((p) => origin + p), ...BLOG_PATHS.map((p) => origin + p), `${origin}/state-of-mcp-2026-11.html`];
+  const items = [];
+  const add = (loc, lastmod) => items.push({ loc, lastmod: lastmod || DEFAULT_LASTMOD });
+  add(`${origin}/`, DEFAULT_LASTMOD);
+  for (const p of SEO_PATHS) add(origin + p, DEFAULT_LASTMOD);
+  for (const p of BLOG_PATHS) add(origin + p, BLOG_LASTMOD[p] || DEFAULT_LASTMOD);
+  add(`${origin}/state-of-mcp-2026-11.html`, '2026-11-13');
   let cursor;
   do {
     const l = await env.LICENSES.list({ prefix: 'page:', cursor, limit: 1000 });
-    for (const k of l.keys) urls.push(origin + pagePath(k.name.slice(5)));
+    for (const k of l.keys) {
+      const at = k.metadata && k.metadata.at;
+      add(origin + pagePath(k.name.slice(5)), at ? day(at) : DEFAULT_LASTMOD);
+    }
     cursor = l.list_complete ? null : l.cursor;
-  } while (cursor && urls.length < 45000);
-  return new Response(`<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${urls.map((u) => `<url><loc>${esc(u)}</loc></url>`).join('')}</urlset>`, { headers: { 'content-type': 'application/xml', 'cache-control': 'public, max-age=3600' } });
+  } while (cursor && items.length < 45000);
+  const body = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">${items.map((u) => `<url><loc>${esc(u.loc)}</loc><lastmod>${u.lastmod}</lastmod></url>`).join('')}</urlset>`;
+  return new Response(body, { headers: { 'content-type': 'application/xml', 'cache-control': 'public, max-age=3600' } });
 }
