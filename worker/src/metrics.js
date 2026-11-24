@@ -64,6 +64,9 @@ export function isInternalRequest(request) {
         return true;
     if (/^node(\/|\b)|node-fetch|\bundici\b|^Node\.js/i.test(ua))
         return true;
+    // Studio verify and CMO draft runners (not end-user traffic).
+    if (/mcp-readiness-verify|mcp-readiness-cmo/i.test(ua))
+        return true;
     return false;
 }
 export function classifyTraffic(request) {
@@ -168,6 +171,127 @@ export function fillUnattributedSources(total, bySource) {
     if (sources.mcp == null)
         sources.mcp = 0;
     return sources;
+}
+
+/** Headline semantics after the 24 Nov 2026 08:43 IST (PR #21) accounting fix. */
+export const OUTSIDE_SCANS_NOTE = "outside_scans is the honest post-cutover headline: unique user-initiated POST /api/scan and /mcp tools/call scans (sources api and mcp) since the 24 Nov 2026 08:43 IST accounting fix (PR #21). Pre-cutover unsourced counts, which were inflated by crawler-triggered GET /s/ scans, are in legacy_unattributed_scans and are not included in outside_scans. outside_scans_since_fix is the same post-cutover attributed total. outside_scan_sources.unattributed is only a post-cutover gap, not the legacy backlog.";
+
+/** Split a raw outside_scans_daily total into the honest headline vs pre-fix unsourced leftover. */
+export function splitLegacyOutsideScans(rawOutside, bySource) {
+    const sources = { api: 0, mcp: 0, ...(bySource || {}) };
+    if (sources.api == null)
+        sources.api = 0;
+    if (sources.mcp == null)
+        sources.mcp = 0;
+    let attributed = 0;
+    for (const [name, value] of Object.entries(sources)) {
+        if (name === "unattributed")
+            continue;
+        attributed += Number(value) || 0;
+    }
+    const raw = Number(rawOutside) || 0;
+    if (sources.unattributed == null)
+        sources.unattributed = 0;
+    return {
+        outside_scans: attributed,
+        outside_scans_since_fix: attributed,
+        legacy_unattributed_scans: Math.max(0, raw - attributed),
+        outside_scan_sources: sources,
+    };
+}
+
+/** Name a /mcp client only when the UA (or documented ASN, if added later) supports it. */
+export const MCP_NAMED_CLIENTS = [
+    { name: "glama", re: /\bglama\b/i },
+    { name: "smithery", re: /\bsmithery\b/i },
+    { name: "pulsemcp", re: /pulsemcp|pulse[\s-]?mcp/i },
+    { name: "mcp_directory", re: /\bmcp\.directory\b|mcpdirectory/i },
+    { name: "registry_healthcheck", re: /registry\.modelcontextprotocol\.io|github\.com\/modelcontextprotocol\/registry|\bmcp-publisher\b/i },
+];
+
+export function classifyMcpClient(request) {
+    const ua = (request?.headers?.get("user-agent") || "");
+    for (const c of MCP_NAMED_CLIENTS) {
+        if (c.re.test(ua))
+            return c.name;
+    }
+    if (isInternalRequest(request))
+        return "internal";
+    if (/probe|scanner|indexer|liveness|health[\s-]?check|directory[\s-]?check|opt-out|never (invokes|calls)|capability survey|read-only|handshake test/i.test(ua))
+        return "unknown_bot";
+    if (!ua.trim() || BOT_RE.test(ua) || aiCrawlerName(ua))
+        return "unknown_bot";
+    return "other";
+}
+
+const MCP_METHODS = new Set([
+    "initialize", "ping", "tools/list", "tools/call",
+    "notification", "options", "http_get", "http_head", "http_other",
+    "rejected_origin", "invalid", "unknown_method", "unknown",
+]);
+
+export function normalizeMcpMethod(raw) {
+    const m = String(raw || "").trim().slice(0, 80);
+    if (!m)
+        return "unknown";
+    if (MCP_METHODS.has(m))
+        return m;
+    if (m.startsWith("notifications/"))
+        return "notification";
+    return "unknown_method";
+}
+
+const MCP_REQUESTS_BY_METHOD_DDL = `CREATE TABLE IF NOT EXISTS mcp_requests_by_method_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  method TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, method)
+)`;
+
+const MCP_REQUESTS_BY_CLIENT_DDL = `CREATE TABLE IF NOT EXISTS mcp_requests_by_client_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  client TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, client)
+)`;
+
+async function bumpMcpBreakdown(db, worker, day, method, client) {
+    if (!db)
+        return;
+    const m = normalizeMcpMethod(method);
+    const c = String(client || "other").trim().slice(0, 40) || "other";
+    await db.prepare(MCP_REQUESTS_BY_METHOD_DDL).run();
+    await db.prepare(MCP_REQUESTS_BY_CLIENT_DDL).run();
+    await db
+        .prepare("INSERT INTO mcp_requests_by_method_daily (worker, day, method, count) VALUES (?, ?, ?, 1) ON CONFLICT(worker, day, method) DO UPDATE SET count = count + 1")
+        .bind(worker, day, m)
+        .run();
+    await db
+        .prepare("INSERT INTO mcp_requests_by_client_daily (worker, day, client, count) VALUES (?, ?, ?, 1) ON CONFLICT(worker, day, client) DO UPDATE SET count = count + 1")
+        .bind(worker, day, c)
+        .run();
+}
+
+/** Structured Workers Log line for a /mcp request. No raw IPs, no full UAs. */
+export function logMcpRequest(request, method, client) {
+    try {
+        const kind = classifyTraffic(request);
+        const ua_class = kind.crawler ? `ai_crawler:${kind.crawler}` : kind.class;
+        const asnRaw = request.cf && request.cf.asn;
+        const asn = asnRaw == null || asnRaw === "" ? null : Number(asnRaw);
+        console.log(JSON.stringify({
+            event: "mcp_request",
+            method: normalizeMcpMethod(method),
+            client: String(client || "other").trim().slice(0, 40) || "other",
+            ua_class,
+            asn: Number.isFinite(asn) ? asn : null,
+        }));
+    }
+    catch {
+        /* logging must never break /mcp */
+    }
 }
 export function normalizeRef(raw) {
     if (!raw)
@@ -466,6 +590,17 @@ export async function recordVisit(env, request, opts) {
             .run();
         return;
     }
+    // /mcp method+client breakdown includes bot and AI-crawler health checks
+    // (excluded from the human-only mcp_requests headline). No raw IPs.
+    if (route === "/mcp") {
+        const client = classifyMcpClient(request);
+        const method = opts.mcp_method || "unknown";
+        try {
+            await bumpMcpBreakdown(db, worker, day, method, client);
+        }
+        catch { /* fail-open */ }
+        logMcpRequest(request, method, client);
+    }
     if (kind.class === "ai_crawler" && kind.crawler) {
         await db
             .prepare("INSERT INTO crawlers_daily (worker, day, crawler, count) VALUES (?, ?, ?, 1) ON CONFLICT(worker, day, crawler) DO UPDATE SET count = count + 1")
@@ -567,7 +702,7 @@ const emptyStats = (worker) => ({
     timezone: WORKER_TZ,
     generated_at: israelNowIso(),
     window_days: 30,
-    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, outside_scan_sources: { api: 0, mcp: 0 }, page_refresh: 0, badge_refresh: 0, mcp_requests: 0, api_scan_requests: 0, landing_views_by_utm: [], outside_scans_by_utm: [], events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
+    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, outside_scan_sources: { api: 0, mcp: 0 }, outside_scans_since_fix: 0, legacy_unattributed_scans: 0, outside_scans_note: OUTSIDE_SCANS_NOTE, page_refresh: 0, badge_refresh: 0, mcp_requests: 0, api_scan_requests: 0, mcp_requests_by_method: {}, mcp_requests_by_client: {}, landing_views_by_utm: [], outside_scans_by_utm: [], events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
     top_landing_referrers: [],
     top_scan_referrers: [],
     daily: [],
@@ -619,6 +754,10 @@ export async function readStats(env, worker) {
         mcp_requests: 0,
         api_scan_requests: 0,
         outside_scan_sources: { api: 0, mcp: 0 },
+        outside_scans_since_fix: 0,
+        legacy_unattributed_scans: 0,
+        mcp_requests_by_method: {},
+        mcp_requests_by_client: {},
     }));
     for (const row of out.daily) {
         out.totals.requests += row.requests;
@@ -700,9 +839,53 @@ export async function readStats(env, worker) {
     catch {
         // Table may not exist yet on older D1; field stays at api/mcp zeros.
     }
-    for (const row of out.daily)
-        row.outside_scan_sources = fillUnattributedSources(row.outside_scans, row.outside_scan_sources);
-    out.totals.outside_scan_sources = fillUnattributedSources(out.totals.outside_scans, out.totals.outside_scan_sources);
+    for (const row of out.daily) {
+        const split = splitLegacyOutsideScans(row.outside_scans, row.outside_scan_sources);
+        row.outside_scans = split.outside_scans;
+        row.outside_scans_since_fix = split.outside_scans_since_fix;
+        row.legacy_unattributed_scans = split.legacy_unattributed_scans;
+        row.outside_scan_sources = split.outside_scan_sources;
+        out.totals.outside_scans_since_fix += split.outside_scans_since_fix;
+        out.totals.legacy_unattributed_scans += split.legacy_unattributed_scans;
+    }
+    const totalSplit = splitLegacyOutsideScans(out.totals.outside_scans, out.totals.outside_scan_sources);
+    out.totals.outside_scans = totalSplit.outside_scans;
+    out.totals.outside_scan_sources = totalSplit.outside_scan_sources;
+    // Re-sum from daily in case of rounding/assignment order; daily already accumulated above.
+    out.totals.outside_scans_note = OUTSIDE_SCANS_NOTE;
+    try {
+        await db.prepare(MCP_REQUESTS_BY_METHOD_DDL).run();
+        await db.prepare(MCP_REQUESTS_BY_CLIENT_DDL).run();
+        const methodRows = await db
+            .prepare("SELECT day, method, SUM(count) AS count FROM mcp_requests_by_method_daily WHERE worker = ? AND day >= ? GROUP BY day, method")
+            .bind(worker, since)
+            .all();
+        for (const row of methodRows.results || []) {
+            const d = byDay.get(String(row.day));
+            const method = normalizeMcpMethod(row.method);
+            const n = Number(row.count) || 0;
+            if (d) {
+                d.mcp_requests_by_method[method] = (d.mcp_requests_by_method[method] || 0) + n;
+            }
+            out.totals.mcp_requests_by_method[method] = (out.totals.mcp_requests_by_method[method] || 0) + n;
+        }
+        const clientRows = await db
+            .prepare("SELECT day, client, SUM(count) AS count FROM mcp_requests_by_client_daily WHERE worker = ? AND day >= ? GROUP BY day, client")
+            .bind(worker, since)
+            .all();
+        for (const row of clientRows.results || []) {
+            const d = byDay.get(String(row.day));
+            const client = String(row.client || "other").trim().slice(0, 40) || "other";
+            const n = Number(row.count) || 0;
+            if (d) {
+                d.mcp_requests_by_client[client] = (d.mcp_requests_by_client[client] || 0) + n;
+            }
+            out.totals.mcp_requests_by_client[client] = (out.totals.mcp_requests_by_client[client] || 0) + n;
+        }
+    }
+    catch {
+        // Tables may not exist yet on older D1; fields stay empty objects.
+    }
     const mapUtm = (rows) => (rows || []).map((row) => ({
         utm_source: String(row.utm_source || ""),
         utm_medium: String(row.utm_medium || ""),
@@ -791,8 +974,8 @@ export function statsHtmlResponse(data, title) {
     const dailyRows = data.daily
         .slice()
         .reverse()
-        .map((d) => `<tr><td>${esc(d.day)}</td><td>${d.requests}</td><td>${d.unique_visitors}</td><td>${d.scans_success}</td><td>${d.scans_fail}</td><td>${d.outside_scans}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.api) || 0}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.mcp) || 0}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.unattributed) || 0}</td><td>${d.mcp_requests || 0}</td><td>${d.api_scan_requests || 0}</td><td>${d.page_refresh || 0}</td><td>${d.badge_refresh || 0}</td><td>${d.badge_hits}</td></tr>`)
-        .join("") || `<tr><td colspan="14">No traffic recorded in the last 30 days yet.</td></tr>`;
+        .map((d) => `<tr><td>${esc(d.day)}</td><td>${d.requests}</td><td>${d.unique_visitors}</td><td>${d.scans_success}</td><td>${d.scans_fail}</td><td>${d.outside_scans}</td><td>${d.outside_scans_since_fix || 0}</td><td>${d.legacy_unattributed_scans || 0}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.api) || 0}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.mcp) || 0}</td><td>${d.mcp_requests || 0}</td><td>${d.api_scan_requests || 0}</td><td>${d.page_refresh || 0}</td><td>${d.badge_refresh || 0}</td><td>${d.badge_hits}</td></tr>`)
+        .join("") || `<tr><td colspan="15">No traffic recorded in the last 30 days yet.</td></tr>`;
     const routeRows = data.routes.map((r) => `<tr><td><code>${esc(r.route)}</code></td><td>${r.count}</td></tr>`).join("") ||
         `<tr><td colspan="2">None yet.</td></tr>`;
     const refRows = data.top_referrers.map((r) => `<tr><td>${esc(r.host)}</td><td>${r.count}</td></tr>`).join("") ||
@@ -805,10 +988,13 @@ export function statsHtmlResponse(data, title) {
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name, count]) => `<tr><td>${esc(name)}</td><td>${count}</td></tr>`)
         .join("") || `<tr><td colspan="2">None yet.</td></tr>`;
-    const sourceRows = Object.entries(totals.outside_scan_sources || {})
+    const kvRows = (obj) => Object.entries(obj || {})
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name, count]) => `<tr><td><code>${esc(name)}</code></td><td>${count}</td></tr>`)
         .join("") || `<tr><td colspan="2">None yet.</td></tr>`;
+    const sourceRows = kvRows(totals.outside_scan_sources);
+    const mcpMethodRows = kvRows(totals.mcp_requests_by_method);
+    const mcpClientRows = kvRows(totals.mcp_requests_by_client);
     const tierRows = Object.entries(priceTiers)
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name, count]) => `<tr><td><code>${esc(name)}</code></td><td>${count}</td></tr>`)
@@ -860,6 +1046,7 @@ export function statsHtmlResponse(data, title) {
   <p class="meta">Privacy-preserving totals. Timezone: Israel time (${esc(data.timezone)}). Generated <span class="nw">${esc(data.generated_at)}</span>.
     No IP addresses, emails, or other personal data are shown here. Waitlist emails are stored privately and never appear on this page.
     JSON: <a href="/stats">/stats</a>.</p>
+  <p class="meta">${esc(totals.outside_scans_note || "")}</p>
   <div class="cards">
     <div class="card"><div class="n">${totals.requests || 0}</div><div class="l">Requests</div></div>
     <div class="card"><div class="n">${totals.unique_visitors || 0}</div><div class="l">Unique visitors</div></div>
@@ -867,9 +1054,11 @@ export function statsHtmlResponse(data, title) {
     <div class="card"><div class="n">${totals.scans?.fail || 0}</div><div class="l">Scans failed</div></div>
     <div class="card"><div class="n">${totals.badge_hits || 0}</div><div class="l">Badge hits</div></div>
     <div class="card"><div class="n">${totals.outside_scans || 0}</div><div class="l">Outside scans</div></div>
+    <div class="card"><div class="n">${totals.outside_scans_since_fix || 0}</div><div class="l">Outside scans since fix</div></div>
+    <div class="card ex"><div class="n">${totals.legacy_unattributed_scans || 0}</div><div class="l">Legacy unattributed scans</div></div>
     <div class="card"><div class="n">${totals.page_refresh || 0}</div><div class="l">Page refreshes</div></div>
     <div class="card"><div class="n">${totals.badge_refresh || 0}</div><div class="l">Badge refreshes</div></div>
-    <div class="card"><div class="n">${totals.mcp_requests || 0}</div><div class="l">/mcp requests</div></div>
+    <div class="card"><div class="n">${totals.mcp_requests || 0}</div><div class="l">/mcp requests (human)</div></div>
     <div class="card"><div class="n">${totals.api_scan_requests || 0}</div><div class="l">/api/scan requests</div></div>
     <div class="card"><div class="n">${totals.waitlist_signups || 0}</div><div class="l">Pro waitlist</div></div>
     <div class="card ex"><div class="n">${internalHits}</div><div class="l">Internal hits (excluded)</div></div>
@@ -877,7 +1066,7 @@ export function statsHtmlResponse(data, title) {
   </div>
   <h2>Daily</h2>
   <div class="tablewrap"><table>
-    <thead><tr><th>Day</th><th>Requests</th><th>Uniques</th><th>Scans ok</th><th>Scans fail</th><th>Outside</th><th>Outside api</th><th>Outside mcp</th><th>Outside unattr.</th><th>/mcp req</th><th>/api/scan req</th><th>Page refresh</th><th>Badge refresh</th><th>Badges</th></tr></thead>
+    <thead><tr><th>Day</th><th>Requests</th><th>Uniques</th><th>Scans ok</th><th>Scans fail</th><th>Outside</th><th>Since fix</th><th>Legacy unattr.</th><th>Outside api</th><th>Outside mcp</th><th>/mcp req</th><th>/api/scan req</th><th>Page refresh</th><th>Badge refresh</th><th>Badges</th></tr></thead>
     <tbody>${dailyRows}</tbody>
   </table></div>
   <h2>Routes</h2>
@@ -894,6 +1083,18 @@ export function statsHtmlResponse(data, title) {
   <div class="tablewrap"><table>
     <thead><tr><th>Source</th><th>Count</th></tr></thead>
     <tbody>${sourceRows}</tbody>
+  </table></div>
+  <h2>/mcp requests by method</h2>
+  <p class="meta">JSON-RPC or HTTP method of each non-internal <code>/mcp</code> request, including bot health checks that are excluded from the human-only /mcp requests headline. No raw IPs are stored.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Method</th><th>Count</th></tr></thead>
+    <tbody>${mcpMethodRows}</tbody>
+  </table></div>
+  <h2>/mcp requests by client</h2>
+  <p class="meta">A named client is used only when the user-agent supports it (for example Glama, Smithery, PulseMCP, mcp.directory, or the official MCP registry). Otherwise: <code>unknown_bot</code> or <code>other</code>.</p>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Client</th><th>Count</th></tr></thead>
+    <tbody>${mcpClientRows}</tbody>
   </table></div>
   <h2>Landing views by UTM</h2>
   <div class="tablewrap"><table>

@@ -164,13 +164,19 @@ async function callScanTool(req, env, msg, mark, scan) {
 }
 
 export async function handleMcp(req, env, mark, scan) {
+  const setMethod = (name) => { if (mark) mark.mcp_method = name; };
   const origin = mcpOriginHeader(req);
-  if (origin && !isAllowedMcpOrigin(origin)) return forbiddenOriginResponse();
+  if (origin && !isAllowedMcpOrigin(origin)) {
+    setMethod('rejected_origin');
+    return forbiddenOriginResponse();
+  }
 
   if (req.method === 'OPTIONS') {
+    setMethod('options');
     return new Response(null, { status: 204, headers: mcpCorsHeaders(req) });
   }
   if (req.method !== 'POST') {
+    setMethod(req.method === 'GET' ? 'http_get' : req.method === 'HEAD' ? 'http_head' : 'http_other');
     return new Response(JSON.stringify({ error: 'method_not_allowed', detail: 'Use POST with JSON-RPC for Streamable HTTP.' }), {
       status: 405,
       headers: { ...mcpCorsHeaders(req), allow: 'POST, OPTIONS' },
@@ -179,15 +185,21 @@ export async function handleMcp(req, env, mark, scan) {
 
   const raw = await req.text();
   if (raw.length > MAX_REQUEST_BYTES) {
+    setMethod('invalid');
     return rpcResponse(null, null, { code: -32600, message: 'Request too large' }, req);
   }
   let msg;
   try { msg = raw ? JSON.parse(raw) : null; } catch { msg = null; }
   if (Array.isArray(msg) || !msg || msg.jsonrpc !== '2.0' || typeof msg.method !== 'string') {
+    setMethod('invalid');
     return rpcResponse(msg && !Array.isArray(msg) ? msg.id ?? null : null, null, { code: -32600, message: 'Invalid Request' }, req);
   }
-  if (msg.id === undefined) return new Response(null, { status: 202, headers: mcpCorsHeaders(req) });
+  if (msg.id === undefined) {
+    setMethod(String(msg.method).startsWith('notifications/') ? 'notification' : msg.method);
+    return new Response(null, { status: 202, headers: mcpCorsHeaders(req) });
+  }
 
+  setMethod(msg.method);
   switch (msg.method) {
     case 'initialize':
       return rpcResponse(msg.id, {
@@ -210,6 +222,7 @@ export async function handleMcp(req, env, mark, scan) {
       }
     }
     default:
+      setMethod('unknown_method');
       return rpcResponse(msg.id, null, { code: -32601, message: 'Method not found' }, req);
   }
 }
