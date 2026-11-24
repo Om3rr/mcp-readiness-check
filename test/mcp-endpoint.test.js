@@ -71,6 +71,8 @@ function memD1() {
           if (/INSERT INTO events_daily/.test(s)) return bump('events_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], event: binds[2] });
           if (/INSERT INTO outside_scans_daily/.test(s)) return bump('outside_scans_daily', binds.slice(0, 2), { worker: binds[0], day: binds[1] });
           if (/INSERT INTO outside_scan_sources_daily/.test(s)) return bump('outside_scan_sources_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], source: binds[2] });
+          if (/INSERT INTO mcp_requests_by_method_daily/.test(s)) return bump('mcp_requests_by_method_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], method: binds[2] });
+          if (/INSERT INTO mcp_requests_by_client_daily/.test(s)) return bump('mcp_requests_by_client_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], client: binds[2] });
           if (/INSERT OR IGNORE INTO outside_scan_seen/.test(s)) {
             const t = table('outside_scan_seen');
             const k = keyOf(binds);
@@ -170,6 +172,16 @@ function memD1() {
               acc.set(row.event, (acc.get(row.event) || 0) + row.count);
             }
             for (const [event, count] of acc) results.push({ event, count });
+          } else if (/FROM mcp_requests_by_method_daily/.test(s)) {
+            for (const row of table('mcp_requests_by_method_daily').values()) {
+              if (row.worker !== binds[0] || row.day < binds[1]) continue;
+              results.push({ day: row.day, method: row.method, count: row.count });
+            }
+          } else if (/FROM mcp_requests_by_client_daily/.test(s)) {
+            for (const row of table('mcp_requests_by_client_daily').values()) {
+              if (row.worker !== binds[0] || row.day < binds[1]) continue;
+              results.push({ day: row.day, client: row.client, count: row.count });
+            }
           } else if (/FROM outside_scan_sources_daily/.test(s) && /GROUP BY day, source/.test(s)) {
             for (const row of table('outside_scan_sources_daily').values()) {
               if (row.worker !== binds[0] || row.day < binds[1]) continue;
@@ -572,15 +584,20 @@ test('stats: daily outside sources, utm and split referrers, daily mcp/api reque
   await env.METRICS.prepare('INSERT INTO outside_scans_daily (worker, day, count) VALUES (?, ?, 1) ON CONFLICT(worker, day) DO UPDATE SET count = count + 1').bind('mcp-readiness', day, 1).run();
 
   const stats = await readStats(env, 'mcp-readiness');
-  assert.equal(stats.totals.outside_scans, 3);
+  assert.equal(stats.totals.outside_scans, 2);
+  assert.equal(stats.totals.outside_scans_since_fix, 2);
+  assert.equal(stats.totals.legacy_unattributed_scans, 1);
+  assert.ok(stats.totals.outside_scans_note.includes('legacy_unattributed_scans'));
   assert.equal(stats.totals.outside_scan_sources.mcp, 1);
   assert.equal(stats.totals.outside_scan_sources.api, 1);
-  assert.equal(stats.totals.outside_scan_sources.unattributed, 1);
+  assert.equal(stats.totals.outside_scan_sources.unattributed || 0, 0);
   assert.ok(stats.totals.mcp_requests >= 1);
   assert.ok(stats.totals.api_scan_requests >= 1);
+  assert.equal(stats.daily[0].outside_scans, 2);
+  assert.equal(stats.daily[0].legacy_unattributed_scans, 1);
   assert.equal(stats.daily[0].outside_scan_sources.mcp, 1);
   assert.equal(stats.daily[0].outside_scan_sources.api, 1);
-  assert.equal(stats.daily[0].outside_scan_sources.unattributed, 1);
+  assert.equal(stats.daily[0].outside_scan_sources.unattributed || 0, 0);
   assert.ok(stats.daily[0].mcp_requests >= 1);
   assert.ok(stats.daily[0].api_scan_requests >= 1);
   assert.equal(stats.totals.landing_views_by_utm[0].utm_source, 'glama');
@@ -592,4 +609,26 @@ test('stats: daily outside sources, utm and split referrers, daily mcp/api reque
   assert.ok(stats.top_landing_referrers.some((r) => r.host.startsWith('utm:glama')));
   assert.ok('outside_scans' in stats.totals);
   assert.ok('top_referrers' in stats);
+});
+
+test('stats: /mcp method and client breakdown records non-internal health checks', async () => {
+  const { recordVisit, readStats } = await import('../worker/src/metrics.js');
+  const env = { METRICS: memD1() };
+  const hit = (ua, method, ip = '203.0.113.60') => recordVisit(env, new Request('https://w.test/mcp', {
+    method: 'POST',
+    headers: { 'user-agent': ua, 'cf-connecting-ip': ip },
+  }), { worker: 'mcp-readiness', route: '/mcp', mcp_method: method });
+
+  await hit('GlamaBot/1.0 (+https://glama.ai)', 'initialize');
+  await hit('GlamaBot/1.0 (+https://glama.ai)', 'tools/list', '203.0.113.61');
+  await hit('SentinelOracle/0.1 (+https://glimind.com/opt-out; liveness-only, never invokes tools)', 'initialize', '203.0.113.62');
+  await hit('curl/8.14.1', 'initialize', '203.0.113.63'); // internal: excluded from breakdown
+
+  const stats = await readStats(env, 'mcp-readiness');
+  assert.equal(stats.totals.mcp_requests_by_client.glama, 2);
+  assert.equal(stats.totals.mcp_requests_by_client.unknown_bot, 1);
+  assert.ok(!stats.totals.mcp_requests_by_client.internal);
+  assert.equal(stats.totals.mcp_requests_by_method.initialize, 2);
+  assert.equal(stats.totals.mcp_requests_by_method['tools/list'], 1);
+  assert.equal(stats.daily[0].mcp_requests_by_client.glama, 2);
 });

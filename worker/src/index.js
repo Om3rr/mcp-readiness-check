@@ -301,6 +301,7 @@ export default {
       source: mark.source || null,
       refresh: mark.refresh || null,
       utm: mark.utm || null,
+      mcp_method: mark.mcp_method || null,
     });
     return res;
   },

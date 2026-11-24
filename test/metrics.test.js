@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../worker/src/index.js';
-import { bucketRoute, isBot, visitorHash, handleEvent, handleWaitlist, isOutsideScan, isBoxIpv6, ipv6InPrefix, parseIpv6Hextets, scanLogPayload, parseUtm, fillUnattributedSources } from '../worker/src/metrics.js';
+import { bucketRoute, isBot, isInternalRequest, visitorHash, handleEvent, handleWaitlist, isOutsideScan, isBoxIpv6, ipv6InPrefix, parseIpv6Hextets, scanLogPayload, parseUtm, fillUnattributedSources, splitLegacyOutsideScans, classifyMcpClient, normalizeMcpMethod, OUTSIDE_SCANS_NOTE } from '../worker/src/metrics.js';
 
 const kv = () => { const m = new Map(); return { m, get: async (k) => m.get(k) ?? null, put: async (k, v) => { m.set(k, v); }, delete: async (k) => { m.delete(k); } }; };
 const call = (env, path, init = {}) => worker.fetch(new Request(`https://w.test${path}`, init), env, { waitUntil() {} });
@@ -21,6 +21,11 @@ test('metrics: /stats and /stats.html are public and empty without D1', async ()
   assert.equal(json.totals.outside_scan_sources.mcp, 0);
   assert.ok('mcp_requests' in json.totals);
   assert.ok('api_scan_requests' in json.totals);
+  assert.equal(json.totals.outside_scans_since_fix, 0);
+  assert.equal(json.totals.legacy_unattributed_scans, 0);
+  assert.equal(json.totals.outside_scans_note, OUTSIDE_SCANS_NOTE);
+  assert.ok(json.totals.mcp_requests_by_method && typeof json.totals.mcp_requests_by_method === 'object');
+  assert.ok(json.totals.mcp_requests_by_client && typeof json.totals.mcp_requests_by_client === 'object');
   assert.ok(Array.isArray(json.totals.landing_views_by_utm));
   assert.ok(Array.isArray(json.totals.outside_scans_by_utm));
   assert.ok(Array.isArray(json.top_landing_referrers));
@@ -104,4 +109,38 @@ test('metrics: parseUtm and unattributed source gap', () => {
   assert.equal(filled.api, 1);
   assert.equal(filled.mcp, 1);
   assert.equal(filled.unattributed, 3);
+});
+
+test('metrics: splitLegacyOutsideScans keeps the headline honest', () => {
+  const split = splitLegacyOutsideScans(33, { api: 0, mcp: 0 });
+  assert.equal(split.outside_scans, 0);
+  assert.equal(split.outside_scans_since_fix, 0);
+  assert.equal(split.legacy_unattributed_scans, 33);
+  assert.equal(split.outside_scan_sources.unattributed, 0);
+  const mixed = splitLegacyOutsideScans(5, { api: 1, mcp: 2 });
+  assert.equal(mixed.outside_scans, 3);
+  assert.equal(mixed.outside_scans_since_fix, 3);
+  assert.equal(mixed.legacy_unattributed_scans, 2);
+  assert.equal(mixed.outside_scan_sources.api, 1);
+  assert.equal(mixed.outside_scan_sources.mcp, 2);
+});
+
+test('metrics: classifyMcpClient names only evidenced clients', () => {
+  const req = (ua) => new Request('https://w.test/mcp', { headers: { 'user-agent': ua } });
+  assert.equal(classifyMcpClient(req('GlamaBot/1.0 (+https://glama.ai)')), 'glama');
+  assert.equal(classifyMcpClient(req('smithery-probe/0.1')), 'smithery');
+  assert.equal(classifyMcpClient(req('PulseMCP Directory Check')), 'pulsemcp');
+  assert.equal(classifyMcpClient(req('mcp.directory liveness')), 'mcp_directory');
+  assert.equal(classifyMcpClient(req('mcp-publisher (+https://registry.modelcontextprotocol.io)')), 'registry_healthcheck');
+  assert.equal(classifyMcpClient(req('rootz-mcp-registry-prober/0.1')), 'unknown_bot');
+  assert.equal(classifyMcpClient(req('SentinelOracle/0.1 (+https://glimind.com/opt-out; liveness-only, never invokes tools)')), 'unknown_bot');
+  assert.equal(classifyMcpClient(req('Mozilla/5.0 (Windows NT 10.0; Win64; x64) Chrome/155.0.0.0')), 'other');
+  assert.equal(classifyMcpClient(req('')), 'unknown_bot');
+  assert.equal(classifyMcpClient(req('curl/8.14.1')), 'internal');
+  assert.equal(isInternalRequest(req('mcp-readiness-verify/1.0')), true);
+  assert.equal(isInternalRequest(req('mcp-readiness-cmo-drafts/0.1')), true);
+  assert.equal(normalizeMcpMethod('tools/list'), 'tools/list');
+  assert.equal(normalizeMcpMethod('notifications/initialized'), 'notification');
+  assert.equal(normalizeMcpMethod('foo/bar'), 'unknown_method');
+  assert.equal(normalizeMcpMethod(''), 'unknown');
 });
