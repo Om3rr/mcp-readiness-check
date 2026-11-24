@@ -75,8 +75,15 @@ form.waitlist,form.sub{display:flex;gap:8px;flex-wrap:wrap;max-width:560px;margi
 <div class="card"><h3>README badge</h3><p class="small">Your live score, linked to your server's public page. Swap in your own URL. It refreshes at most every 6 hours.</p>
 <div class="badgebox"><img src="/badge.svg?url=https%3A%2F%2Fmcp.deepwiki.com%2Fmcp" alt="MCP readiness badge for DeepWiki" width="120" height="20"></div>
 <div class="codebox"><pre id="badge-md">[![MCP readiness](https://mcp.pacerai.fit/badge.svg?url=https://mcp.deepwiki.com/mcp)](https://mcp.pacerai.fit/s/mcp.deepwiki.com/mcp)</pre><button type="button" class="ghost sm copy" data-copy="badge-md" data-event="badge_copied">Copy</button></div></div>
-<div class="card"><h3>Scan from your agent</h3><p class="small">Add our remote MCP server and let your agent call <code>scan_mcp</code>. Agent access is part of Pro, coming soon.</p>
-<div class="codebox"><pre id="remote">https://mcp.pacerai.fit/mcp</pre><button type="button" class="ghost sm copy" data-copy="remote">Copy</button></div></div>
+<div class="card"><h3>Scan from your agent</h3><p class="small">Add the free, live MCP endpoint at <code>https://mcp.pacerai.fit/mcp</code> and call <code>scan_mcp_server</code>. No license key.</p>
+<div class="codebox"><pre id="remote">{
+  "mcpServers": {
+    "mcp-readiness": {
+      "type": "streamable-http",
+      "url": "https://mcp.pacerai.fit/mcp"
+    }
+  }
+}</pre><button type="button" class="ghost sm copy" data-copy="remote">Copy</button></div></div>
 </div></section>
 
 <section id="popular"><h2>Popular MCP servers: score and token cost</h2>
@@ -117,7 +124,7 @@ form.waitlist,form.sub{display:flex;gap:8px;flex-wrap:wrap;max-width:560px;margi
 <div class="grid g3" style="margin-top:16px">
 <div class="card plan"><span class="tag">Coming soon</span><h3>Verified badge</h3><p class="small">A fresh independent re-audit and a Verified badge, issued only if the server passes.</p><button type="button" class="ghost cta" data-event="price_click" data-tier="verified" data-goto="waitlist-box">Get notified</button></div>
 <div class="card plan"><span class="tag">Coming soon</span><h3>Report pack</h3><p class="small">Full HTML and PDF reports, no subscription.</p><button type="button" class="ghost cta" data-event="price_click" data-tier="pack" data-goto="waitlist-box">Get notified</button></div>
-<div class="card plan"><span class="tag">Coming soon</span><h3>Agent credits</h3><p class="small">Pay per scan from the API or from an agent via the <code>scan_mcp</code> tool.</p><button type="button" class="ghost cta" data-event="price_click" data-tier="credits" data-goto="waitlist-box">Get notified</button></div>
+<div class="card plan"><span class="tag">Coming soon</span><h3>Agent credits</h3><p class="small">Pay-per-scan credits for the hosted API, coming soon. The live <code>/mcp</code> tool is free and needs no key.</p><button type="button" class="ghost cta" data-event="price_click" data-tier="credits" data-goto="waitlist-box">Get notified</button></div>
 </div>
 <div class="card" id="waitlist-box" style="margin-top:16px"><h3>Join the Pro waitlist</h3>
 <form class="waitlist" id="waitlist"><label class="hp" for="wl-email">Email</label><input id="wl-email" type="email" name="email" required placeholder="you@company.com" autocomplete="email"><input class="hp" type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true"><button type="submit">Join the waitlist</button></form>
@@ -147,7 +154,7 @@ const ORIGIN=location.origin;
 const scoreCopy=(n)=>n<70?'Fix these first: the issues above are what agents trip on. Fix them, re-scan, then lock the score in CI.':n>90?'Show it off: this server is in great shape. Put the badge in your README and keep it there with the Action.':'Close: fix the top issue to pass 90, then keep it from slipping with the Action.';
 const yamlFor=(u)=>`name: MCP readiness\non: [pull_request]\njobs:\n  mcp-readiness:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: Om3rr/mcp-readiness-check@v1\n        with:\n          url: ${u}\n          fail-under: 80\n          max-context-tokens: 8000`;
 async function runScan(target){const out=$('#result');const btn=$('#scanbtn');btn.disabled=true;out.innerHTML='<div class="card small">Scanning… usually 2–10 seconds.</div>';
- try{const r=await fetch('/api/scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({url:target})});const j=await r.json();
+ try{const r=await fetch('/api/scan',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(Object.assign({url:target}, (window.mcpUtm&&window.mcpUtm())||{}))});const j=await r.json();
   if(!r.ok){out.innerHTML=`<div class="card">Couldn't scan: <b>${esc(j.error)}</b> ${esc(j.detail||'')}</div>`;return}
   const score=Math.round(Number(j.score)||0);const pageUrl=ORIGIN+String(j.page||'');
   const badgeUrl=`${ORIGIN}/badge.svg?url=${encodeURIComponent(j.url)}`;

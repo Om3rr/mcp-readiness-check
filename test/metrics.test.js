@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import worker from '../worker/src/index.js';
-import { bucketRoute, isBot, visitorHash, handleEvent, handleWaitlist, isOutsideScan, isBoxIpv6, ipv6InPrefix, parseIpv6Hextets, scanLogPayload } from '../worker/src/metrics.js';
+import { bucketRoute, isBot, visitorHash, handleEvent, handleWaitlist, isOutsideScan, isBoxIpv6, ipv6InPrefix, parseIpv6Hextets, scanLogPayload, parseUtm, fillUnattributedSources } from '../worker/src/metrics.js';
 
 const kv = () => { const m = new Map(); return { m, get: async (k) => m.get(k) ?? null, put: async (k, v) => { m.set(k, v); }, delete: async (k) => { m.delete(k); } }; };
 const call = (env, path, init = {}) => worker.fetch(new Request(`https://w.test${path}`, init), env, { waitUntil() {} });
@@ -17,6 +17,14 @@ test('metrics: /stats and /stats.html are public and empty without D1', async ()
   assert.equal(json.totals.page_refresh, 0);
   assert.equal(json.totals.badge_refresh, 0);
   assert.ok('outside_scan_sources' in json.totals);
+  assert.equal(json.totals.outside_scan_sources.api, 0);
+  assert.equal(json.totals.outside_scan_sources.mcp, 0);
+  assert.ok('mcp_requests' in json.totals);
+  assert.ok('api_scan_requests' in json.totals);
+  assert.ok(Array.isArray(json.totals.landing_views_by_utm));
+  assert.ok(Array.isArray(json.totals.outside_scans_by_utm));
+  assert.ok(Array.isArray(json.top_landing_referrers));
+  assert.ok(Array.isArray(json.top_scan_referrers));
   assert.equal(JSON.stringify(json).includes('@'), false);
   const html = await call(env, '/stats.html');
   assert.equal(html.status, 200);
@@ -86,4 +94,14 @@ test('metrics: scan log payload is host, UA class and ASN only', () => {
   assert.doesNotMatch(raw, /203\.0\.113\.9/);
   assert.doesNotMatch(raw, /Googlebot/i);
   assert.doesNotMatch(raw, /Mozilla/);
+});
+
+test('metrics: parseUtm and unattributed source gap', () => {
+  assert.deepEqual(parseUtm({ utm_source: 'glama', utm_medium: 'directory', utm_campaign: 'mcp-readiness-14d' }), { utm_source: 'glama', utm_medium: 'directory', utm_campaign: 'mcp-readiness-14d' });
+  assert.deepEqual(parseUtm({ ref: 'utm:pulsemcp/directory/mcp-readiness-14d' }), { utm_source: 'pulsemcp', utm_medium: 'directory', utm_campaign: 'mcp-readiness-14d' });
+  assert.equal(parseUtm({ utm_medium: 'directory' }), null);
+  const filled = fillUnattributedSources(5, { api: 1, mcp: 1 });
+  assert.equal(filled.api, 1);
+  assert.equal(filled.mcp, 1);
+  assert.equal(filled.unattributed, 3);
 });

@@ -139,3 +139,25 @@ CREATE TABLE IF NOT EXISTS outside_scan_seen (
   target_hash TEXT NOT NULL,
   PRIMARY KEY (worker, day, ip_hash, target_hash)
 );
+
+-- Attribution: UTM triples for landing views and outside scans. No raw URLs or IPs.
+CREATE TABLE IF NOT EXISTS utm_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  utm_source TEXT NOT NULL,
+  utm_medium TEXT NOT NULL,
+  utm_campaign TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, kind, utm_source, utm_medium, utm_campaign)
+);
+
+-- Referrer hosts split by kind (landing_view vs outside_scan). The mixed referrers_daily table is unchanged.
+CREATE TABLE IF NOT EXISTS referrers_by_kind_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  host TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, kind, host)
+);

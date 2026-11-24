@@ -9,7 +9,7 @@ import { handleStripe, handleLemon } from './webhooks.js';
 import { badge } from './badge.js';
 import { registerMonitor, runMonitors } from './monitor.js';
 import { serverPage, savePage, loadPage, pagePath, sitemap, withGoogleVerification } from './pages.js';
-import { bucketRoute, handleEvent, handleStats, handleWaitlist, scheduleTrack, isBot } from './metrics.js';
+import { bucketRoute, handleEvent, handleStats, handleWaitlist, scheduleTrack, isBot, parseUtm } from './metrics.js';
 
 const WORKER_NAME = 'mcp-readiness';
 
@@ -133,6 +133,7 @@ async function route(req, env, ctx, mark) {
         mark.targetUrl = t.url;
         mark.events = ['scan_started'];
         mark.source = 'api';
+        mark.utm = parseUtm(body);
         const key = bearer(req, url);
         if (key) {
           const c = await consume(env, key);
@@ -299,6 +300,7 @@ export default {
       events: mark.events || [],
       source: mark.source || null,
       refresh: mark.refresh || null,
+      utm: mark.utm || null,
     });
     return res;
   },
