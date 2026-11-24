@@ -111,3 +111,83 @@
 
 ## Optional
 - [Public traffic stats](https://mcp.pacerai.fit/stats.html)
+
+<!-- token-cost:start -->
+## Token cost pages
+- [MCP server token cost ranking](https://mcp.pacerai.fit/token-cost/): 25 open servers ranked by measured tool-list tokens per turn, 50 behind login.
+- [Token cost of Cloudflare Docs MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-docs/): ~434 tokens per turn, 2 tools
+- [Token cost of Microsoft Learn MCP server](https://mcp.pacerai.fit/token-cost/mslearn/): ~1,215 tokens per turn, 3 tools
+- [Token cost of Exa Search MCP server](https://mcp.pacerai.fit/token-cost/exa/): ~605 tokens per turn, 2 tools
+- [Token cost of Context7 MCP server](https://mcp.pacerai.fit/token-cost/context7/): ~1,304 tokens per turn, 2 tools
+- [Token cost of DeepWiki MCP server](https://mcp.pacerai.fit/token-cost/deepwiki/): ~427 tokens per turn, 3 tools
+- [Token cost of Hugging Face MCP server](https://mcp.pacerai.fit/token-cost/huggingface/): ~4,967 tokens per turn, 4 tools
+- [Token cost of Astro Docs MCP server](https://mcp.pacerai.fit/token-cost/astro-docs/): ~80 tokens per turn, 1 tools
+- [Token cost of AWS Knowledge MCP server](https://mcp.pacerai.fit/token-cost/aws-knowledge/): ~1,978 tokens per turn, 5 tools
+- [Token cost of Semgrep MCP server](https://mcp.pacerai.fit/token-cost/semgrep/): login required, not measured
+- [Token cost of Globalping MCP server](https://mcp.pacerai.fit/token-cost/globalping/): login required, not measured
+- [Token cost of Linear MCP server](https://mcp.pacerai.fit/token-cost/linear/): login required, not measured
+- [Token cost of Notion MCP server](https://mcp.pacerai.fit/token-cost/notion/): login required, not measured
+- [Token cost of Sentry MCP server](https://mcp.pacerai.fit/token-cost/sentry/): login required, not measured
+- [Token cost of Stripe MCP server](https://mcp.pacerai.fit/token-cost/stripe/): login required, not measured
+- [Token cost of Supabase MCP server](https://mcp.pacerai.fit/token-cost/supabase/): login required, not measured
+- [Token cost of Vercel MCP server](https://mcp.pacerai.fit/token-cost/vercel/): login required, not measured
+- [Token cost of GitHub MCP server](https://mcp.pacerai.fit/token-cost/github/): login required, not measured
+- [Token cost of PayPal MCP server](https://mcp.pacerai.fit/token-cost/paypal/): login required, not measured
+- [Token cost of Square (SSE) MCP server](https://mcp.pacerai.fit/token-cost/square/): login required, not measured
+- [Token cost of Neon MCP server](https://mcp.pacerai.fit/token-cost/neon/): login required, not measured
+- [Token cost of Cloudflare Workers Bindings MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-bindings/): login required, not measured
+- [Token cost of Webflow MCP server](https://mcp.pacerai.fit/token-cost/webflow/): login required, not measured
+- [Token cost of Atlassian MCP server](https://mcp.pacerai.fit/token-cost/atlassian/): login required, not measured
+- [Token cost of Airtable MCP server](https://mcp.pacerai.fit/token-cost/airtable/): login required, not measured
+- [Token cost of Apify MCP server](https://mcp.pacerai.fit/token-cost/apify/): login required, not measured
+- [Token cost of Asana MCP server](https://mcp.pacerai.fit/token-cost/asana-v2/): login required, not measured
+- [Token cost of Asana Command MCP server](https://mcp.pacerai.fit/token-cost/asana-command/): login required, not measured
+- [Token cost of Atlassian Rovo MCP server](https://mcp.pacerai.fit/token-cost/atlassian-rovo/): login required, not measured
+- [Token cost of Box MCP server](https://mcp.pacerai.fit/token-cost/box/): login required, not measured
+- [Token cost of Browserbase MCP server](https://mcp.pacerai.fit/token-cost/browserbase/): ~752 tokens per turn, 6 tools
+- [Token cost of Buffer MCP server](https://mcp.pacerai.fit/token-cost/buffer/): login required, not measured
+- [Token cost of Canva MCP server](https://mcp.pacerai.fit/token-cost/canva/): login required, not measured
+- [Token cost of ClickUp MCP server](https://mcp.pacerai.fit/token-cost/clickup/): login required, not measured
+- [Token cost of Cloudflare Agents SDK Docs MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-agents-sdk-docs/): ~101 tokens per turn, 1 tools
+- [Token cost of Cloudflare API MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-api/): login required, not measured
+- [Token cost of Cloudflare Blog MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-blog/): ~464 tokens per turn, 4 tools
+- [Token cost of Cloudflare Browser Run MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-browser-run/): login required, not measured
+- [Token cost of Cloudflare Containers MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-containers/): login required, not measured
+- [Token cost of Cloudflare Demo Day MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-demo-day/): ~52 tokens per turn, 1 tools
+- [Token cost of Cloudflare DEX MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-dex/): login required, not measured
+- [Token cost of Cloudflare One CASB MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-casb/): login required, not measured
+- [Token cost of CoinGecko MCP server](https://mcp.pacerai.fit/token-cost/coingecko/): ~439 tokens per turn, 2 tools
+- [Token cost of fal MCP server](https://mcp.pacerai.fit/token-cost/fal/): login required, not measured
+- [Token cost of Figma MCP server](https://mcp.pacerai.fit/token-cost/figma/): login required, not measured
+- [Token cost of Firecrawl MCP server](https://mcp.pacerai.fit/token-cost/firecrawl/): ~3,869 tokens per turn, 3 tools
+- [Token cost of GitLab MCP server](https://mcp.pacerai.fit/token-cost/gitlab/): login required, not measured
+- [Token cost of Gmail MCP server](https://mcp.pacerai.fit/token-cost/gmail/): ~11,282 tokens per turn, 23 tools
+- [Token cost of Google Calendar MCP server](https://mcp.pacerai.fit/token-cost/google-calendar/): ~5,765 tokens per turn, 9 tools
+- [Token cost of Google Chat MCP server](https://mcp.pacerai.fit/token-cost/google-chat/): ~3,792 tokens per turn, 4 tools
+- [Token cost of Google Classroom MCP server](https://mcp.pacerai.fit/token-cost/google-classroom/): ~0 tokens per turn, 0 tools
+- [Token cost of Google Docs MCP server](https://mcp.pacerai.fit/token-cost/google-docs/): ~10,011 tokens per turn, 2 tools
+- [Token cost of Google Drive MCP server](https://mcp.pacerai.fit/token-cost/google-drive/): ~4,609 tokens per turn, 9 tools
+- [Token cost of Google People MCP server](https://mcp.pacerai.fit/token-cost/google-people/): ~607 tokens per turn, 3 tools
+- [Token cost of Google Sheets MCP server](https://mcp.pacerai.fit/token-cost/google-sheets/): ~7,860 tokens per turn, 6 tools
+- [Token cost of Google Slides MCP server](https://mcp.pacerai.fit/token-cost/google-slides/): ~8,957 tokens per turn, 4 tools
+- [Token cost of Higgsfield AI MCP server](https://mcp.pacerai.fit/token-cost/higgsfield/): login required, not measured
+- [Token cost of Hostinger MCP server](https://mcp.pacerai.fit/token-cost/hostinger/): login required, not measured
+- [Token cost of HubSpot MCP server](https://mcp.pacerai.fit/token-cost/hubspot/): login required, not measured
+- [Token cost of Intercom MCP server](https://mcp.pacerai.fit/token-cost/intercom/): login required, not measured
+- [Token cost of Jam MCP server](https://mcp.pacerai.fit/token-cost/jam/): login required, not measured
+- [Token cost of Klaviyo MCP server](https://mcp.pacerai.fit/token-cost/klaviyo/): login required, not measured
+- [Token cost of Miro MCP server](https://mcp.pacerai.fit/token-cost/miro/): login required, not measured
+- [Token cost of monday.com MCP server](https://mcp.pacerai.fit/token-cost/monday/): login required, not measured
+- [Token cost of MongoDB MCP server](https://mcp.pacerai.fit/token-cost/mongodb/): login required, not measured
+- [Token cost of Netlify MCP server](https://mcp.pacerai.fit/token-cost/netlify/): login required, not measured
+- [Token cost of Perplexity MCP server](https://mcp.pacerai.fit/token-cost/perplexity/): login required, not measured
+- [Token cost of Plaid MCP server](https://mcp.pacerai.fit/token-cost/plaid/): login required, not measured
+- [Token cost of PostHog MCP server](https://mcp.pacerai.fit/token-cost/posthog/): login required, not measured
+- [Token cost of Prisma MCP server](https://mcp.pacerai.fit/token-cost/prisma/): login required, not measured
+- [Token cost of Slack MCP server](https://mcp.pacerai.fit/token-cost/slack/): login required, not measured
+- [Token cost of Square (Streamable HTTP) MCP server](https://mcp.pacerai.fit/token-cost/square-http/): login required, not measured
+- [Token cost of Svelte MCP server](https://mcp.pacerai.fit/token-cost/svelte/): ~1,186 tokens per turn, 4 tools
+- [Token cost of TickTick MCP server](https://mcp.pacerai.fit/token-cost/ticktick/): login required, not measured
+- [Token cost of Twilio Docs MCP server](https://mcp.pacerai.fit/token-cost/twilio-docs/): ~1,035 tokens per turn, 2 tools
+- [Token cost of Wix MCP server](https://mcp.pacerai.fit/token-cost/wix/): login required, not measured
+<!-- token-cost:end -->
