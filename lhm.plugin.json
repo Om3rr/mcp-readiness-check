@@ -1,0 +1,29 @@
+{
+  "identifier": "om3rr-mcp-readiness",
+  "name": "MCP Readiness",
+  "version": "0.5.0",
+  "description": "Free scanner for remote MCP servers: checks OAuth discovery, tool annotations, Origin/CORS and estimates tool-list token cost per agent turn. Web scan, README badge, GitHub Action, and an MCP tool.",
+  "author": "Om3rr",
+  "authorUrl": "https://github.com/Om3rr",
+  "homepage": "https://mcp.pacerai.fit/?utm_source=lobehub&utm_medium=directory&utm_campaign=mcp-readiness-14d",
+  "category": "developer",
+  "cloudEndpoint": "https://mcp.pacerai.fit/mcp",
+  "tags": ["mcp", "testing", "oauth"],
+  "tools": [
+    {
+      "name": "scan_mcp_server",
+      "description": "Read-only readiness scan of a public Streamable HTTP MCP server you are authorized to test. Returns a score, estimated tokens per turn, key findings, and a link to the full results page. Rate-limited. Surface checks only, not a security audit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "description": "https URL of the MCP endpoint to scan"
+          }
+        },
+        "required": ["url"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

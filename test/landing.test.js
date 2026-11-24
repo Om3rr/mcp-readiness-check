@@ -222,3 +222,30 @@ test('live-scan links are rel=nofollow so crawlers do not follow /s/ pages', () 
   assert.ok(hrefs.length >= 5);
   for (const tag of hrefs) assert.match(tag, /rel="nofollow"/);
 });
+
+test('homepage describes the free scan_mcp_server endpoint, not the old paid scan_mcp copy', () => {
+  const html = read('index.html');
+  assert.match(html, /scan_mcp_server/);
+  assert.match(html, /https:\/\/mcp\.pacerai\.fit\/mcp/);
+  assert.match(html, /"type": "streamable-http"/);
+  assert.doesNotMatch(html, /Agent access is part of Pro, coming soon/);
+  assert.doesNotMatch(html, /(?<![A-Za-z0-9_])scan_mcp(?!_server)/);
+  const tjs = read('t.js');
+  assert.match(tjs, /mcpUtm/);
+  assert.match(html, /window\.mcpUtm/);
+});
+
+test('directory manifests are accurate and describe the free remote', () => {
+  const root = new URL('../', import.meta.url).pathname;
+  const glama = JSON.parse(readFileSync(new URL('../glama.json', import.meta.url), 'utf8'));
+  assert.deepEqual(glama.maintainers, ['Om3rr']);
+  const mcp = JSON.parse(readFileSync(new URL('../.mcp.json', import.meta.url), 'utf8'));
+  assert.equal(mcp.mcpServers['mcp-readiness'].type, 'streamable-http');
+  assert.equal(mcp.mcpServers['mcp-readiness'].url, 'https://mcp.pacerai.fit/mcp');
+  const lhm = JSON.parse(readFileSync(new URL('../lhm.plugin.json', import.meta.url), 'utf8'));
+  assert.equal(lhm.cloudEndpoint, 'https://mcp.pacerai.fit/mcp');
+  assert.equal(lhm.version, '0.5.0');
+  assert.equal(lhm.tools[0].name, 'scan_mcp_server');
+  assert.match(lhm.homepage, /utm_source=lobehub/);
+  assert.doesNotMatch(JSON.stringify(lhm), /\bPro\b|paid plan|license key required/i);
+});

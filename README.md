@@ -122,11 +122,31 @@ Scoring: start at 100, −15 per ❌, −5 per ⚠️. It is a surface scan, not
 
 ## Use from your agent (MCP)
 
-The hosted scanner is also a remote MCP server at `https://mcp.pacerai.fit/mcp` (Streamable HTTP, no license key). Add that URL as a remote server in your agent, then call the `scan_mcp_server` tool with the `https` URL of an MCP server you own or are authorized to test.
+The hosted scanner is also a free, live remote MCP server at `https://mcp.pacerai.fit/mcp` (Streamable HTTP, no license key). Add that URL as a remote server in your agent, then call the `scan_mcp_server` tool with the `https` URL of an MCP server you own or are authorized to test.
 
-The tool returns a readiness score, an estimate of tokens per turn for the tool list, key findings, and a link to the full results page. Calls are rate-limited (10 per minute and 100 per day per client). This is a surface scan, not a security audit.
+```json
+{
+  "mcpServers": {
+    "mcp-readiness": {
+      "type": "streamable-http",
+      "url": "https://mcp.pacerai.fit/mcp"
+    }
+  }
+}
+```
+
+The tool returns a readiness score, an estimate of tokens per turn for the tool list, key findings, and a link to the full results page. Calls are rate-limited (10 per minute and 100 per day per client). This is a surface scan, not a security audit. There is no paid or Pro gate on this tool.
 
 The same endpoint is also served at `https://mcp-readiness.omer20sh.workers.dev/mcp`.
+
+### Origin policy
+
+`POST /mcp` follows the MCP Streamable HTTP rule that servers MUST validate `Origin`:
+
+- Requests with **no `Origin` header** (server-side agents and CLIs) are allowed.
+- Browser requests are allowed only from the site's own origins, `https://mcp.pacerai.fit` and `https://mcp-readiness.omer20sh.workers.dev`, plus `http`/`https` `localhost`, `127.0.0.1`, and `::1` (any port) for local inspectors such as MCP Inspector.
+- Any other `Origin` receives HTTP 403 with a JSON-RPC error (`-32000`, "Origin not allowed").
+- Allowed browser responses include `Access-Control-Allow-Origin` set to that origin (not `*`), plus the same `Access-Control-Allow-Methods` and `Access-Control-Allow-Headers` as `OPTIONS`. The server is stateless and does not issue `Mcp-Session-Id`. `GET /mcp` remains 405.
 
 ## Examples
 

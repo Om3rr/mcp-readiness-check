@@ -3,8 +3,19 @@
   var q; try { q = new URLSearchParams(location.search); } catch (e) { q = { get: function(){ return null; } }; }
   var ref = '';
   var src = q.get('utm_source');
-  if (src) ref = 'utm:' + [src, q.get('utm_medium') || '', q.get('utm_campaign') || ''].join('/').slice(0, 170);
-  else if (document.referrer && document.referrer.indexOf(location.origin) !== 0) ref = document.referrer;
+  var medium = q.get('utm_medium') || '';
+  var campaign = q.get('utm_campaign') || '';
+  if (src) {
+    ref = 'utm:' + [src, medium, campaign].join('/').slice(0, 170);
+    try { sessionStorage.setItem('mcp_utm', JSON.stringify({ utm_source: src, utm_medium: medium, utm_campaign: campaign })); } catch (e) {}
+  } else if (document.referrer && document.referrer.indexOf(location.origin) !== 0) ref = document.referrer;
+  window.mcpUtm = function () {
+    try {
+      if (src) return { utm_source: src, utm_medium: medium, utm_campaign: campaign };
+      var stored = sessionStorage.getItem('mcp_utm');
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) { return {}; }
+  };
   function ping(event, props) {
     try {
       var body = JSON.stringify({ event: event, path: location.pathname, ref: ref, props: props || {} });

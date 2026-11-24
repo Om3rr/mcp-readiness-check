@@ -44,7 +44,8 @@ function memD1() {
             const k = keyOf(keyBinds);
             const row = t.get(k) || { count: 0, ...extra };
             row.count = (row.count || 0) + 1;
-            Object.assign(row, extra);
+            const { count: _ignore, ...rest } = extra || {};
+            Object.assign(row, rest, { count: row.count });
             t.set(k, row);
             return { meta: { changes: 1 } };
           };
@@ -79,6 +80,22 @@ function memD1() {
           }
           if (/INSERT INTO internal_daily/.test(s)) return bump('internal_daily', binds.slice(0, 2), { worker: binds[0], day: binds[1] });
           if (/INSERT INTO crawlers_daily/.test(s)) return bump('crawlers_daily', binds.slice(0, 3), { worker: binds[0], day: binds[1], crawler: binds[2] });
+          if (/INSERT INTO utm_daily/.test(s)) {
+            const t = table('utm_daily');
+            const k = keyOf(binds.slice(0, 6));
+            const row = t.get(k) || { worker: binds[0], day: binds[1], kind: binds[2], utm_source: binds[3], utm_medium: binds[4], utm_campaign: binds[5], count: 0 };
+            row.count += 1;
+            t.set(k, row);
+            return { meta: { changes: 1 } };
+          }
+          if (/INSERT INTO referrers_by_kind_daily/.test(s)) {
+            const t = table('referrers_by_kind_daily');
+            const k = keyOf(binds.slice(0, 4));
+            const row = t.get(k) || { worker: binds[0], day: binds[1], kind: binds[2], host: binds[3], count: 0 };
+            row.count += 1;
+            t.set(k, row);
+            return { meta: { changes: 1 } };
+          }
           return { meta: { changes: 0 } };
         },
         async first() {
@@ -127,6 +144,11 @@ function memD1() {
                 badge_refresh: find('badge_refresh_daily', day, 'count'),
               });
             }
+          } else if (/FROM requests_daily/.test(s) && /route IN/.test(s)) {
+            for (const row of table('requests_daily').values()) {
+              if (row.worker !== binds[0] || row.day < binds[1]) continue;
+              if (row.route === '/mcp' || row.route === '/api/scan') results.push({ day: row.day, route: row.route, count: row.count });
+            }
           } else if (/FROM requests_daily/.test(s) && /GROUP BY route/.test(s)) {
             const acc = new Map();
             for (const row of table('requests_daily').values()) {
@@ -148,6 +170,11 @@ function memD1() {
               acc.set(row.event, (acc.get(row.event) || 0) + row.count);
             }
             for (const [event, count] of acc) results.push({ event, count });
+          } else if (/FROM outside_scan_sources_daily/.test(s) && /GROUP BY day, source/.test(s)) {
+            for (const row of table('outside_scan_sources_daily').values()) {
+              if (row.worker !== binds[0] || row.day < binds[1]) continue;
+              results.push({ day: row.day, source: row.source, count: row.count });
+            }
           } else if (/FROM outside_scan_sources_daily/.test(s)) {
             const acc = new Map();
             for (const row of table('outside_scan_sources_daily').values()) {
@@ -159,6 +186,27 @@ function memD1() {
             /* none */
           } else if (/FROM event_props_daily/.test(s)) {
             /* none */
+          } else if (/FROM utm_daily/.test(s)) {
+            const acc = new Map();
+            for (const row of table('utm_daily').values()) {
+              if (row.worker !== binds[0] || row.day < binds[1]) continue;
+              if (s.includes("kind = 'landing_view'") && row.kind !== 'landing_view') continue;
+              if (s.includes("kind = 'outside_scan'") && row.kind !== 'outside_scan') continue;
+              const k = [row.kind, row.utm_source, row.utm_medium, row.utm_campaign].join('\x1f');
+              const cur = acc.get(k) || { utm_source: row.utm_source, utm_medium: row.utm_medium, utm_campaign: row.utm_campaign, count: 0 };
+              cur.count += row.count;
+              acc.set(k, cur);
+            }
+            results.push(...acc.values());
+          } else if (/FROM referrers_by_kind_daily/.test(s)) {
+            const acc = new Map();
+            for (const row of table('referrers_by_kind_daily').values()) {
+              if (row.worker !== binds[0] || row.day < binds[1]) continue;
+              if (s.includes("kind = 'landing_view'") && row.kind !== 'landing_view') continue;
+              if (s.includes("kind = 'outside_scan'") && row.kind !== 'outside_scan') continue;
+              acc.set(row.host, (acc.get(row.host) || 0) + row.count);
+            }
+            for (const [host, count] of acc) results.push({ host, count });
           }
           return { results };
         },
@@ -408,7 +456,9 @@ test('stats: internal MCP calls are excluded as now', async () => {
     await Promise.all(pending);
     const stats = await readStats(env, 'mcp-readiness');
     assert.equal(stats.totals.outside_scans, 0);
-    assert.deepEqual(stats.totals.outside_scan_sources, {});
+    assert.equal(stats.totals.outside_scan_sources.api || 0, 0);
+    assert.equal(stats.totals.outside_scan_sources.mcp || 0, 0);
+    assert.equal(stats.totals.outside_scans, 0);
     assert.ok(stats.totals.internal_hits >= 1);
   } finally { restore(); }
 });
@@ -437,7 +487,9 @@ test('stats: page and badge refreshes are not outside; api/mcp are, once per IP 
   assert.equal(stats.totals.page_refresh, 1);
   assert.equal(stats.totals.badge_refresh, 1);
   assert.equal(stats.totals.outside_scans, 0);
-  assert.deepEqual(stats.totals.outside_scan_sources, {});
+  assert.equal(stats.totals.outside_scan_sources.api || 0, 0);
+  assert.equal(stats.totals.outside_scan_sources.mcp || 0, 0);
+  assert.ok(!stats.totals.outside_scan_sources.unattributed);
   assert.ok('outside_scans' in stats.totals);
   assert.ok('requests' in stats.totals);
 
@@ -454,4 +506,90 @@ test('stats: page and badge refreshes are not outside; api/mcp are, once per IP 
   assert.equal(stats.totals.outside_scan_sources.mcp, 1);
   assert.equal(stats.daily[0].page_refresh, 1);
   assert.equal(stats.daily[0].badge_refresh, 1);
+});
+
+test('mcp Origin policy: no Origin and allowlisted origins work with CORS; foreign Origin is 403', async () => {
+  const env = { LICENSES: kv(), PUBLIC_URL: 'https://mcp.pacerai.fit' };
+  const init = { jsonrpc: '2.0', id: 1, method: 'initialize', params: { protocolVersion: '2025-06-18', capabilities: {}, clientInfo: { name: 't', version: '0' } } };
+  const post = (headers = {}) => call(env, '/mcp', { method: 'POST', headers: { 'content-type': 'application/json', ...headers }, body: JSON.stringify(init) });
+
+  const none = await post();
+  assert.equal(none.status, 200);
+  assert.equal(none.headers.get('access-control-allow-origin'), null);
+  assert.equal((await none.json()).result.serverInfo.name, 'mcp-readiness');
+
+  const site = await post({ origin: 'https://mcp.pacerai.fit' });
+  assert.equal(site.status, 200);
+  assert.equal(site.headers.get('access-control-allow-origin'), 'https://mcp.pacerai.fit');
+  assert.equal(site.headers.get('access-control-allow-methods'), 'POST, OPTIONS');
+  assert.match(site.headers.get('access-control-allow-headers') || '', /mcp-protocol-version/);
+  assert.match(site.headers.get('vary') || '', /Origin/i);
+
+  const local = await post({ origin: 'http://localhost:6274' });
+  assert.equal(local.status, 200);
+  assert.equal(local.headers.get('access-control-allow-origin'), 'http://localhost:6274');
+
+  const foreign = await post({ origin: 'https://example.com' });
+  assert.equal(foreign.status, 403);
+  const err = await foreign.json();
+  assert.equal(err.error.code, -32000);
+  assert.match(err.error.message, /Origin not allowed/i);
+  assert.equal(foreign.headers.get('access-control-allow-origin'), null);
+
+  const preflight = await call(env, '/mcp', { method: 'OPTIONS', headers: { origin: 'https://mcp.pacerai.fit' } });
+  assert.equal(preflight.status, 204);
+  assert.equal(preflight.headers.get('access-control-allow-origin'), 'https://mcp.pacerai.fit');
+
+  const get = await call(env, '/mcp', { method: 'GET' });
+  assert.equal(get.status, 405);
+});
+
+
+test('stats: daily outside sources, utm and split referrers, daily mcp/api request counts', async () => {
+  const { recordVisit, handleEvent, readStats, israelDay } = await import('../worker/src/metrics.js');
+  const env = { METRICS: memD1() };
+  const targetA = 'https://mcp.athena.example/mcp';
+  const targetB = 'https://mcp.other-athena.example/mcp';
+  const req = (ip, referer) => new Request('https://w.test/', { headers: { 'user-agent': 'Mozilla/5.0', 'cf-connecting-ip': ip, ...(referer ? { referer } : {}) } });
+
+  await recordVisit(env, req('203.0.113.50', 'https://glama.ai/x'), {
+    worker: 'mcp-readiness', route: '/mcp', scan: 'success', source: 'mcp', targetUrl: targetA,
+    utm: { utm_source: 'glama', utm_medium: 'directory', utm_campaign: 'mcp-readiness-14d' },
+  });
+  await recordVisit(env, req('203.0.113.51'), {
+    worker: 'mcp-readiness', route: '/api/scan', scan: 'success', source: 'api', targetUrl: targetB,
+    utm: { utm_source: 'pulsemcp', utm_medium: 'directory', utm_campaign: 'mcp-readiness-14d' },
+  });
+  const ev = await handleEvent(new Request('https://w.test/', {
+    method: 'POST',
+    headers: { 'content-type': 'application/json', 'user-agent': 'Mozilla/5.0', 'cf-connecting-ip': '203.0.113.52' },
+    body: JSON.stringify({ event: 'landing_view', ref: 'utm:glama/directory/mcp-readiness-14d' }),
+  }), env, 'mcp-readiness');
+  assert.ok([200, 204].includes(ev.status));
+
+  // Simulate a historical outside count with no source row (pre-source-tracking days).
+  const day = israelDay();
+  await env.METRICS.prepare('INSERT INTO outside_scans_daily (worker, day, count) VALUES (?, ?, 1) ON CONFLICT(worker, day) DO UPDATE SET count = count + 1').bind('mcp-readiness', day, 1).run();
+
+  const stats = await readStats(env, 'mcp-readiness');
+  assert.equal(stats.totals.outside_scans, 3);
+  assert.equal(stats.totals.outside_scan_sources.mcp, 1);
+  assert.equal(stats.totals.outside_scan_sources.api, 1);
+  assert.equal(stats.totals.outside_scan_sources.unattributed, 1);
+  assert.ok(stats.totals.mcp_requests >= 1);
+  assert.ok(stats.totals.api_scan_requests >= 1);
+  assert.equal(stats.daily[0].outside_scan_sources.mcp, 1);
+  assert.equal(stats.daily[0].outside_scan_sources.api, 1);
+  assert.equal(stats.daily[0].outside_scan_sources.unattributed, 1);
+  assert.ok(stats.daily[0].mcp_requests >= 1);
+  assert.ok(stats.daily[0].api_scan_requests >= 1);
+  assert.equal(stats.totals.landing_views_by_utm[0].utm_source, 'glama');
+  assert.equal(stats.totals.landing_views_by_utm[0].utm_medium, 'directory');
+  assert.equal(stats.totals.landing_views_by_utm[0].utm_campaign, 'mcp-readiness-14d');
+  const scanSources = stats.totals.outside_scans_by_utm.map((r) => r.utm_source).sort();
+  assert.deepEqual(scanSources, ['glama', 'pulsemcp']);
+  assert.ok(stats.top_scan_referrers.some((r) => r.host === 'glama.ai'));
+  assert.ok(stats.top_landing_referrers.some((r) => r.host.startsWith('utm:glama')));
+  assert.ok('outside_scans' in stats.totals);
+  assert.ok('top_referrers' in stats);
 });

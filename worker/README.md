@@ -17,13 +17,17 @@ Free web scan (score + top 3 issues), a paid full report (HTML, plus PDF when Br
 | `GET /api/report?url=…&format=html\|pdf` | Full report | license |
 | `GET /badge.svg?url=…` | Score badge, cached 6 h | public |
 | `POST /api/ci/run {repo}` | GitHub Action metering: `free` (50/day per repo), `capped` or `full` | public / license |
-| `POST /mcp` | Remote MCP server with one tool, `scan_mcp_server({url})`. Returns score, tokens per turn, key findings, and a results-page link | public, 10/min and 100/day per IP hash |
+| `POST /mcp` | Remote MCP server with one tool, `scan_mcp_server({url})`. Returns score, tokens per turn, key findings, and a results-page link. Free, no key. Origin policy: no Origin allowed; browsers only from the site origins and localhost/127.0.0.1/::1; other Origins get 403 | public, 10/min and 100/day per IP hash |
 | `POST /api/monitor {url, webhook?, remove?}` | Daily re-scan (cron 06:17 UTC). On score, findings or context-cost drift, POSTs `mcp_readiness.drift` to your webhook. Pro 10, Team 200 servers | license |
 | `GET /api/license` | Plan, status, remaining | license |
 | `POST /api/subscribe {email}` | Report-magnet email capture (KV `lead:*`) | public, 5/h per IP |
 | `POST /webhooks/stripe` | `checkout.session.completed`, `invoice.paid`, `invoice.payment_failed`, `customer.subscription.deleted` | Stripe signature |
 | `POST /webhooks/lemonsqueezy` | `order_created`, `subscription_created`, `subscription_payment_success`, `subscription_cancelled`, `subscription_expired` | HMAC `X-Signature` |
 | `GET /thanks?session_id=…` / `?ls_order=…` | Shows the new license key once | — |
+
+## Origin policy for `/mcp`
+
+Requests with no `Origin` header (CLIs and server-side agents) are allowed. Browser requests must come from `https://mcp.pacerai.fit`, `https://mcp-readiness.omer20sh.workers.dev`, or `http`/`https` `localhost` / `127.0.0.1` / `::1` (any port, for local inspectors). Any other `Origin` is rejected with HTTP 403 and a JSON-RPC error. Allowed browser responses echo that origin in `Access-Control-Allow-Origin` (never `*`) and send the same allow-methods/allow-headers as `OPTIONS`. The endpoint is stateless and does not use `Mcp-Session-Id`. `GET /mcp` is 405.
 
 ## Plans (src/license.js)
 

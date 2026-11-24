@@ -101,6 +101,74 @@ export function shouldSkipRoute(route) {
     return SKIP_ROUTES.has(route);
 }
 /** Store utm:source/medium/campaign as-is; otherwise keep only the referrer host. */
+export function sanitizeUtmPart(value) {
+    return String(value || "").trim().slice(0, 80);
+}
+/** Parse utm_source/medium/campaign from a POST body or a utm:source/medium/campaign ref string. */
+export function parseUtm(input) {
+    const src = input && typeof input === "object" ? input : {};
+    let source = sanitizeUtmPart(src.utm_source);
+    let medium = sanitizeUtmPart(src.utm_medium);
+    let campaign = sanitizeUtmPart(src.utm_campaign);
+    const ref = String(src.ref || "");
+    if (!source && ref.toLowerCase().startsWith("utm:")) {
+        const parts = ref.slice(4).split("/");
+        source = sanitizeUtmPart(parts[0]);
+        medium = sanitizeUtmPart(parts[1]);
+        campaign = sanitizeUtmPart(parts[2]);
+    }
+    if (!source)
+        return null;
+    return { utm_source: source, utm_medium: medium, utm_campaign: campaign };
+}
+const UTM_DAILY_DDL = `CREATE TABLE IF NOT EXISTS utm_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  utm_source TEXT NOT NULL,
+  utm_medium TEXT NOT NULL,
+  utm_campaign TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, kind, utm_source, utm_medium, utm_campaign)
+)`;
+const REFERRERS_BY_KIND_DDL = `CREATE TABLE IF NOT EXISTS referrers_by_kind_daily (
+  worker TEXT NOT NULL,
+  day TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  host TEXT NOT NULL,
+  count INTEGER NOT NULL DEFAULT 0,
+  PRIMARY KEY (worker, day, kind, host)
+)`;
+export async function bumpUtm(db, worker, day, kind, utm) {
+    if (!db || !utm || !utm.utm_source)
+        return;
+    await db.prepare(UTM_DAILY_DDL).run();
+    await db
+        .prepare("INSERT INTO utm_daily (worker, day, kind, utm_source, utm_medium, utm_campaign, count) VALUES (?, ?, ?, ?, ?, ?, 1) ON CONFLICT(worker, day, kind, utm_source, utm_medium, utm_campaign) DO UPDATE SET count = count + 1")
+        .bind(worker, day, kind, utm.utm_source, utm.utm_medium || "", utm.utm_campaign || "")
+        .run();
+}
+export async function bumpReferrerKind(db, worker, day, kind, host) {
+    if (!db || !host)
+        return;
+    await db.prepare(REFERRERS_BY_KIND_DDL).run();
+    await db
+        .prepare("INSERT INTO referrers_by_kind_daily (worker, day, kind, host, count) VALUES (?, ?, ?, ?, 1) ON CONFLICT(worker, day, kind, host) DO UPDATE SET count = count + 1")
+        .bind(worker, day, kind, host)
+        .run();
+}
+export function fillUnattributedSources(total, bySource) {
+    const sources = { ...(bySource || {}) };
+    const attributed = Object.values(sources).reduce((a, b) => a + (Number(b) || 0), 0);
+    const gap = (Number(total) || 0) - attributed;
+    if (gap > 0)
+        sources.unattributed = (Number(sources.unattributed) || 0) + gap;
+    if (sources.api == null)
+        sources.api = 0;
+    if (sources.mcp == null)
+        sources.mcp = 0;
+    return sources;
+}
 export function normalizeRef(raw) {
     if (!raw)
         return null;
@@ -479,6 +547,12 @@ export async function recordVisit(env, request, opts) {
                 .prepare("INSERT INTO outside_scan_sources_daily (worker, day, source, count) VALUES (?, ?, ?, 1) ON CONFLICT(worker, day, source) DO UPDATE SET count = count + 1")
                 .bind(worker, day, source)
                 .run();
+            const utm = parseUtm(opts.utm || { ref: referrerHost(request, opts.ref) });
+            if (utm)
+                await bumpUtm(db, worker, day, "outside_scan", utm);
+            const scanRef = referrerHost(request, opts.ref);
+            if (scanRef)
+                await bumpReferrerKind(db, worker, day, "outside_scan", scanRef);
         }
     }
 }
@@ -493,7 +567,9 @@ const emptyStats = (worker) => ({
     timezone: WORKER_TZ,
     generated_at: israelNowIso(),
     window_days: 30,
-    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, outside_scan_sources: {}, page_refresh: 0, badge_refresh: 0, events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
+    totals: { requests: 0, unique_visitors: 0, scans: { success: 0, fail: 0 }, badge_hits: 0, waitlist_signups: 0, outside_scans: 0, outside_scan_sources: { api: 0, mcp: 0 }, page_refresh: 0, badge_refresh: 0, mcp_requests: 0, api_scan_requests: 0, landing_views_by_utm: [], outside_scans_by_utm: [], events: {}, internal_hits: 0, ai_crawlers: {}, price_click_tiers: {} },
+    top_landing_referrers: [],
+    top_scan_referrers: [],
     daily: [],
     routes: [],
     top_referrers: [],
@@ -540,6 +616,9 @@ export async function readStats(env, worker) {
         outside_scans: Number(row.outside_scans) || 0,
         page_refresh: Number(row.page_refresh) || 0,
         badge_refresh: Number(row.badge_refresh) || 0,
+        mcp_requests: 0,
+        api_scan_requests: 0,
+        outside_scan_sources: { api: 0, mcp: 0 },
     }));
     for (const row of out.daily) {
         out.totals.requests += row.requests;
@@ -550,6 +629,28 @@ export async function readStats(env, worker) {
         out.totals.outside_scans += row.outside_scans;
         out.totals.page_refresh += row.page_refresh;
         out.totals.badge_refresh += row.badge_refresh;
+    }
+    const byDay = new Map(out.daily.map((row) => [row.day, row]));
+    try {
+        const routeDaily = await db
+            .prepare("SELECT day, route, SUM(count) AS count FROM requests_daily WHERE worker = ? AND day >= ? AND route IN ('/mcp', '/api/scan') GROUP BY day, route")
+            .bind(worker, since)
+            .all();
+        for (const row of routeDaily.results || []) {
+            const d = byDay.get(String(row.day));
+            if (!d)
+                continue;
+            const n = Number(row.count) || 0;
+            if (row.route === "/mcp")
+                d.mcp_requests += n;
+            else if (row.route === "/api/scan")
+                d.api_scan_requests += n;
+        }
+    }
+    catch { /* older D1 without those routes is fine */ }
+    for (const row of out.daily) {
+        out.totals.mcp_requests += row.mcp_requests;
+        out.totals.api_scan_requests += row.api_scan_requests;
     }
     const routes = await db
         .prepare("SELECT route, SUM(count) AS count FROM requests_daily WHERE worker = ? AND day >= ? GROUP BY route ORDER BY count DESC, route ASC LIMIT 30")
@@ -582,9 +683,66 @@ export async function readStats(env, worker) {
                 continue;
             out.totals.outside_scan_sources[name] = Number(row.count) || 0;
         }
+        const srcDaily = await db
+            .prepare("SELECT day, source, SUM(count) AS count FROM outside_scan_sources_daily WHERE worker = ? AND day >= ? GROUP BY day, source")
+            .bind(worker, since)
+            .all();
+        for (const row of srcDaily.results || []) {
+            const d = byDay.get(String(row.day));
+            if (!d)
+                continue;
+            const name = String(row.source || "").slice(0, 40);
+            if (!name)
+                continue;
+            d.outside_scan_sources[name] = Number(row.count) || 0;
+        }
     }
     catch {
-        // Table may not exist yet on older D1; field stays {}.
+        // Table may not exist yet on older D1; field stays at api/mcp zeros.
+    }
+    for (const row of out.daily)
+        row.outside_scan_sources = fillUnattributedSources(row.outside_scans, row.outside_scan_sources);
+    out.totals.outside_scan_sources = fillUnattributedSources(out.totals.outside_scans, out.totals.outside_scan_sources);
+    const mapUtm = (rows) => (rows || []).map((row) => ({
+        utm_source: String(row.utm_source || ""),
+        utm_medium: String(row.utm_medium || ""),
+        utm_campaign: String(row.utm_campaign || ""),
+        count: Number(row.count) || 0,
+    }));
+    const mapRefs = (rows) => (rows || []).map((row) => ({ host: String(row.host), count: Number(row.count) || 0 }));
+    try {
+        await db.prepare(UTM_DAILY_DDL).run();
+        const landingUtm = await db
+            .prepare("SELECT utm_source, utm_medium, utm_campaign, SUM(count) AS count FROM utm_daily WHERE worker = ? AND day >= ? AND kind = 'landing_view' GROUP BY utm_source, utm_medium, utm_campaign ORDER BY count DESC, utm_source ASC LIMIT 50")
+            .bind(worker, since)
+            .all();
+        out.totals.landing_views_by_utm = mapUtm(landingUtm.results);
+        const scanUtm = await db
+            .prepare("SELECT utm_source, utm_medium, utm_campaign, SUM(count) AS count FROM utm_daily WHERE worker = ? AND day >= ? AND kind = 'outside_scan' GROUP BY utm_source, utm_medium, utm_campaign ORDER BY count DESC, utm_source ASC LIMIT 50")
+            .bind(worker, since)
+            .all();
+        out.totals.outside_scans_by_utm = mapUtm(scanUtm.results);
+    }
+    catch {
+        out.totals.landing_views_by_utm = [];
+        out.totals.outside_scans_by_utm = [];
+    }
+    try {
+        await db.prepare(REFERRERS_BY_KIND_DDL).run();
+        const landRefs = await db
+            .prepare("SELECT host, SUM(count) AS count FROM referrers_by_kind_daily WHERE worker = ? AND day >= ? AND kind = 'landing_view' GROUP BY host ORDER BY count DESC, host ASC LIMIT 20")
+            .bind(worker, since)
+            .all();
+        out.top_landing_referrers = mapRefs(landRefs.results);
+        const scanRefs = await db
+            .prepare("SELECT host, SUM(count) AS count FROM referrers_by_kind_daily WHERE worker = ? AND day >= ? AND kind = 'outside_scan' GROUP BY host ORDER BY count DESC, host ASC LIMIT 20")
+            .bind(worker, since)
+            .all();
+        out.top_scan_referrers = mapRefs(scanRefs.results);
+    }
+    catch {
+        out.top_landing_referrers = [];
+        out.top_scan_referrers = [];
     }
     const wl = await db
         .prepare("SELECT COUNT(*) AS count FROM waitlist WHERE product = ? AND created_at >= ?")
@@ -633,8 +791,8 @@ export function statsHtmlResponse(data, title) {
     const dailyRows = data.daily
         .slice()
         .reverse()
-        .map((d) => `<tr><td>${esc(d.day)}</td><td>${d.requests}</td><td>${d.unique_visitors}</td><td>${d.scans_success}</td><td>${d.scans_fail}</td><td>${d.outside_scans}</td><td>${d.page_refresh || 0}</td><td>${d.badge_refresh || 0}</td><td>${d.badge_hits}</td></tr>`)
-        .join("") || `<tr><td colspan="9">No traffic recorded in the last 30 days yet.</td></tr>`;
+        .map((d) => `<tr><td>${esc(d.day)}</td><td>${d.requests}</td><td>${d.unique_visitors}</td><td>${d.scans_success}</td><td>${d.scans_fail}</td><td>${d.outside_scans}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.api) || 0}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.mcp) || 0}</td><td>${(d.outside_scan_sources && d.outside_scan_sources.unattributed) || 0}</td><td>${d.mcp_requests || 0}</td><td>${d.api_scan_requests || 0}</td><td>${d.page_refresh || 0}</td><td>${d.badge_refresh || 0}</td><td>${d.badge_hits}</td></tr>`)
+        .join("") || `<tr><td colspan="14">No traffic recorded in the last 30 days yet.</td></tr>`;
     const routeRows = data.routes.map((r) => `<tr><td><code>${esc(r.route)}</code></td><td>${r.count}</td></tr>`).join("") ||
         `<tr><td colspan="2">None yet.</td></tr>`;
     const refRows = data.top_referrers.map((r) => `<tr><td>${esc(r.host)}</td><td>${r.count}</td></tr>`).join("") ||
@@ -655,6 +813,11 @@ export function statsHtmlResponse(data, title) {
         .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
         .map(([name, count]) => `<tr><td><code>${esc(name)}</code></td><td>${count}</td></tr>`)
         .join("") || `<tr><td colspan="2">None yet.</td></tr>`;
+    const utmRows = (rows) => (rows || []).map((r) => `<tr><td><code>${esc(r.utm_source)}</code></td><td><code>${esc(r.utm_medium || "")}</code></td><td><code>${esc(r.utm_campaign || "")}</code></td><td>${r.count}</td></tr>`).join("") || `<tr><td colspan="4">None yet.</td></tr>`;
+    const landingUtmRows = utmRows(totals.landing_views_by_utm);
+    const scanUtmRows = utmRows(totals.outside_scans_by_utm);
+    const landingRefRows = (data.top_landing_referrers || []).map((r) => `<tr><td>${esc(r.host)}</td><td>${r.count}</td></tr>`).join("") || `<tr><td colspan="2">None yet.</td></tr>`;
+    const scanRefRows = (data.top_scan_referrers || []).map((r) => `<tr><td>${esc(r.host)}</td><td>${r.count}</td></tr>`).join("") || `<tr><td colspan="2">None yet.</td></tr>`;
     const html = `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -706,13 +869,15 @@ export function statsHtmlResponse(data, title) {
     <div class="card"><div class="n">${totals.outside_scans || 0}</div><div class="l">Outside scans</div></div>
     <div class="card"><div class="n">${totals.page_refresh || 0}</div><div class="l">Page refreshes</div></div>
     <div class="card"><div class="n">${totals.badge_refresh || 0}</div><div class="l">Badge refreshes</div></div>
+    <div class="card"><div class="n">${totals.mcp_requests || 0}</div><div class="l">/mcp requests</div></div>
+    <div class="card"><div class="n">${totals.api_scan_requests || 0}</div><div class="l">/api/scan requests</div></div>
     <div class="card"><div class="n">${totals.waitlist_signups || 0}</div><div class="l">Pro waitlist</div></div>
     <div class="card ex"><div class="n">${internalHits}</div><div class="l">Internal hits (excluded)</div></div>
     <div class="card ex"><div class="n">${Object.values(aiCrawlers).reduce((a, b) => a + b, 0)}</div><div class="l">AI crawlers (excluded)</div></div>
   </div>
   <h2>Daily</h2>
   <div class="tablewrap"><table>
-    <thead><tr><th>Day</th><th>Requests</th><th>Uniques</th><th>Scans ok</th><th>Scans fail</th><th>Outside</th><th>Page refresh</th><th>Badge refresh</th><th>Badges</th></tr></thead>
+    <thead><tr><th>Day</th><th>Requests</th><th>Uniques</th><th>Scans ok</th><th>Scans fail</th><th>Outside</th><th>Outside api</th><th>Outside mcp</th><th>Outside unattr.</th><th>/mcp req</th><th>/api/scan req</th><th>Page refresh</th><th>Badge refresh</th><th>Badges</th></tr></thead>
     <tbody>${dailyRows}</tbody>
   </table></div>
   <h2>Routes</h2>
@@ -729,6 +894,26 @@ export function statsHtmlResponse(data, title) {
   <div class="tablewrap"><table>
     <thead><tr><th>Source</th><th>Count</th></tr></thead>
     <tbody>${sourceRows}</tbody>
+  </table></div>
+  <h2>Landing views by UTM</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>utm_source</th><th>utm_medium</th><th>utm_campaign</th><th>Count</th></tr></thead>
+    <tbody>${landingUtmRows}</tbody>
+  </table></div>
+  <h2>Outside scans by UTM</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>utm_source</th><th>utm_medium</th><th>utm_campaign</th><th>Count</th></tr></thead>
+    <tbody>${scanUtmRows}</tbody>
+  </table></div>
+  <h2>Landing-view referrers</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Referrer</th><th>Hits</th></tr></thead>
+    <tbody>${landingRefRows}</tbody>
+  </table></div>
+  <h2>Outside-scan referrers</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Referrer</th><th>Hits</th></tr></thead>
+    <tbody>${scanRefRows}</tbody>
   </table></div>
   <h2>Price clicks by tier</h2>
   <div class="tablewrap"><table>
@@ -832,6 +1017,13 @@ export async function handleEvent(request, env, worker) {
                 .prepare("INSERT INTO referrers_daily (worker, day, host, count) VALUES (?, ?, ?, 1) ON CONFLICT(worker, day, host) DO UPDATE SET count = count + 1")
                 .bind(worker, day, ref)
                 .run();
+        }
+        if (event === "landing_view") {
+            const utm = parseUtm({ ...body, ref });
+            if (utm)
+                await bumpUtm(db, worker, day, "landing_view", utm);
+            if (ref)
+                await bumpReferrerKind(db, worker, day, "landing_view", ref);
         }
         if (event === "price_click") {
             const props = (body.props && typeof body.props === "object") ? body.props : {};

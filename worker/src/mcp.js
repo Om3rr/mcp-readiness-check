@@ -31,6 +31,51 @@ const jsonHeaders = {
   'mcp-protocol-version': MCP_PROTOCOL_VERSION,
 };
 
+/** Site origins plus localhost / 127.0.0.1 / ::1 (any port) for local inspectors. */
+export const MCP_SITE_ORIGINS = new Set([
+  'https://mcp.pacerai.fit',
+  'https://mcp-readiness.omer20sh.workers.dev',
+]);
+export const MCP_CORS_ALLOW_METHODS = 'POST, OPTIONS';
+export const MCP_CORS_ALLOW_HEADERS = 'content-type, accept, authorization, mcp-protocol-version, mcp-session-id';
+
+export function mcpOriginHeader(request) {
+  return String(request?.headers?.get('origin') || '').trim();
+}
+
+export function isAllowedMcpOrigin(origin) {
+  if (!origin) return true; // no Origin: server-side agents and CLIs
+  let u;
+  try { u = new URL(origin); } catch { return false; }
+  const normalized = `${u.protocol}//${u.host}`;
+  if (MCP_SITE_ORIGINS.has(normalized) || MCP_SITE_ORIGINS.has(origin)) return true;
+  const host = u.hostname.replace(/^\[|\]$/g, '').toLowerCase();
+  if (host === 'localhost' || host === '127.0.0.1' || host === '::1') {
+    return u.protocol === 'http:' || u.protocol === 'https:';
+  }
+  return false;
+}
+
+/** CORS headers for an allowed browser Origin. No Origin means no ACAO (non-browser). */
+export function mcpCorsHeaders(request) {
+  const origin = mcpOriginHeader(request);
+  const headers = { ...jsonHeaders, vary: 'Origin' };
+  if (origin && isAllowedMcpOrigin(origin)) {
+    headers['access-control-allow-origin'] = origin;
+    headers['access-control-allow-methods'] = MCP_CORS_ALLOW_METHODS;
+    headers['access-control-allow-headers'] = MCP_CORS_ALLOW_HEADERS;
+  }
+  return headers;
+}
+
+export function forbiddenOriginResponse() {
+  return new Response(JSON.stringify({
+    jsonrpc: '2.0',
+    id: null,
+    error: { code: -32000, message: 'Origin not allowed' },
+  }), { status: 403, headers: { ...jsonHeaders, vary: 'Origin' } });
+}
+
 function textOf(value, max = 400) {
   return escapeHtml(String(value ?? '')).slice(0, max);
 }
@@ -80,20 +125,20 @@ export function mcpToolResult(r, targetUrl, publicBase) {
   };
 }
 
-function rpcResponse(id, result, error) {
+function rpcResponse(id, result, error, request, status = 200) {
   const body = error
     ? { jsonrpc: '2.0', id: id ?? null, error }
     : { jsonrpc: '2.0', id: id ?? null, result };
-  return new Response(JSON.stringify(body), { headers: jsonHeaders });
+  return new Response(JSON.stringify(body), { status, headers: request ? mcpCorsHeaders(request) : { ...jsonHeaders } });
 }
 
 async function callScanTool(req, env, msg, mark, scan) {
   const t = await resolvePublicTarget(msg.params?.arguments?.url);
   if (!t.ok) {
-    return rpcResponse(msg.id, { isError: true, content: [{ type: 'text', text: `Rejected URL: ${textOf(t.error, 80)}` }] });
+    return rpcResponse(msg.id, { isError: true, content: [{ type: 'text', text: `Rejected URL: ${textOf(t.error, 80)}` }] }, null, req);
   }
   if (!(await rateLimitHashed(env, req, 'mcp'))) {
-    return rpcResponse(msg.id, { isError: true, content: [{ type: 'text', text: 'Rate limited. Try again later (limit 10/min, 100/day).' }] });
+    return rpcResponse(msg.id, { isError: true, content: [{ type: 'text', text: 'Rate limited. Try again later (limit 10/min, 100/day).' }] }, null, req);
   }
   if (mark) {
     mark.targetUrl = t.url;
@@ -115,37 +160,33 @@ async function callScanTool(req, env, msg, mark, scan) {
     mark.scan = 'success';
     mark.source = 'mcp';
   }
-  return rpcResponse(msg.id, result);
+  return rpcResponse(msg.id, result, null, req);
 }
 
 export async function handleMcp(req, env, mark, scan) {
+  const origin = mcpOriginHeader(req);
+  if (origin && !isAllowedMcpOrigin(origin)) return forbiddenOriginResponse();
+
   if (req.method === 'OPTIONS') {
-    return new Response(null, {
-      headers: {
-        ...jsonHeaders,
-        'access-control-allow-origin': '*',
-        'access-control-allow-methods': 'POST, OPTIONS',
-        'access-control-allow-headers': 'content-type, accept, authorization, mcp-protocol-version, mcp-session-id',
-      },
-    });
+    return new Response(null, { status: 204, headers: mcpCorsHeaders(req) });
   }
   if (req.method !== 'POST') {
     return new Response(JSON.stringify({ error: 'method_not_allowed', detail: 'Use POST with JSON-RPC for Streamable HTTP.' }), {
       status: 405,
-      headers: { ...jsonHeaders, allow: 'POST, OPTIONS' },
+      headers: { ...mcpCorsHeaders(req), allow: 'POST, OPTIONS' },
     });
   }
 
   const raw = await req.text();
   if (raw.length > MAX_REQUEST_BYTES) {
-    return rpcResponse(null, null, { code: -32600, message: 'Request too large' });
+    return rpcResponse(null, null, { code: -32600, message: 'Request too large' }, req);
   }
   let msg;
   try { msg = raw ? JSON.parse(raw) : null; } catch { msg = null; }
   if (Array.isArray(msg) || !msg || msg.jsonrpc !== '2.0' || typeof msg.method !== 'string') {
-    return rpcResponse(msg && !Array.isArray(msg) ? msg.id ?? null : null, null, { code: -32600, message: 'Invalid Request' });
+    return rpcResponse(msg && !Array.isArray(msg) ? msg.id ?? null : null, null, { code: -32600, message: 'Invalid Request' }, req);
   }
-  if (msg.id === undefined) return new Response(null, { status: 202, headers: jsonHeaders });
+  if (msg.id === undefined) return new Response(null, { status: 202, headers: mcpCorsHeaders(req) });
 
   switch (msg.method) {
     case 'initialize':
@@ -154,21 +195,21 @@ export async function handleMcp(req, env, mark, scan) {
         capabilities: { tools: { listChanged: false } },
         serverInfo: { name: 'mcp-readiness', version: env.MCP_VERSION || '0.5.0' },
         instructions: 'Call scan_mcp_server with the https URL of a public MCP server you are authorized to test. No license key is required. The tool returns a score, tokens per turn, key findings, and a results page link. Surface scan only, not a security audit.',
-      });
+      }, null, req);
     case 'ping':
-      return rpcResponse(msg.id, {});
+      return rpcResponse(msg.id, {}, null, req);
     case 'tools/list':
-      return rpcResponse(msg.id, { tools: MCP_TOOLS });
+      return rpcResponse(msg.id, { tools: MCP_TOOLS }, null, req);
     case 'tools/call': {
-      if (msg.params?.name !== MCP_TOOL_NAME) return rpcResponse(msg.id, null, { code: -32602, message: 'Unknown tool' });
+      if (msg.params?.name !== MCP_TOOL_NAME) return rpcResponse(msg.id, null, { code: -32602, message: 'Unknown tool' }, req);
       try {
         return await callScanTool(req, env, msg, mark, scan);
       } catch (e) {
         if (mark && mark.events && mark.events.includes('scan_started') && !mark.scan) mark.scan = 'fail';
-        return rpcResponse(msg.id, { isError: true, content: [{ type: 'text', text: `Scan failed: ${textOf(e?.message || e, 200)}` }] });
+        return rpcResponse(msg.id, { isError: true, content: [{ type: 'text', text: `Scan failed: ${textOf(e?.message || e, 200)}` }] }, null, req);
       }
     }
     default:
-      return rpcResponse(msg.id, null, { code: -32601, message: 'Method not found' });
+      return rpcResponse(msg.id, null, { code: -32601, message: 'Method not found' }, req);
   }
 }
