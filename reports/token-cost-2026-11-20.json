@@ -1,0 +1,755 @@
+{
+ "note": "Token-cost scan results behind the /token-cost/ pages as of 20 November 2026 (from popular-remote-servers-2026-11-20.json and data/mcp-servers.json).",
+ "servers": [
+  {
+   "id": "cloudflare-docs",
+   "name": "Cloudflare Docs",
+   "url": "https://docs.mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 434,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "mslearn",
+   "name": "Microsoft Learn",
+   "url": "https://learn.microsoft.com/api/mcp",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 3,
+   "contextTokens": 1215,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "exa",
+   "name": "Exa Search",
+   "url": "https://mcp.exa.ai/mcp",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 605,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "context7",
+   "name": "Context7",
+   "url": "https://mcp.context7.com/mcp",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 1304,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "deepwiki",
+   "name": "DeepWiki",
+   "url": "https://mcp.deepwiki.com/mcp",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 3,
+   "contextTokens": 427,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "huggingface",
+   "name": "Hugging Face",
+   "url": "https://huggingface.co/mcp",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 4,
+   "contextTokens": 4967,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "astro-docs",
+   "name": "Astro Docs",
+   "url": "https://mcp.docs.astro.build/mcp",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 1,
+   "contextTokens": 80,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "aws-knowledge",
+   "name": "AWS Knowledge",
+   "url": "https://knowledge-mcp.global.api.aws",
+   "score": 90,
+   "authRequired": false,
+   "toolCount": 5,
+   "contextTokens": 1978,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "semgrep",
+   "name": "Semgrep",
+   "url": "https://mcp.semgrep.ai/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "globalping",
+   "name": "Globalping",
+   "url": "https://mcp.globalping.dev/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "linear",
+   "name": "Linear",
+   "url": "https://mcp.linear.app/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "notion",
+   "name": "Notion",
+   "url": "https://mcp.notion.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "sentry",
+   "name": "Sentry",
+   "url": "https://mcp.sentry.dev/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "stripe",
+   "name": "Stripe",
+   "url": "https://mcp.stripe.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "supabase",
+   "name": "Supabase",
+   "url": "https://mcp.supabase.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "vercel",
+   "name": "Vercel",
+   "url": "https://mcp.vercel.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "github",
+   "name": "GitHub",
+   "url": "https://api.githubcopilot.com/mcp/",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "paypal",
+   "name": "PayPal",
+   "url": "https://mcp.paypal.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "square",
+   "name": "Square",
+   "url": "https://mcp.squareup.com/sse",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "neon",
+   "name": "Neon",
+   "url": "https://mcp.neon.tech/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "cloudflare-bindings",
+   "name": "Cloudflare Workers Bindings",
+   "url": "https://bindings.mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "webflow",
+   "name": "Webflow",
+   "url": "https://mcp.webflow.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "atlassian",
+   "name": "Atlassian",
+   "url": "https://mcp.atlassian.com/v1/mcp",
+   "score": 95,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T16:30:00Z"
+  },
+  {
+   "id": "airtable",
+   "name": "Airtable",
+   "url": "https://mcp.airtable.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "apify",
+   "name": "Apify",
+   "url": "https://mcp.apify.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:48Z"
+  },
+  {
+   "id": "asana-v2",
+   "name": "Asana",
+   "url": "https://mcp.asana.com/v2/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "asana-command",
+   "name": "Asana Command",
+   "url": "https://mcp.asana.com/v2/command/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "atlassian-rovo",
+   "name": "Atlassian Rovo",
+   "url": "https://mcp.atlassian.com/v2/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "box",
+   "name": "Box",
+   "url": "https://mcp.box.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:49Z"
+  },
+  {
+   "id": "browserbase",
+   "name": "Browserbase",
+   "url": "https://mcp.browserbase.com/mcp",
+   "score": 85,
+   "authRequired": false,
+   "toolCount": 6,
+   "contextTokens": 752,
+   "scannedAt": "2026-11-20T18:17:21Z"
+  },
+  {
+   "id": "buffer",
+   "name": "Buffer",
+   "url": "https://mcp.buffer.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:49Z"
+  },
+  {
+   "id": "canva",
+   "name": "Canva",
+   "url": "https://mcp.canva.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:49Z"
+  },
+  {
+   "id": "clickup",
+   "name": "ClickUp",
+   "url": "https://mcp.clickup.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:49Z"
+  },
+  {
+   "id": "cloudflare-agents-sdk-docs",
+   "name": "Cloudflare Agents SDK Docs",
+   "url": "https://agents.cloudflare.com/mcp",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 1,
+   "contextTokens": 101,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "cloudflare-api",
+   "name": "Cloudflare API",
+   "url": "https://mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "cloudflare-blog",
+   "name": "Cloudflare Blog",
+   "url": "https://blog.mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 4,
+   "contextTokens": 464,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "cloudflare-browser-run",
+   "name": "Cloudflare Browser Run",
+   "url": "https://browser.mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "cloudflare-containers",
+   "name": "Cloudflare Containers",
+   "url": "https://containers.mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "cloudflare-demo-day",
+   "name": "Cloudflare Demo Day",
+   "url": "https://demo-day.mcp.cloudflare.com/mcp",
+   "score": 90,
+   "authRequired": false,
+   "toolCount": 1,
+   "contextTokens": 52,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "cloudflare-dex",
+   "name": "Cloudflare DEX",
+   "url": "https://dex.mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "cloudflare-casb",
+   "name": "Cloudflare One CASB",
+   "url": "https://casb.mcp.cloudflare.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "coingecko",
+   "name": "CoinGecko",
+   "url": "https://mcp.api.coingecko.com/mcp",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 439,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "fal",
+   "name": "fal",
+   "url": "https://mcp.fal.ai/mcp-relay",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:50Z"
+  },
+  {
+   "id": "figma",
+   "name": "Figma",
+   "url": "https://mcp.figma.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "firecrawl",
+   "name": "Firecrawl",
+   "url": "https://mcp.firecrawl.dev/v2/mcp",
+   "score": 95,
+   "authRequired": false,
+   "toolCount": 3,
+   "contextTokens": 3869,
+   "scannedAt": "2026-11-20T18:15:48Z"
+  },
+  {
+   "id": "gitlab",
+   "name": "GitLab",
+   "url": "https://gitlab.com/api/v4/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "gmail",
+   "name": "Gmail",
+   "url": "https://gmailmcp.googleapis.com/mcp/v1",
+   "score": 85,
+   "authRequired": false,
+   "toolCount": 23,
+   "contextTokens": 11282,
+   "scannedAt": "2026-11-20T18:17:21Z"
+  },
+  {
+   "id": "google-calendar",
+   "name": "Google Calendar",
+   "url": "https://calendarmcp.googleapis.com/mcp/v1",
+   "score": 80,
+   "authRequired": false,
+   "toolCount": 9,
+   "contextTokens": 5765,
+   "scannedAt": "2026-11-20T18:17:21Z"
+  },
+  {
+   "id": "google-chat",
+   "name": "Google Chat",
+   "url": "https://chatmcp.googleapis.com/mcp/v1",
+   "score": 85,
+   "authRequired": false,
+   "toolCount": 4,
+   "contextTokens": 3792,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "google-classroom",
+   "name": "Google Classroom",
+   "url": "https://classroommcp.googleapis.com/mcp/v1",
+   "score": 90,
+   "authRequired": false,
+   "toolCount": 0,
+   "contextTokens": 0,
+   "scannedAt": "2026-11-20T18:15:52Z"
+  },
+  {
+   "id": "google-docs",
+   "name": "Google Docs",
+   "url": "https://docsmcp.googleapis.com/mcp/v1",
+   "score": 85,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 10011,
+   "scannedAt": "2026-11-20T18:15:50Z"
+  },
+  {
+   "id": "google-drive",
+   "name": "Google Drive",
+   "url": "https://drivemcp.googleapis.com/mcp/v1",
+   "score": 85,
+   "authRequired": false,
+   "toolCount": 9,
+   "contextTokens": 4609,
+   "scannedAt": "2026-11-20T18:17:21Z"
+  },
+  {
+   "id": "google-people",
+   "name": "Google People",
+   "url": "https://people.googleapis.com/mcp/v1",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 3,
+   "contextTokens": 607,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "google-sheets",
+   "name": "Google Sheets",
+   "url": "https://sheetsmcp.googleapis.com/mcp/v1",
+   "score": 85,
+   "authRequired": false,
+   "toolCount": 6,
+   "contextTokens": 7860,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "google-slides",
+   "name": "Google Slides",
+   "url": "https://slidesmcp.googleapis.com/mcp/v1",
+   "score": 80,
+   "authRequired": false,
+   "toolCount": 4,
+   "contextTokens": 8957,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "higgsfield",
+   "name": "Higgsfield AI",
+   "url": "https://mcp.higgsfield.ai/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:17:21Z"
+  },
+  {
+   "id": "hostinger",
+   "name": "Hostinger",
+   "url": "https://mcp.hostinger.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:50Z"
+  },
+  {
+   "id": "hubspot",
+   "name": "HubSpot",
+   "url": "https://mcp.hubspot.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "intercom",
+   "name": "Intercom",
+   "url": "https://mcp.intercom.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "jam",
+   "name": "Jam",
+   "url": "https://mcp.jam.dev/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "klaviyo",
+   "name": "Klaviyo",
+   "url": "https://mcp.klaviyo.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:50Z"
+  },
+  {
+   "id": "miro",
+   "name": "Miro",
+   "url": "https://mcp.miro.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:50Z"
+  },
+  {
+   "id": "monday",
+   "name": "monday.com",
+   "url": "https://mcp.monday.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:50Z"
+  },
+  {
+   "id": "mongodb",
+   "name": "MongoDB",
+   "url": "https://mcp.mongodb.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "netlify",
+   "name": "Netlify",
+   "url": "https://netlify-mcp.netlify.app/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "perplexity",
+   "name": "Perplexity",
+   "url": "https://api.perplexity.ai/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:52Z"
+  },
+  {
+   "id": "plaid",
+   "name": "Plaid",
+   "url": "https://api.dashboard.plaid.com/mcp/",
+   "score": 90,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "posthog",
+   "name": "PostHog",
+   "url": "https://mcp.posthog.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "prisma",
+   "name": "Prisma",
+   "url": "https://mcp.prisma.io/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "slack",
+   "name": "Slack",
+   "url": "https://mcp.slack.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "square-http",
+   "name": "Square",
+   "url": "https://mcp.squareup.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:52Z"
+  },
+  {
+   "id": "svelte",
+   "name": "Svelte",
+   "url": "https://mcp.svelte.dev/mcp",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 4,
+   "contextTokens": 1186,
+   "scannedAt": "2026-11-20T18:15:47Z"
+  },
+  {
+   "id": "ticktick",
+   "name": "TickTick",
+   "url": "https://mcp.ticktick.com",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  },
+  {
+   "id": "twilio-docs",
+   "name": "Twilio Docs",
+   "url": "https://mcp.twilio.com/docs",
+   "score": 100,
+   "authRequired": false,
+   "toolCount": 2,
+   "contextTokens": 1035,
+   "scannedAt": "2026-11-20T18:15:48Z"
+  },
+  {
+   "id": "wix",
+   "name": "Wix",
+   "url": "https://mcp.wix.com/mcp",
+   "score": 100,
+   "authRequired": true,
+   "toolCount": null,
+   "contextTokens": null,
+   "scannedAt": "2026-11-20T18:15:51Z"
+  }
+ ]
+}

@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
+import { gunzipSync } from 'node:zlib';
 import { join } from 'node:path';
 import worker from '../worker/src/index.js';
 import { TOKEN_COST_PATHS } from '../worker/src/token-cost-paths.js';
@@ -9,14 +10,19 @@ const pub = new URL('../worker/public/', import.meta.url).pathname;
 const read = (f) => readFileSync(join(pub, f), 'utf8');
 const env = { LICENSES: { get: async () => null, put: async () => {}, list: async () => ({ keys: [], list_complete: true }) } };
 const call = (path) => worker.fetch(new Request(`https://w.test${path}`), env, { waitUntil() {} });
-const servers = readdirSync(join(pub, 'token-cost'), { withFileTypes: true }).filter((d) => d.isDirectory()).map((d) => d.name);
+const TIERS = ['under-1k-tokens', '1k-5k-tokens', '5k-20k-tokens', 'over-20k-tokens'];
+const servers = readdirSync(join(pub, 'token-cost'), { withFileTypes: true }).filter((d) => d.isDirectory() && !TIERS.includes(d.name)).map((d) => d.name);
+const prev = JSON.parse(readFileSync(new URL('../reports/token-cost-2026-11-20.json', import.meta.url), 'utf8')).servers;
+const cur = JSON.parse(gunzipSync(readFileSync(new URL('../reports/registry-token-cost-2026-11-27.json.gz', import.meta.url))).toString('utf8'));
 const titleOf = (h) => h.match(/<title>([^<]+)<\/title>/)[1];
 const descOf = (h) => h.match(/<meta name="description" content="([^"]+)"/)[1];
 
 test('token-cost: one page per scored server, all in the sitemap paths', () => {
-  assert.ok(servers.length >= 70, `only ${servers.length} pages`);
+  assert.ok(servers.length >= 400 && servers.length <= 500, `${servers.length} pages`);
   assert.equal(TOKEN_COST_PATHS[0], '/token-cost/');
-  assert.deepEqual(TOKEN_COST_PATHS.slice(1).sort(), servers.map((s) => `/token-cost/${s}/`).sort());
+  assert.deepEqual(TOKEN_COST_PATHS.slice(1).sort(), [...TIERS, ...servers].map((s) => `/token-cost/${s}/`).sort());
+  // Every page from the 20 Nov ranking keeps its URL.
+  for (const p of prev) assert.ok(servers.includes(p.id), p.id);
 });
 
 test('token-cost: server pages have title, unique description, canonical, og, scan date, honest note', () => {
@@ -33,6 +39,9 @@ test('token-cost: server pages have title, unique description, canonical, og, sc
     assert.equal((h.match(/<h1>/g) || []).length, 1, s);
     assert.match(h, /<a href="\/token-cost\/">/, s);
     assert.match(h, /<a href="\/">/, s);
+    assert.match(h, /href="\/#remote"/, s);
+    assert.match(h, /https:\/\/mcp\.pacerai\.fit\/mcp</, s);
+    assert.doesNotMatch(h, /toolslim/i, s);
     // Rescan goes through the /s/ page (POST rescan), always nofollow, never an auto-scan URL.
     for (const m of h.matchAll(/<a [^>]*href="\/s\/[^"]*"[^>]*>/g)) assert.match(m[0], /rel="nofollow"/, s);
     assert.doesNotMatch(h, /\/scan\?url=|\/api\/scan/, s);
@@ -49,8 +58,13 @@ test('token-cost: server pages have title, unique description, canonical, og, sc
 test('token-cost: measured numbers for open servers, no invented numbers behind login', () => {
   const gmail = read('token-cost/gmail/index.html');
   assert.equal(titleOf(gmail), 'Token cost of Gmail MCP server');
-  assert.match(gmail, /~11,282 <span class="small">\(estimate, about ±10%\)<\/span>/);
-  assert.match(gmail, /<td>Tools listed<\/td><td>23<\/td>/);
+  const g = cur.servers.find((x) => x.url === 'https://gmailmcp.googleapis.com/mcp/v1');
+  assert.ok(g && g.ok && !g.authRequired, 'gmail in the 27 Nov scan');
+  assert.match(gmail, new RegExp(`~${g.contextTokens.toLocaleString('en-US')} <span class="small">\\(estimate, about ±10%\\)</span>`));
+  assert.match(gmail, new RegExp(`<td>Tools listed</td><td>${g.toolCount}</td>`));
+  // Delta vs the previous scan uses both recorded numbers.
+  const gp = prev.find((x) => x.id === 'gmail');
+  assert.match(gmail, new RegExp(`20 November 2026: ${gp.toolCount} tools, ~${gp.contextTokens.toLocaleString('en-US')} tokens\\. 27 November 2026: ${g.toolCount} tools`));
   const air = read('token-cost/airtable/index.html');
   assert.match(air, /required login\. The unauthenticated scan on [^.]+ returned no tool list/);
   assert.match(air, /Not measured \(no tool list without login\)/);
@@ -71,6 +85,21 @@ test('token-cost: ranking page sorted by tokens, auth list separate, links every
   for (const s of servers) assert.match(h, new RegExp(`href="/token-cost/${s}/"`), s);
   assert.match(h, /not a security audit/);
   assert.match(read('index.html'), /href="\/token-cost\/"/);
+});
+
+test('token-cost: size hub pages list only servers in their measured range', () => {
+  const bounds = { 'under-1k-tokens': [0, 1000], '1k-5k-tokens': [1000, 5000], '5k-20k-tokens': [5000, 20000], 'over-20k-tokens': [20000, Infinity] };
+  let total = 0;
+  for (const t of TIERS) {
+    const h = read(`token-cost/${t}/index.html`);
+    assert.match(h, new RegExp(`<link rel="canonical" href="https://mcp.pacerai.fit/token-cost/${t}/">`));
+    assert.match(h, /not a security audit/);
+    const toks = [...h.matchAll(/data-sort="(\d+)">~/g)].map((m) => Number(m[1]));
+    for (const n of toks) assert.ok(n >= bounds[t][0] && n < bounds[t][1], `${t}: ${n}`);
+    total += toks.length;
+  }
+  const ranked = read('token-cost/index.html').split('<h2>Servers that need login')[0];
+  assert.equal(total, [...ranked.matchAll(/data-sort="(\d+)">~/g)].length);
 });
 
 test('token-cost: routes served from assets, sitemap and llms.txt list them, robots still blocks /s/', async () => {

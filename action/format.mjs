@@ -11,7 +11,7 @@ export function summaryMarkdown(r, url, mode, meter = {}) {
     for (const f of shown) lines.push(`- ${ICON[f.level]} **${f.title}**${mode === 'full' && f.fix ? `<br>Fix: ${f.fix}` : ''}`);
     if (mode !== 'full' && issues.length > 3) lines.push('', `> ${issues.length - 3} more finding(s), plus fixes, the HTML report and SARIF, are on Pro ($19/mo).`);
   }
-  if ((r.contextTokens ?? 0) > 5000 || issues.some((f) => f.id === 'tools.description_long' || f.id === 'tools.many')) lines.push('', `> **Trim the tool list:** \`npx toolslim <url> --fix\` writes a slimmer drop-in version ([ToolSlim](https://github.com/Om3rr/toolslim)).`);
+  if ((r.contextTokens ?? 0) > 5000 || issues.some((f) => f.id === 'tools.description_long' || f.id === 'tools.many')) lines.push('', `> **Heavy tool list:** see [how to reduce tool-list token cost](https://mcp.pacerai.fit/blog/reduce-mcp-tool-list-token-cost/).`);
   lines.push('', `<sub>mcp-readiness-check · mode: ${mode}${meter.remaining != null ? ` · ${meter.remaining} runs left` : ''} · live protocol scan, no tools with side effects were called</sub>`);
   return lines.join('\n');
 }

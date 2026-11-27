@@ -81,11 +81,11 @@ export async function scan(env, target, opts = {}) {
   return r;
 }
 
-// Hook for the ToolSlim "fix" step: when the tool list is heavy, point at the slimmer.
+// "fix" hint: when the tool list is heavy, point at the public guide on trimming it. Same keys as before (tool, why, command, url).
 export function slimHint(r, env = {}) {
-  const heavy = (r.contextTokens ?? 0) > Number(env.TOOLSLIM_THRESHOLD_TOKENS || 5000) || r.findings.some((f) => f.id === 'tools.description_long' || f.id === 'tools.many');
+  const heavy = (r.contextTokens ?? 0) > Number(env.FIX_THRESHOLD_TOKENS || 5000) || r.findings.some((f) => f.id === 'tools.description_long' || f.id === 'tools.many');
   if (!heavy) return null;
-  return { tool: 'toolslim', why: `Tool list costs ~${(r.contextTokens ?? 0).toLocaleString('en-US')} tokens per agent turn`, command: 'npx toolslim <your-mcp-url> --fix', url: env.TOOLSLIM_URL || 'https://github.com/Om3rr/toolslim' };
+  return { tool: 'guide', why: `Tool list costs ~${(r.contextTokens ?? 0).toLocaleString('en-US')} tokens per agent turn`, command: null, url: `${env.PUBLIC_URL || 'https://mcp.pacerai.fit'}/blog/reduce-mcp-tool-list-token-cost/` };
 }
 
 export function limited(r, env) {

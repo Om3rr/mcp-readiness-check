@@ -2,7 +2,7 @@
 // Usage:
 //   mcp-readiness-check https://host/mcp [--token T] [--json] [--html report.html]
 //   mcp-readiness-check --stdio node server.js [--json] [--html report.html]
-//   --json includes `target` and the raw `tools` list (for `toolslim --report`); --no-tools drops it; --json-out FILE writes it to a file
+//   --json includes `target` and the raw `tools` list; --no-tools drops it; --json-out FILE writes it to a file
 //   mcp-readiness-check --batch servers.txt --out reports/     (one URL per line, "# comments" ok)
 import { writeFileSync, readFileSync, mkdirSync } from 'node:fs';
 import { probeHttp, toMarkdown, withTools } from '../src/probe.js';

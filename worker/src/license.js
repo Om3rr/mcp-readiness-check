@@ -2,7 +2,7 @@
 // Keys are shown to the buyer once; KV stores only their SHA-256 hash.
 export const PLANS = {
   free: { label: 'Free', quota: 0, monthly: false },
-  pro: { label: 'Pro ($19/mo)', quota: 2000, monthly: true }, // full findings + ToolSlim rewrite + hosted report + 10 monitors
+  pro: { label: 'Pro ($19/mo)', quota: 2000, monthly: true }, // full findings + slimmer tools.json + hosted report + 10 monitors
   team: { label: 'Team ($99/mo)', quota: 20000, monthly: true }, // 20,000 hosted scans + 200 monitors
   verified: { label: 'Verified re-audit ($79 one-off)', quota: 3, monthly: false }, // fresh audit + badge only if it passes
   pack: { label: 'Report pack ($9 one-off)', quota: 5, monthly: false },

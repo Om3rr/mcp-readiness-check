@@ -34,7 +34,7 @@ Requests with no `Origin` header (CLIs and server-side agents) are allowed. Brow
 | Plan | Price | Units |
 |---|---|---|
 | Free | $0 | paste-a-URL scan 10/h with no sign-up, Action 50 runs/day per repo (top 3 issues), badge + indexable server page |
-| `pro` | $19/mo | 2,000 runs or scans/mo, every finding with its fix, ToolSlim rewrite, hosted report, scans behind a test token, 10 monitors |
+| `pro` | $19/mo | 2,000 runs or scans/mo, every finding with its fix, hosted report, scans behind a test token, 10 monitors |
 | `team` | $99/mo | 20,000 hosted scans/mo, 200 monitors, multiple API keys |
 | `verified` | $79 one-time | fresh re-audit + directory listing; Verified badge only if it passes |
 | `pack` | $9 one-off | 5 full reports |
@@ -43,7 +43,7 @@ Requests with no `Origin` header (CLIs and server-side agents) are allowed. Brow
 
 Paid plans are **coming soon**. GitHub Marketplace has no paid plans for Actions, so the Action stays free and any paid plan will be billed on the hosted site. No checkout is wired up yet: server pages and the landing page show "coming soon" with no links.
 
-The ToolSlim hook works like this: when the tool list costs more than `TOOLSLIM_THRESHOLD_TOKENS` (default 5,000) or descriptions are oversized, `/api/scan` returns `fix: { tool: "toolslim", command, url }`. The landing page and the Action summary show it as the "fix" step.
+The fix hint works like this: when the tool list costs more than `FIX_THRESHOLD_TOKENS` (default 5,000) or descriptions are oversized, `/api/scan` returns `fix: { tool: "guide", why, command: null, url }`, where `url` is the public guide on reducing tool-list token cost. The landing page and the Action summary link to it.
 
 License keys look like `mrc_live_<40 hex>`. Only their SHA-256 hash is stored in KV.
 

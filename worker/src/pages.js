@@ -143,8 +143,8 @@ ${error ? `<p class="small">${esc(error)}</p>` : ''}
 ${r ? `<div class="card"><div style="display:flex;gap:20px;align-items:center"><div class="score">${esc(r.score)}</div><div style="min-width:0"><b style="overflow-wrap:anywhere">${esc(name)}</b><div class="small">${r.authRequired ? 'Login required: OAuth discovery checked' : `${esc(r.toolCount)} tools · ~${(r.contextTokens || 0).toLocaleString('en-US')} tokens per agent turn`}</div></div></div>
 <h2>Top issues</h2><ul class="issues">${issues}</ul>
 ${r.locked ? `<p class="small">${esc(r.locked)} more issue(s) and every fix will be in the full report.</p>` : ''}
-${r.fix ? `<p class="small">Heavy tool list: ${esc(r.fix.why)}. Pro (coming soon) writes a slimmer drop-in tools.json with ToolSlim.</p>` : ''}
-<p class="small"><b>Full report: coming soon.</b> Every finding with its fix, a ToolSlim slim tools.json, a hosted report, scans behind a test token, and monitoring. Payment will never change the score.</p></div>` : `<div class="card"><p>${esc(error || 'Not scanned yet.')}</p></div>`}
+${r.fix ? `<p class="small">Heavy tool list: ${esc(r.fix.why)}. <a href="/blog/reduce-mcp-tool-list-token-cost/">How to reduce tool-list token cost</a>.</p>` : ''}
+<p class="small"><b>Full report: coming soon.</b> Every finding with its fix, a hosted report, scans behind a test token, and monitoring. Payment will never change the score.</p></div>` : `<div class="card"><p>${esc(error || 'Not scanned yet.')}</p></div>`}
 ${nextSteps(origin, canonical, url, r)}
 <p class="small">Automated surface checks of what any MCP client sees before login: initialize, tools/list, an unknown method, a foreign Origin, a CORS preflight and OAuth discovery. No tool is called. A triage signal, not a security audit.</p>
 </main>${PAGE_FOOT}</div><script src="/t.js" defer></script></body></html>`;
