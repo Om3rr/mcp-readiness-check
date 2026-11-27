@@ -452,7 +452,7 @@
 - [Token cost of BlitzReels Video Editor MCP server](https://mcp.pacerai.fit/token-cost/blitzreels/): ~158,249 tokens per turn, 158 tools
 - [Token cost of Tabular Recipe MCP server](https://mcp.pacerai.fit/token-cost/tabularrecipe-tabular-recipe/): ~886 tokens per turn, 8 tools
 - [Token cost of BotBuy.tw MCP server](https://mcp.pacerai.fit/token-cost/tw-botbuy-marketplace/): ~3,613 tokens per turn, 26 tools
-- [Token cost of Mcp MCP server](https://mcp.pacerai.fit/token-cost/online-x-402/): ~11,117 tokens per turn, 64 tools
+- [Token cost of Online x 402 MCP server](https://mcp.pacerai.fit/token-cost/online-x-402/): ~11,117 tokens per turn, 64 tools
 - [Token cost of FilmLab MCP server](https://mcp.pacerai.fit/token-cost/thefilmradar-filmlab/): ~92,162 tokens per turn, 158 tools
 - [Token cost of Rosis Morgenhimmel MCP server](https://mcp.pacerai.fit/token-cost/de-morgenhimmel/): ~738 tokens per turn, 8 tools
 - [Token cost of Analytics Legends MCP server](https://mcp.pacerai.fit/token-cost/analyticslegends-sap-analytics/): ~4,988 tokens per turn, 25 tools
