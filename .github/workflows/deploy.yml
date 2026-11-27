@@ -1,0 +1,82 @@
+name: deploy
+# Manual only: deploys the mcp-readiness Worker, verifies the token-cost pages, then submits them to IndexNow.
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: deploy-mcp-readiness
+  cancel-in-progress: false
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SITE: https://mcp.pacerai.fit
+      INDEXNOW_KEY: 374bdcd16f6846c698b95588e74afe47
+    steps:
+      - name: Check the CLOUDFLARE_API_TOKEN secret is set
+        env:
+          CF_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: |
+          if [ -z "$CF_TOKEN" ]; then
+            echo "::error::Repository secret CLOUDFLARE_API_TOKEN is empty or missing. Add it under Settings > Secrets and variables > Actions, then re-run."
+            exit 1
+          fi
+          echo "CLOUDFLARE_API_TOKEN secret is present."
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - run: npm test
+      - name: wrangler deploy
+        working-directory: worker
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: 58c54958724645286a3862a3bf99e83d
+        run: |
+          set -o pipefail
+          npx --yes wrangler@4 deploy 2>&1 | tee /tmp/deploy.log
+          vid=$(grep -oE 'Current Version ID: [0-9a-f-]+' /tmp/deploy.log | awk '{print $4}' || true)
+          echo "Deploy version id: ${vid:-not found}"
+          echo "### Deploy version id: ${vid:-not found}" >> "$GITHUB_STEP_SUMMARY"
+      - name: Verify token-cost pages, sitemap and IndexNow key
+        run: |
+          sleep 15
+          H='x-studio-internal: 1'
+          node -e "import('./worker/src/token-cost-paths.js').then(m=>console.log(m.TOKEN_COST_PATHS.join('\n')))" > /tmp/tc-paths.txt
+          echo "token-cost paths: $(wc -l < /tmp/tc-paths.txt)"
+          for p in /token-cost/ /token-cost/gmail/ /token-cost/biz-notaryon-calculators/ /token-cost/over-20k-tokens/ /token-cost/stripe/; do
+            code=$(curl -s -o /tmp/p.html -w '%{http_code}' -H "$H" "$SITE$p")
+            line="$code $p ($(grep -c '27 November 2026' /tmp/p.html || true) lines mention 27 November 2026)"
+            echo "$line"; echo "- $line" >> "$GITHUB_STEP_SUMMARY"
+          done
+          : > /tmp/bad.txt
+          while read -r p; do
+            c=$(curl -s -o /dev/null -w '%{http_code}' -H "$H" "$SITE$p")
+            [ "$c" = "200" ] || echo "$c $p" >> /tmp/bad.txt
+          done < /tmp/tc-paths.txt
+          nbad=$(wc -l < /tmp/bad.txt); echo "non-200 token-cost paths: $nbad"; cat /tmp/bad.txt
+          locs=$(curl -s -H "$H" "$SITE/sitemap.xml" | grep -o '<loc>[^<]*token-cost[^<]*</loc>' | wc -l)
+          total=$(curl -s -H "$H" "$SITE/sitemap.xml" | grep -o '<loc>' | wc -l)
+          echo "sitemap token-cost locs: $locs (all locs: $total)"
+          echo "- non-200 token-cost paths: $nbad; sitemap token-cost locs: $locs (all: $total)" >> "$GITHUB_STEP_SUMMARY"
+          keycode=$(curl -s -o /tmp/key.txt -w '%{http_code}' -H "$H" "$SITE/$INDEXNOW_KEY.txt")
+          grep -q "$INDEXNOW_KEY" /tmp/key.txt && echo "IndexNow key file: $keycode, matches" || { echo "::error::IndexNow key file missing or wrong ($keycode)"; exit 1; }
+          if [ "$nbad" -gt 0 ]; then echo "::error::$nbad token-cost paths are not 200; skipping IndexNow."; exit 1; fi
+      - name: Submit to IndexNow
+        run: |
+          python3 - <<'PY'
+          import json, os, urllib.request, urllib.error
+          site, key = os.environ['SITE'], os.environ['INDEXNOW_KEY']
+          paths = [l.strip() for l in open('/tmp/tc-paths.txt') if l.strip()]
+          urls = [site + '/'] + [site + p for p in paths]
+          body = json.dumps({'host': 'mcp.pacerai.fit', 'key': key, 'keyLocation': f'{site}/{key}.txt', 'urlList': urls}).encode()
+          out = []
+          for ep in ['https://api.indexnow.org/indexnow', 'https://www.bing.com/indexnow', 'https://yandex.com/indexnow']:
+              req = urllib.request.Request(ep, data=body, headers={'Content-Type': 'application/json; charset=utf-8'}, method='POST')
+              try:
+                  with urllib.request.urlopen(req, timeout=60) as r: line = f'IndexNow {ep}: {r.status} ({len(urls)} urls)'
+              except urllib.error.HTTPError as e: line = f'IndexNow {ep}: {e.code} {e.read()[:200]!r}'
+              except Exception as e: line = f'IndexNow {ep}: error {e}'
+              print(line); out.append(line)
+          with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as f: f.write('\n'.join(f'- {l}' for l in out) + '\n')
+          PY
