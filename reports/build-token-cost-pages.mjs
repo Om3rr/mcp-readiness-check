@@ -51,7 +51,8 @@ const pretty = (s) => s.split(/[-_.]+/).filter(Boolean).map((w) => w[0].toUpperC
 function displayName(s) {
   const t = String(s.title || '').split(/\s+[-–—|:]\s+|:\s+/)[0].trim().replace(/[\s-]+(remote\s+)?(mcp(\s+server)?|server)$/i, '').trim();
   if (t && t.length <= 48) return t;
-  const n = String(s.registryName || '').split('/').pop();
+  const [ns = '', n0 = ''] = String(s.registryName || '').split('/');
+  const n = /^(mcp|server|mcp-server|remote|api)$/i.test(n0) ? ns.split('.').filter((p) => !['io', 'github', 'com', 'ai', 'app', 'dev', 'net', 'org', 'co', 'www'].includes(p)).join(' ') : n0;
   return n ? pretty(n).slice(0, 48) : new URL(s.url).host;
 }
 function newSlug(s) {
