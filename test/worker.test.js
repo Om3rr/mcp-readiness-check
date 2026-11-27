@@ -135,7 +135,7 @@ test('server pages: stable path mapping, SSR with title/meta/canonical, badge li
   assert.equal(pagePath('https://mcp.example.com/'), '/s/mcp.example.com');
   assert.equal(targetFromPath('/s/mcp.example.com/mcp'), 'https://mcp.example.com/mcp');
   assert.equal(targetFromPath('/s/a.com/../x'), null);
-  const view = { score: 72, server: 'Acme <MCP>', toolCount: 40, contextTokens: 9100, authRequired: false, top: [{ level: 'fail', id: 'x', title: 'Accepts a foreign Origin' }], locked: 4, fix: { why: 'Tool list costs ~9,100 tokens per agent turn', command: 'npx toolslim <your-mcp-url> --fix', url: 'https://github.com/Om3rr/toolslim' } };
+  const view = { score: 72, server: 'Acme <MCP>', toolCount: 40, contextTokens: 9100, authRequired: false, top: [{ level: 'fail', id: 'x', title: 'Accepts a foreign Origin' }], locked: 4, fix: { tool: 'guide', why: 'Tool list costs ~9,100 tokens per agent turn', command: null, url: 'https://mcp.pacerai.fit/blog/reduce-mcp-tool-list-token-cost/' } };
   const html = render({ CHECKOUT_URL_PRO: 'https://buy.example.com/pro' }, 'https://w.test/s/mcp.example.com/mcp', 'https://mcp.example.com/mcp', { ...view, at: '2026-11-13T16:00:00.000Z' });
   assert.match(html, /<title>Acme &lt;MCP&gt; MCP server readiness: 72\/100/);
   assert.match(html, /<link rel="canonical" href="https:\/\/w.test\/s\/mcp.example.com\/mcp">/);
@@ -143,9 +143,9 @@ test('server pages: stable path mapping, SSR with title/meta/canonical, badge li
   assert.match(html, /application\/ld\+json/);
   assert.match(html, /coming soon/); assert.ok(!/checkout|buy\.example/.test(html));
   assert.match(html, /\]\(https:\/\/w.test\/s\/mcp.example.com\/mcp\)/); // badge markdown links to the page
-  assert.match(html, /ToolSlim/);
+  assert.match(html, /How to reduce tool-list token cost/);
+  assert.doesNotMatch(html, /toolslim/i);
   assert.match(html, /data-event="badge_copied"/);
-  assert.ok(!/npx toolslim/.test(html), 'no dead ToolSlim command');
   assert.ok(!html.includes('<MCP>'));
   assert.match(render({}, 'https://w.test/s/x.com/mcp', 'https://x.com/mcp', null, 'down'), /noindex/);
   const store = kv(); store.list = async ({ prefix }) => ({ keys: [...store.m.keys()].filter((k) => k.startsWith(prefix)).map((name) => ({ name })), list_complete: true });
@@ -230,7 +230,7 @@ test('badge cache miss: bots get a cached or neutral badge and do not scan', asy
   }
 });
 
-test('/api/license contract used by ToolSlim: plan + status active for a Pro key', async () => {
+test('/api/license contract: plan + status active for a Pro key', async () => {
   const env = { LICENSES: kv() };
   const key = await issueLicense(env, { plan: 'pro', source: 't', ref: 'ts' });
   const j = await (await call(env, '/api/license', { headers: { authorization: `Bearer ${key}` } })).json();

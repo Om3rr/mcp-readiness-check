@@ -78,19 +78,9 @@ Outputs: `score`, `context-tokens`, `findings`, `mode`. Listing text: [MARKETPLA
 
 **Free tier:** score gate, context-token budget, top 3 issues per run, 50 runs/day per repo, plus this CLI (unlimited, local).
 
-Heavy tool list? The fix step is [ToolSlim](https://github.com/Om3rr/toolslim). Its free lossless optimizer cut Notion's official server from 17,477 to 5,213 tokens per call (70.2%, 13 Nov 2026): `npx toolslim <url> --fix`.
+Heavy tool list? See [how to reduce tool-list token cost](https://mcp.pacerai.fit/blog/reduce-mcp-tool-list-token-cost/) and the [MCP server token cost ranking](https://mcp.pacerai.fit/token-cost/).
 
-### Fix step: ToolSlim, in the same Action
-
-```yaml
-- uses: Om3rr/mcp-readiness-check@v1
-  with:
-    url: http://127.0.0.1:8787/mcp
-    fix: safe                 # off | safe (lossless) | standard | aggressive
-    fix-out: tools.slim.json
-```
-
-The CLI's `--json` (and `--json-out FILE`, or the Action's `json-path` input) includes `target` and the raw `tools` list, so `toolslim --report scan.json` never re-connects to your server. See [ToolSlim INTEGRATION.md](https://github.com/Om3rr/toolslim/blob/main/INTEGRATION.md).
+The CLI's `--json` (and `--json-out FILE`, or the Action's `json-path` input) includes `target` and the raw `tools` list, so your own tooling can work from the report without re-connecting to your server.
 
 ## CLI
 

@@ -38,7 +38,7 @@ const mode = m.mode === 'full' ? 'full' : m.mode === 'capped' ? 'capped' : 'free
 const issues = r.findings.filter((f) => f.level === 'fail' || f.level === 'warn');
 
 summary(summaryMarkdown(r, url, mode, m));
-// JSON report with the raw tool list, for the ToolSlim fix step (or your own tooling).
+// JSON report with the raw tool list, for your own tooling.
 if (I('JSON_PATH')) writeFileSync(I('JSON_PATH'), JSON.stringify(withTools(r, url), null, 1));
 if (mode === 'full') {
   writeFileSync(I('REPORT_PATH', 'mcp-readiness-report.html'), toHtml(r, url));

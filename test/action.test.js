@@ -19,12 +19,13 @@ test('sarif has one result per fail/warn and valid levels', () => {
   assert.equal(s.runs[0].results[0].level, 'error');
 });
 
-test('toolslim hook appears only for heavy tool lists', () => {
-  assert.match(summaryMarkdown({ ...r, contextTokens: 9100 }, 'u', 'free'), /toolslim/);
-  assert.ok(!summaryMarkdown({ ...r, contextTokens: 300 }, 'u', 'free').includes('toolslim'));
+test('token-cost guide hint appears only for heavy tool lists, no private tool named', () => {
+  assert.match(summaryMarkdown({ ...r, contextTokens: 9100 }, 'u', 'free'), /reduce-mcp-tool-list-token-cost/);
+  assert.ok(!summaryMarkdown({ ...r, contextTokens: 300 }, 'u', 'free').includes('reduce-mcp-tool-list-token-cost'));
+  assert.doesNotMatch(summaryMarkdown({ ...r, contextTokens: 9100 }, 'u', 'free'), /toolslim/i);
 });
 
-test('JSON report for ToolSlim carries target and raw tools; default serialisation does not', async () => {
+test('JSON report carries target and raw tools; default serialisation does not', async () => {
   const { report, withTools } = await import('../src/probe.js');
   const rr = report({ serverInfo: { name: 's' }, protocolVersion: '2025-06-18' }, [{ name: 'list_x', description: 'd', inputSchema: { type: 'object' } }], []);
   assert.ok(!('tools' in JSON.parse(JSON.stringify(rr))));

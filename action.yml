@@ -37,11 +37,11 @@ inputs:
     required: false
     default: ''
   json-path:
-    description: 'Where to write the JSON report, including the raw tools/list (input for ToolSlim). Empty disables.'
+    description: 'Where to write the JSON report, including the raw tools/list. Empty disables.'
     required: false
     default: ''
   fix:
-    description: 'Run the ToolSlim fix step after the scan: off | safe | standard | aggressive (standard and aggressive need a license key).'
+    description: 'Reserved for a future tool-list slimming step. It is not available yet, so any value other than off only prints a notice.'
     required: false
     default: 'off'
   fix-out:
@@ -81,9 +81,7 @@ runs:
       if: inputs.fix != 'off'
       shell: bash
       run: |
-        npx -y toolslim@0 --report "$REPORT" --fix --level "$LEVEL" --out "$OUT" \
-          ${MAXTOK:+--max-total-tokens "$MAXTOK"} --md "$RUNNER_TEMP/toolslim.md" --fail-on none || echo "::warning::ToolSlim fix step failed; the scan result stands."
-        cat "$RUNNER_TEMP/toolslim.md" >> "$GITHUB_STEP_SUMMARY" 2>/dev/null || true
+        echo "::notice::The fix step is not available yet; the scan result stands. Guide: https://mcp.pacerai.fit/blog/reduce-mcp-tool-list-token-cost/"
       env:
         REPORT: ${{ inputs.json-path || format('{0}/mcp-readiness.json', runner.temp) }}
         LEVEL: ${{ inputs.fix }}

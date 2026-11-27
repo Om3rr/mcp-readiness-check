@@ -114,11 +114,15 @@
 
 <!-- token-cost:start -->
 ## Token cost pages
-- [MCP server token cost ranking](https://mcp.pacerai.fit/token-cost/): 25 open servers ranked by measured tool-list tokens per turn, 50 behind login.
+- [MCP server token cost ranking](https://mcp.pacerai.fit/token-cost/): 450 open servers ranked by measured tool-list tokens per turn, 50 behind login. Scanned 27 November 2026.
+- [MCP servers with a tool list under 1,000 tokens per turn](https://mcp.pacerai.fit/token-cost/under-1k-tokens/)
+- [MCP servers with a tool list 1,000 to 5,000 tokens per turn](https://mcp.pacerai.fit/token-cost/1k-5k-tokens/)
+- [MCP servers with a tool list 5,000 to 20,000 tokens per turn](https://mcp.pacerai.fit/token-cost/5k-20k-tokens/)
+- [MCP servers with a tool list over 20,000 tokens per turn](https://mcp.pacerai.fit/token-cost/over-20k-tokens/)
 - [Token cost of Cloudflare Docs MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-docs/): ~434 tokens per turn, 2 tools
 - [Token cost of Microsoft Learn MCP server](https://mcp.pacerai.fit/token-cost/mslearn/): ~1,215 tokens per turn, 3 tools
-- [Token cost of Exa Search MCP server](https://mcp.pacerai.fit/token-cost/exa/): ~605 tokens per turn, 2 tools
-- [Token cost of Context7 MCP server](https://mcp.pacerai.fit/token-cost/context7/): ~1,304 tokens per turn, 2 tools
+- [Token cost of Exa Search MCP server](https://mcp.pacerai.fit/token-cost/exa/): ~585 tokens per turn, 2 tools
+- [Token cost of Context7 MCP server](https://mcp.pacerai.fit/token-cost/context7/): ~1,380 tokens per turn, 2 tools
 - [Token cost of DeepWiki MCP server](https://mcp.pacerai.fit/token-cost/deepwiki/): ~427 tokens per turn, 3 tools
 - [Token cost of Hugging Face MCP server](https://mcp.pacerai.fit/token-cost/huggingface/): ~4,967 tokens per turn, 4 tools
 - [Token cost of Astro Docs MCP server](https://mcp.pacerai.fit/token-cost/astro-docs/): ~80 tokens per turn, 1 tools
@@ -144,32 +148,32 @@
 - [Token cost of Asana Command MCP server](https://mcp.pacerai.fit/token-cost/asana-command/): login required, not measured
 - [Token cost of Atlassian Rovo MCP server](https://mcp.pacerai.fit/token-cost/atlassian-rovo/): login required, not measured
 - [Token cost of Box MCP server](https://mcp.pacerai.fit/token-cost/box/): login required, not measured
-- [Token cost of Browserbase MCP server](https://mcp.pacerai.fit/token-cost/browserbase/): ~752 tokens per turn, 6 tools
+- [Token cost of Browserbase MCP server](https://mcp.pacerai.fit/token-cost/browserbase/): ~894 tokens per turn, 6 tools
 - [Token cost of Buffer MCP server](https://mcp.pacerai.fit/token-cost/buffer/): login required, not measured
 - [Token cost of Canva MCP server](https://mcp.pacerai.fit/token-cost/canva/): login required, not measured
 - [Token cost of ClickUp MCP server](https://mcp.pacerai.fit/token-cost/clickup/): login required, not measured
-- [Token cost of Cloudflare Agents SDK Docs MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-agents-sdk-docs/): ~101 tokens per turn, 1 tools
+- [Token cost of Cloudflare Agents SDK Docs MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-agents-sdk-docs/): ~115 tokens per turn, 1 tools
 - [Token cost of Cloudflare API MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-api/): login required, not measured
-- [Token cost of Cloudflare Blog MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-blog/): ~464 tokens per turn, 4 tools
+- [Token cost of Cloudflare Blog MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-blog/): ~1,041 tokens per turn, 4 tools
 - [Token cost of Cloudflare Browser Run MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-browser-run/): login required, not measured
 - [Token cost of Cloudflare Containers MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-containers/): login required, not measured
 - [Token cost of Cloudflare Demo Day MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-demo-day/): ~52 tokens per turn, 1 tools
 - [Token cost of Cloudflare DEX MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-dex/): login required, not measured
 - [Token cost of Cloudflare One CASB MCP server](https://mcp.pacerai.fit/token-cost/cloudflare-casb/): login required, not measured
-- [Token cost of CoinGecko MCP server](https://mcp.pacerai.fit/token-cost/coingecko/): ~439 tokens per turn, 2 tools
+- [Token cost of CoinGecko MCP server](https://mcp.pacerai.fit/token-cost/coingecko/): ~513 tokens per turn, 2 tools
 - [Token cost of fal MCP server](https://mcp.pacerai.fit/token-cost/fal/): login required, not measured
 - [Token cost of Figma MCP server](https://mcp.pacerai.fit/token-cost/figma/): login required, not measured
-- [Token cost of Firecrawl MCP server](https://mcp.pacerai.fit/token-cost/firecrawl/): ~3,869 tokens per turn, 3 tools
+- [Token cost of Firecrawl MCP server](https://mcp.pacerai.fit/token-cost/firecrawl/): ~6,670 tokens per turn, 3 tools
 - [Token cost of GitLab MCP server](https://mcp.pacerai.fit/token-cost/gitlab/): login required, not measured
-- [Token cost of Gmail MCP server](https://mcp.pacerai.fit/token-cost/gmail/): ~11,282 tokens per turn, 23 tools
-- [Token cost of Google Calendar MCP server](https://mcp.pacerai.fit/token-cost/google-calendar/): ~5,765 tokens per turn, 9 tools
-- [Token cost of Google Chat MCP server](https://mcp.pacerai.fit/token-cost/google-chat/): ~3,792 tokens per turn, 4 tools
-- [Token cost of Google Classroom MCP server](https://mcp.pacerai.fit/token-cost/google-classroom/): ~0 tokens per turn, 0 tools
-- [Token cost of Google Docs MCP server](https://mcp.pacerai.fit/token-cost/google-docs/): ~10,011 tokens per turn, 2 tools
-- [Token cost of Google Drive MCP server](https://mcp.pacerai.fit/token-cost/google-drive/): ~4,609 tokens per turn, 9 tools
-- [Token cost of Google People MCP server](https://mcp.pacerai.fit/token-cost/google-people/): ~607 tokens per turn, 3 tools
-- [Token cost of Google Sheets MCP server](https://mcp.pacerai.fit/token-cost/google-sheets/): ~7,860 tokens per turn, 6 tools
-- [Token cost of Google Slides MCP server](https://mcp.pacerai.fit/token-cost/google-slides/): ~8,957 tokens per turn, 4 tools
+- [Token cost of Gmail MCP server](https://mcp.pacerai.fit/token-cost/gmail/): ~37,422 tokens per turn, 30 tools
+- [Token cost of Google Calendar MCP server](https://mcp.pacerai.fit/token-cost/google-calendar/): ~29,791 tokens per turn, 9 tools
+- [Token cost of Google Chat MCP server](https://mcp.pacerai.fit/token-cost/google-chat/): ~9,399 tokens per turn, 4 tools
+- [Token cost of Google Classroom MCP server](https://mcp.pacerai.fit/token-cost/google-classroom/): ~1 tokens per turn, 0 tools
+- [Token cost of Google Docs MCP server](https://mcp.pacerai.fit/token-cost/google-docs/): ~10,742 tokens per turn, 2 tools
+- [Token cost of Google Drive MCP server](https://mcp.pacerai.fit/token-cost/google-drive/): ~29,066 tokens per turn, 15 tools
+- [Token cost of Google People MCP server](https://mcp.pacerai.fit/token-cost/google-people/): ~1,119 tokens per turn, 3 tools
+- [Token cost of Google Sheets MCP server](https://mcp.pacerai.fit/token-cost/google-sheets/): ~9,635 tokens per turn, 9 tools
+- [Token cost of Google Slides MCP server](https://mcp.pacerai.fit/token-cost/google-slides/): ~9,480 tokens per turn, 4 tools
 - [Token cost of Higgsfield AI MCP server](https://mcp.pacerai.fit/token-cost/higgsfield/): login required, not measured
 - [Token cost of Hostinger MCP server](https://mcp.pacerai.fit/token-cost/hostinger/): login required, not measured
 - [Token cost of HubSpot MCP server](https://mcp.pacerai.fit/token-cost/hubspot/): login required, not measured
@@ -186,8 +190,433 @@
 - [Token cost of Prisma MCP server](https://mcp.pacerai.fit/token-cost/prisma/): login required, not measured
 - [Token cost of Slack MCP server](https://mcp.pacerai.fit/token-cost/slack/): login required, not measured
 - [Token cost of Square (Streamable HTTP) MCP server](https://mcp.pacerai.fit/token-cost/square-http/): login required, not measured
-- [Token cost of Svelte MCP server](https://mcp.pacerai.fit/token-cost/svelte/): ~1,186 tokens per turn, 4 tools
+- [Token cost of Svelte MCP server](https://mcp.pacerai.fit/token-cost/svelte/): ~5,634 tokens per turn, 4 tools
 - [Token cost of TickTick MCP server](https://mcp.pacerai.fit/token-cost/ticktick/): login required, not measured
-- [Token cost of Twilio Docs MCP server](https://mcp.pacerai.fit/token-cost/twilio-docs/): ~1,035 tokens per turn, 2 tools
+- [Token cost of Twilio Docs MCP server](https://mcp.pacerai.fit/token-cost/twilio-docs/): ~1,180 tokens per turn, 2 tools
 - [Token cost of Wix MCP server](https://mcp.pacerai.fit/token-cost/wix/): login required, not measured
+- [Token cost of Check WireGuard Graphai MCP server](https://mcp.pacerai.fit/token-cost/eu-graphai-check-wireguard/): ~966 tokens per turn, 20 tools
+- [Token cost of stake.link Agents (stakedotlink.money) MCP server](https://mcp.pacerai.fit/token-cost/money-stakedotlink-agents/): ~4,555 tokens per turn, 60 tools
+- [Token cost of ToolAPI MCP server](https://mcp.pacerai.fit/token-cost/toolapi-hub/): ~11,820 tokens per turn, 193 tools
+- [Token cost of minia2a MCP server](https://mcp.pacerai.fit/token-cost/uk-minia2a-minia2a-mcp-remote/): ~151,503 tokens per turn, 1960 tools
+- [Token cost of Xuangui Adjudication Gate MCP server](https://mcp.pacerai.fit/token-cost/huodouai-xuangui-gate/): ~894 tokens per turn, 12 tools
+- [Token cost of polls.karbach.digital MCP server](https://mcp.pacerai.fit/token-cost/digital-karbach-polls-elections/): ~4,075 tokens per turn, 47 tools
+- [Token cost of AI 代理人任務中樞 MCP server](https://mcp.pacerai.fit/token-cost/penguindriver-hub/): ~18,139 tokens per turn, 174 tools
+- [Token cost of Novarithm Agent Hub MCP server](https://mcp.pacerai.fit/token-cost/novarithm-agent-hub/): ~151,626 tokens per turn, 1040 tools
+- [Token cost of MyClawn Fund MCP server](https://mcp.pacerai.fit/token-cost/myclawn-fund/): ~875 tokens per turn, 12 tools
+- [Token cost of Mat Web & Data Toolkit (x402, Cloudflare) MCP server](https://mcp.pacerai.fit/token-cost/workers-matt-d59-automatom-web-data-toolkit/): ~4,675 tokens per turn, 46 tools
+- [Token cost of The Clearing MCP server](https://mcp.pacerai.fit/token-cost/online-thedarkforest-clearing-the-clearing/): ~17,254 tokens per turn, 147 tools
+- [Token cost of ScorpTech x402 API MCP server](https://mcp.pacerai.fit/token-cost/it-scorptech-x402/): ~285,057 tokens per turn, 1020 tools
+- [Token cost of Flowering UCP MCP server](https://mcp.pacerai.fit/token-cost/dk-flowering-ucp/): ~943 tokens per turn, 12 tools
+- [Token cost of Namepiq MCP server](https://mcp.pacerai.fit/token-cost/namepiq-domains/): ~4,157 tokens per turn, 45 tools
+- [Token cost of unicum.gg MCP server](https://mcp.pacerai.fit/token-cost/gg-unicum-wot-stats/): ~14,803 tokens per turn, 129 tools
+- [Token cost of Synergieloc MCP server](https://mcp.pacerai.fit/token-cost/fr-synergieloc-immobilier/): ~262,497 tokens per turn, 680 tools
+- [Token cost of Alpha (Mossland) MCP server](https://mcp.pacerai.fit/token-cost/land-moss-alpha/): ~578 tokens per turn, 12 tools
+- [Token cost of PredictAsiaX MCP server](https://mcp.pacerai.fit/token-cost/predictasiax/): ~4,529 tokens per turn, 44 tools
+- [Token cost of BankRegReports MCP server](https://mcp.pacerai.fit/token-cost/bankregreports/): ~19,463 tokens per turn, 116 tools
+- [Token cost of OSINT Terminal MCP server](https://mcp.pacerai.fit/token-cost/thetempleofdoom-osint-mcp-osint-terminal/): ~61,166 tokens per turn, 485 tools
+- [Token cost of Public Folder MCP server](https://mcp.pacerai.fit/token-cost/one-asel-agents-public-folder/): ~716 tokens per turn, 12 tools
+- [Token cost of KeeSpecs MCP server](https://mcp.pacerai.fit/token-cost/keespecs/): ~4,895 tokens per turn, 44 tools
+- [Token cost of Support Agent Admin by Nova (CIVAI) MCP server](https://mcp.pacerai.fit/token-cost/civai-nova-support-agent-admin/): ~13,513 tokens per turn, 115 tools
+- [Token cost of SAP MCP server](https://mcp.pacerai.fit/token-cost/sap/): ~291,873 tokens per turn, 453 tools
+- [Token cost of x402card MCP server](https://mcp.pacerai.fit/token-cost/x402card-freeland-esim/): ~706 tokens per turn, 12 tools
+- [Token cost of ClawSpan ShardLink MCP server](https://mcp.pacerai.fit/token-cost/cloud-clawspan-shardlink/): ~2,847 tokens per turn, 43 tools
+- [Token cost of Genexxis paid agent tools (x402) MCP server](https://mcp.pacerai.fit/token-cost/genexxis-data-apis/): ~18,578 tokens per turn, 106 tools
+- [Token cost of XBOSS MCP server](https://mcp.pacerai.fit/token-cost/kr-xdata-xboss/): ~242,877 tokens per turn, 446 tools
+- [Token cost of Content Pipeline Agent by Nova (CIVAI) MCP server](https://mcp.pacerai.fit/token-cost/civai-nova-content-pipeline-agent/): ~961 tokens per turn, 11 tools
+- [Token cost of LVL LTD skill market MCP server](https://mcp.pacerai.fit/token-cost/lvlltd-skill-market/): ~2,827 tokens per turn, 43 tools
+- [Token cost of TextForAgents MCP server](https://mcp.pacerai.fit/token-cost/textforagents/): ~6,214 tokens per turn, 102 tools
+- [Token cost of Honeyfield Marketing MCP server](https://mcp.pacerai.fit/token-cost/at-honeyfield-marketing/): ~170,358 tokens per turn, 443 tools
+- [Token cost of DTA MCP server](https://mcp.pacerai.fit/token-cost/mn-dta-terminal/): ~926 tokens per turn, 11 tools
+- [Token cost of Wezzet AI Comms MCP server](https://mcp.pacerai.fit/token-cost/wezzet-aicomms/): ~4,936 tokens per turn, 41 tools
+- [Token cost of AutoTasker Hub MCP server](https://mcp.pacerai.fit/token-cost/highkingflower-autotasker/): ~5,940 tokens per turn, 97 tools
+- [Token cost of Outil.io MCP server](https://mcp.pacerai.fit/token-cost/outil/): ~129,312 tokens per turn, 431 tools
+- [Token cost of Hokyo MCP server](https://mcp.pacerai.fit/token-cost/bustup-monitor/): ~991 tokens per turn, 10 tools
+- [Token cost of A2aroom MCP server](https://mcp.pacerai.fit/token-cost/a2aroom-guest/): ~4,577 tokens per turn, 37 tools
+- [Token cost of Agent Commons MCP server](https://mcp.pacerai.fit/token-cost/pw-algo-agent-commons/): ~10,765 tokens per turn, 97 tools
+- [Token cost of Nas.com MCP server](https://mcp.pacerai.fit/token-cost/nas/): ~177,258 tokens per turn, 423 tools
+- [Token cost of Cards4Play MCP server](https://mcp.pacerai.fit/token-cost/cards4play/): ~887 tokens per turn, 10 tools
+- [Token cost of LION MCP server](https://mcp.pacerai.fit/token-cost/lionx402-lion-x402/): ~3,986 tokens per turn, 37 tools
+- [Token cost of SVG Lab MCP server](https://mcp.pacerai.fit/token-cost/svglab/): ~18,499 tokens per turn, 94 tools
+- [Token cost of AgentRXI MCP server](https://mcp.pacerai.fit/token-cost/agentrxi/): ~64,846 tokens per turn, 412 tools
+- [Token cost of ChinaTravelChina MCP server](https://mcp.pacerai.fit/token-cost/chinatravelchina/): ~825 tokens per turn, 10 tools
+- [Token cost of AI Agent Tokenized Stock OS MCP server](https://mcp.pacerai.fit/token-cost/aatos/): ~4,821 tokens per turn, 37 tools
+- [Token cost of A Place for Agents MCP server](https://mcp.pacerai.fit/token-cost/aplaceforagents-square/): ~14,832 tokens per turn, 91 tools
+- [Token cost of UK Data for Agents MCP server](https://mcp.pacerai.fit/token-cost/uk-reliness-uk-data/): ~77,980 tokens per turn, 384 tools
+- [Token cost of Jeremy Twogood MCP server](https://mcp.pacerai.fit/token-cost/jeremytwogood-portfolio/): ~820 tokens per turn, 10 tools
+- [Token cost of ZenVault MCP server](https://mcp.pacerai.fit/token-cost/zenvault/): ~3,048 tokens per turn, 36 tools
+- [Token cost of Market Intelligence API MCP server](https://mcp.pacerai.fit/token-cost/marketintelligenceapi-api-market-intelligence/): ~17,105 tokens per turn, 90 tools
+- [Token cost of Automate America MCP server](https://mcp.pacerai.fit/token-cost/automateamerica-automate-america/): ~216,261 tokens per turn, 382 tools
+- [Token cost of ScoreMindset MCP server](https://mcp.pacerai.fit/token-cost/scoremindset-capital-mental/): ~724 tokens per turn, 10 tools
+- [Token cost of APICK Web MCP server](https://mcp.pacerai.fit/token-cost/apick-web/): ~4,919 tokens per turn, 35 tools
+- [Token cost of Bafan MCP server](https://mcp.pacerai.fit/token-cost/bafan/): ~17,063 tokens per turn, 88 tools
+- [Token cost of AI Fusion One MCP server](https://mcp.pacerai.fit/token-cost/theaiworldnetwork-aifusionone/): ~172,392 tokens per turn, 373 tools
+- [Token cost of devutils MCP server](https://mcp.pacerai.fit/token-cost/devutils/): ~552 tokens per turn, 10 tools
+- [Token cost of Money Reactor MCP server](https://mcp.pacerai.fit/token-cost/workers-makar52nn2016-money-reactor-x402-money-reactor/): ~2,957 tokens per turn, 35 tools
+- [Token cost of Lookup Kit MCP server](https://mcp.pacerai.fit/token-cost/lookupkit-lookup-kit/): ~16,337 tokens per turn, 87 tools
+- [Token cost of OneUptime MCP server](https://mcp.pacerai.fit/token-cost/oneuptime/): ~71,217 tokens per turn, 366 tools
+- [Token cost of Tiny Utils MCP server](https://mcp.pacerai.fit/token-cost/utils/): ~613 tokens per turn, 10 tools
+- [Token cost of Control Your Tesla MCP server](https://mcp.pacerai.fit/token-cost/control-your-tesla/): ~3,798 tokens per turn, 34 tools
+- [Token cost of KENJTEC MCP server](https://mcp.pacerai.fit/token-cost/kenjtec/): ~16,246 tokens per turn, 85 tools
+- [Token cost of NeuralVerge MCP server](https://mcp.pacerai.fit/token-cost/neuralverge/): ~92,888 tokens per turn, 364 tools
+- [Token cost of gethal.ai MCP server](https://mcp.pacerai.fit/token-cost/gethal/): ~723 tokens per turn, 9 tools
+- [Token cost of SYMBaiEX Evidence MCP server](https://mcp.pacerai.fit/token-cost/symbaiex-evidence/): ~3,682 tokens per turn, 34 tools
+- [Token cost of TimeZero Resurrection MCP server](https://mcp.pacerai.fit/token-cost/timezero-re-game/): ~7,687 tokens per turn, 85 tools
+- [Token cost of Lanetti MCP server](https://mcp.pacerai.fit/token-cost/fi-lanetti-oma/): ~96,404 tokens per turn, 356 tools
+- [Token cost of SSearch MCP server](https://mcp.pacerai.fit/token-cost/search/): ~812 tokens per turn, 9 tools
+- [Token cost of Locate2u MCP by usefulapi MCP server](https://mcp.pacerai.fit/token-cost/usefulapi-locate2u/): ~4,590 tokens per turn, 34 tools
+- [Token cost of Krosos MCP server](https://mcp.pacerai.fit/token-cost/krosos/): ~12,320 tokens per turn, 84 tools
+- [Token cost of Spark Inventory MCP server](https://mcp.pacerai.fit/token-cost/spark/): ~354,609 tokens per turn, 342 tools
+- [Token cost of Cutshed MCP server](https://mcp.pacerai.fit/token-cost/cutshed/): ~815 tokens per turn, 9 tools
+- [Token cost of ShipMyForm MCP server](https://mcp.pacerai.fit/token-cost/shipmyform/): ~4,483 tokens per turn, 33 tools
+- [Token cost of Agent Diary MCP server](https://mcp.pacerai.fit/token-cost/diary/): ~13,284 tokens per turn, 83 tools
+- [Token cost of Tanod MCP server](https://mcp.pacerai.fit/token-cost/tanod/): ~201,430 tokens per turn, 328 tools
+- [Token cost of Email List Validation Email Verification MCP server](https://mcp.pacerai.fit/token-cost/emaillistvalidation-email-verification/): ~861 tokens per turn, 9 tools
+- [Token cost of Tamgara MCP server](https://mcp.pacerai.fit/token-cost/tamgara/): ~4,476 tokens per turn, 33 tools
+- [Token cost of Osmanth Agent Marketplace MCP server](https://mcp.pacerai.fit/token-cost/osmanthagent-market/): ~12,516 tokens per turn, 82 tools
+- [Token cost of Simpler.Asia MCP server](https://mcp.pacerai.fit/token-cost/asia-simpler-simpler-asia/): ~159,873 tokens per turn, 320 tools
+- [Token cost of Hybrid Race Data MCP server](https://mcp.pacerai.fit/token-cost/hybridracedata-hyrox/): ~915 tokens per turn, 9 tools
+- [Token cost of Refnusa MCP server](https://mcp.pacerai.fit/token-cost/refnusa/): ~4,855 tokens per turn, 33 tools
+- [Token cost of Cubicle MCP server](https://mcp.pacerai.fit/token-cost/cubicle/): ~19,997 tokens per turn, 80 tools
+- [Token cost of Kaiku MCP server](https://mcp.pacerai.fit/token-cost/kaiku/): ~120,236 tokens per turn, 309 tools
+- [Token cost of Tools for pump.fun bots MCP server](https://mcp.pacerai.fit/token-cost/loopholetape-pumpfun-tools/): ~787 tokens per turn, 9 tools
+- [Token cost of Bio API MCP server](https://mcp.pacerai.fit/token-cost/bio-api/): ~4,963 tokens per turn, 33 tools
+- [Token cost of BugOtter MCP server](https://mcp.pacerai.fit/token-cost/bugotter/): ~17,519 tokens per turn, 80 tools
+- [Token cost of The Commons by Dead Brands, LLC MCP server](https://mcp.pacerai.fit/token-cost/deadbrands-arena/): ~78,702 tokens per turn, 308 tools
+- [Token cost of MailTester Email Verification MCP server](https://mcp.pacerai.fit/token-cost/mailtester-email-verification/): ~861 tokens per turn, 9 tools
+- [Token cost of Qvoo CRM MCP by usefulapi MCP server](https://mcp.pacerai.fit/token-cost/usefulapi-qvoo/): ~4,714 tokens per turn, 33 tools
+- [Token cost of Guest Logic Hotel PMS MCP server](https://mcp.pacerai.fit/token-cost/guestlogic-hotel-pms/): ~19,800 tokens per turn, 79 tools
+- [Token cost of ce-net MCP server](https://mcp.pacerai.fit/token-cost/ce-net/): ~31,266 tokens per turn, 303 tools
+- [Token cost of Pay With Prompt MCP server](https://mcp.pacerai.fit/token-cost/paywithprompt-pay-with-prompt/): ~657 tokens per turn, 9 tools
+- [Token cost of MyFolksBoard.com MCP server](https://mcp.pacerai.fit/token-cost/myfolksboard/): ~4,709 tokens per turn, 32 tools
+- [Token cost of Automaton Onchain Tools MCP server](https://mcp.pacerai.fit/token-cost/vercel-automaton-tx-explainer-base-tools/): ~13,204 tokens per turn, 79 tools
+- [Token cost of Trainer Connect MCP server](https://mcp.pacerai.fit/token-cost/br-trainerconnect-personal-trainer/): ~43,091 tokens per turn, 289 tools
+- [Token cost of 電影影集動畫上映日 MCP server](https://mcp.pacerai.fit/token-cost/penguindriver-movie/): ~830 tokens per turn, 9 tools
+- [Token cost of TgPay Crypto Merchant API MCP server](https://mcp.pacerai.fit/token-cost/tgpaybot-merchant-api/): ~4,242 tokens per turn, 32 tools
+- [Token cost of MUDD World Sanctuary MCP server](https://mcp.pacerai.fit/token-cost/muddworldorg-sanctuary/): ~15,562 tokens per turn, 79 tools
+- [Token cost of Yardstick ATS MCP server](https://mcp.pacerai.fit/token-cost/yardstick/): ~66,273 tokens per turn, 277 tools
+- [Token cost of swarm-board MCP server](https://mcp.pacerai.fit/token-cost/board/): ~615 tokens per turn, 9 tools
+- [Token cost of wondaverse MCP server](https://mcp.pacerai.fit/token-cost/wondaverse-agent-space/): ~4,717 tokens per turn, 32 tools
+- [Token cost of Oblique Markets MCP server](https://mcp.pacerai.fit/token-cost/markets-oblique-api-oblique-markets/): ~12,596 tokens per turn, 79 tools
+- [Token cost of WritersLogic verifiable AI agents MCP server](https://mcp.pacerai.fit/token-cost/writerslogic-agents/): ~122,021 tokens per turn, 265 tools
+- [Token cost of Ban Bulkheads MCP server](https://mcp.pacerai.fit/token-cost/textforagents-ban-bulkheads-reputation-firebreaks/): ~478 tokens per turn, 9 tools
+- [Token cost of Chip MCP server](https://mcp.pacerai.fit/token-cost/chip/): ~4,153 tokens per turn, 32 tools
+- [Token cost of Taskpush MCP server](https://mcp.pacerai.fit/token-cost/taskpush/): ~17,205 tokens per turn, 78 tools
+- [Token cost of APICK MCP server](https://mcp.pacerai.fit/token-cost/apick-all/): ~58,070 tokens per turn, 259 tools
+- [Token cost of TraderMarketCap MCP server](https://mcp.pacerai.fit/token-cost/tradermarketcap-prices/): ~762 tokens per turn, 9 tools
+- [Token cost of AI Stock League (Korea) MCP server](https://mcp.pacerai.fit/token-cost/kr-pe-trading-community/): ~4,499 tokens per turn, 32 tools
+- [Token cost of Himalayas Remote Jobs MCP server](https://mcp.pacerai.fit/token-cost/himalayas/): ~18,942 tokens per turn, 78 tools
+- [Token cost of FavCRM MCP server](https://mcp.pacerai.fit/token-cost/favcrm/): ~96,481 tokens per turn, 244 tools
+- [Token cost of TokenSafe MCP server](https://mcp.pacerai.fit/token-cost/tokensafe/): ~454 tokens per turn, 9 tools
+- [Token cost of ProfitCollector MCP server](https://mcp.pacerai.fit/token-cost/ca-bakhour-profitcollector/): ~2,991 tokens per turn, 31 tools
+- [Token cost of Ferrite MCP server](https://mcp.pacerai.fit/token-cost/ferrite/): ~19,226 tokens per turn, 78 tools
+- [Token cost of GadgetHumans API Hub MCP server](https://mcp.pacerai.fit/token-cost/gadgethumans-api-hub/): ~22,837 tokens per turn, 236 tools
+- [Token cost of Agent Market MCP server](https://mcp.pacerai.fit/token-cost/agent-market/): ~982 tokens per turn, 9 tools
+- [Token cost of CheapXAPI MCP server](https://mcp.pacerai.fit/token-cost/cheapxapi/): ~3,650 tokens per turn, 31 tools
+- [Token cost of Irfan Aslam Tools MCP server](https://mcp.pacerai.fit/token-cost/irfanaslam-tools/): ~15,979 tokens per turn, 78 tools
+- [Token cost of Summer MCP server](https://mcp.pacerai.fit/token-cost/summer/): ~95,332 tokens per turn, 235 tools
+- [Token cost of Sefaria Library MCP server](https://mcp.pacerai.fit/token-cost/sefaria/): ~918 tokens per turn, 9 tools
+- [Token cost of Pumpkin MCP server](https://mcp.pacerai.fit/token-cost/pumpkincms-pumpkin-public-site/): ~4,484 tokens per turn, 31 tools
+- [Token cost of ConfBuilder MCP server](https://mcp.pacerai.fit/token-cost/seamlessevents-mcp-confbuilder/): ~14,136 tokens per turn, 78 tools
+- [Token cost of ZapX by ZAP-Hosting MCP server](https://mcp.pacerai.fit/token-cost/zap-hosting-zapx/): ~67,120 tokens per turn, 233 tools
+- [Token cost of Leeveel MCP server](https://mcp.pacerai.fit/token-cost/gr-leeveel-leeveel/): ~742 tokens per turn, 9 tools
+- [Token cost of H1R3 MCP server](https://mcp.pacerai.fit/token-cost/h1r3/): ~3,652 tokens per turn, 31 tools
+- [Token cost of Call2Me MCP server](https://mcp.pacerai.fit/token-cost/call2me/): ~15,567 tokens per turn, 76 tools
+- [Token cost of CharGen MCP server](https://mcp.pacerai.fit/token-cost/char-gen-chargen/): ~91,879 tokens per turn, 226 tools
+- [Token cost of Emaillistchecker.io Email Verification MCP server](https://mcp.pacerai.fit/token-cost/emaillistchecker-email-verification/): ~861 tokens per turn, 9 tools
+- [Token cost of FernTool Network Tools MCP server](https://mcp.pacerai.fit/token-cost/ferntool-ip/): ~4,189 tokens per turn, 30 tools
+- [Token cost of Bodywise Fitness and Nutrition MCP server](https://mcp.pacerai.fit/token-cost/bodywise/): ~18,615 tokens per turn, 75 tools
+- [Token cost of Proof Holdings MCP server](https://mcp.pacerai.fit/token-cost/holdings-proof/): ~140,011 tokens per turn, 219 tools
+- [Token cost of ChatAd 손님 (chatad.kr) MCP server](https://mcp.pacerai.fit/token-cost/kr-chatad-chatad-guest/): ~853 tokens per turn, 9 tools
+- [Token cost of IndiaInsurances MCP server](https://mcp.pacerai.fit/token-cost/indiainsurances/): ~4,729 tokens per turn, 30 tools
+- [Token cost of MeshMarket MCP server](https://mcp.pacerai.fit/token-cost/meshtool-meshmarket/): ~19,717 tokens per turn, 74 tools
+- [Token cost of Panda Video MCP server](https://mcp.pacerai.fit/token-cost/pandavideo/): ~58,357 tokens per turn, 216 tools
+- [Token cost of 4bots MCP server](https://mcp.pacerai.fit/token-cost/4bots/): ~939 tokens per turn, 9 tools
+- [Token cost of Octura Solutions Site Tools MCP server](https://mcp.pacerai.fit/token-cost/octurasolutions-site-tools/): ~4,871 tokens per turn, 30 tools
+- [Token cost of Asyntai MCP server](https://mcp.pacerai.fit/token-cost/asyntai-support-agent/): ~14,010 tokens per turn, 73 tools
+- [Token cost of CallMCP MCP server](https://mcp.pacerai.fit/token-cost/callmcp/): ~101,637 tokens per turn, 214 tools
+- [Token cost of webring.online MCP server](https://mcp.pacerai.fit/token-cost/ring/): ~539 tokens per turn, 9 tools
+- [Token cost of AgentPad MCP server](https://mcp.pacerai.fit/token-cost/agentpad/): ~4,980 tokens per turn, 30 tools
+- [Token cost of Little Works MCP server](https://mcp.pacerai.fit/token-cost/little-works-discover/): ~6,997 tokens per turn, 73 tools
+- [Token cost of KaiCalls MCP server](https://mcp.pacerai.fit/token-cost/kaicalls/): ~101,637 tokens per turn, 214 tools
+- [Token cost of htmlweb.ru MCP server](https://mcp.pacerai.fit/token-cost/ru-htmlweb/): ~967 tokens per turn, 9 tools
+- [Token cost of MARS Economic MCP server](https://mcp.pacerai.fit/token-cost/mars-economic/): ~4,212 tokens per turn, 30 tools
+- [Token cost of Vectorial Data Terminal MCP server](https://mcp.pacerai.fit/token-cost/vectorialdata-terminal/): ~14,301 tokens per turn, 73 tools
+- [Token cost of AI SDR Kit by Zevari MCP server](https://mcp.pacerai.fit/token-cost/zevari-ai-sdr-kit/): ~37,372 tokens per turn, 197 tools
+- [Token cost of dumpthis.sh MCP server](https://mcp.pacerai.fit/token-cost/sh-dumpthis-maroon/): ~693 tokens per turn, 9 tools
+- [Token cost of Nutrients MCP server](https://mcp.pacerai.fit/token-cost/prospre-nutrients/): ~4,467 tokens per turn, 30 tools
+- [Token cost of FFxF MCP server](https://mcp.pacerai.fit/token-cost/ffxf-cloud/): ~17,858 tokens per turn, 73 tools
+- [Token cost of EventTrader MCP server](https://mcp.pacerai.fit/token-cost/cymetica-event-trader/): ~46,686 tokens per turn, 197 tools
+- [Token cost of 覓安居 MCP server](https://mcp.pacerai.fit/token-cost/meang/): ~882 tokens per turn, 9 tools
+- [Token cost of draconic21 Daily Agent Signal + x402 Data Tools (com.onrender.draconic21-x402-api/data-tools) MCP server](https://mcp.pacerai.fit/token-cost/onrender-draconic21-x402-api-data-tools/): ~4,445 tokens per turn, 29 tools
+- [Token cost of AINDEX MCP server](https://mcp.pacerai.fit/token-cost/aindex/): ~15,355 tokens per turn, 71 tools
+- [Token cost of Crank Protocol MCP server](https://mcp.pacerai.fit/token-cost/crank/): ~65,833 tokens per turn, 196 tools
+- [Token cost of Tolsey MCP server](https://mcp.pacerai.fit/token-cost/xyz-tolsey/): ~962 tokens per turn, 9 tools
+- [Token cost of SmithTalks MCP server](https://mcp.pacerai.fit/token-cost/smithtalks/): ~3,527 tokens per turn, 29 tools
+- [Token cost of ZeroClickz MCP server](https://mcp.pacerai.fit/token-cost/zeroclickz/): ~19,021 tokens per turn, 71 tools
+- [Token cost of Vealth MCP server](https://mcp.pacerai.fit/token-cost/vealth/): ~125,658 tokens per turn, 196 tools
+- [Token cost of BeevR MCP server](https://mcp.pacerai.fit/token-cost/beevr/): ~951 tokens per turn, 8 tools
+- [Token cost of Stratly Town Square MCP server](https://mcp.pacerai.fit/token-cost/us-stratly-townsquare/): ~2,717 tokens per turn, 29 tools
+- [Token cost of CN Evidence MCP server](https://mcp.pacerai.fit/token-cost/cn-evidence/): ~13,543 tokens per turn, 71 tools
+- [Token cost of oriiion MCP server](https://mcp.pacerai.fit/token-cost/oriiion/): ~57,615 tokens per turn, 193 tools
+- [Token cost of Lenny Rachitsky Podcast Transcripts MCP server](https://mcp.pacerai.fit/token-cost/mcp-lenny-rachitsky-podcast/): ~973 tokens per turn, 8 tools
+- [Token cost of HoldKit MCP server](https://mcp.pacerai.fit/token-cost/peerfoundry-holdkit/): ~4,450 tokens per turn, 28 tools
+- [Token cost of Highland Intel APIs MCP server](https://mcp.pacerai.fit/token-cost/group-highlnd-intel-highland-apis/): ~15,679 tokens per turn, 71 tools
+- [Token cost of OpenFactory MCP server](https://mcp.pacerai.fit/token-cost/openfactory/): ~68,929 tokens per turn, 192 tools
+- [Token cost of Jason Lovell MCP server](https://mcp.pacerai.fit/token-cost/jasonlovell-site/): ~997 tokens per turn, 8 tools
+- [Token cost of HOBO Works Agent Market MCP server](https://mcp.pacerai.fit/token-cost/cloud-hoboworks-agent-market/): ~2,446 tokens per turn, 28 tools
+- [Token cost of Toolbooth MCP server](https://mcp.pacerai.fit/token-cost/toolbooth/): ~14,876 tokens per turn, 71 tools
+- [Token cost of Fine Structure MCP server](https://mcp.pacerai.fit/token-cost/finestructure-fine-structure/): ~43,325 tokens per turn, 188 tools
+- [Token cost of Polargate MCP server](https://mcp.pacerai.fit/token-cost/polargate/): ~845 tokens per turn, 8 tools
+- [Token cost of MotifyMe MCP server](https://mcp.pacerai.fit/token-cost/motifyme/): ~4,615 tokens per turn, 28 tools
+- [Token cost of Siren MCP server](https://mcp.pacerai.fit/token-cost/siren/): ~17,659 tokens per turn, 70 tools
+- [Token cost of iDos Games MCP server](https://mcp.pacerai.fit/token-cost/idosgames-platform/): ~456,599 tokens per turn, 187 tools
+- [Token cost of IP Address API MCP server](https://mcp.pacerai.fit/token-cost/ipinfo/): ~509 tokens per turn, 8 tools
+- [Token cost of Agentosaurus MCP server](https://mcp.pacerai.fit/token-cost/agentosaurus/): ~4,710 tokens per turn, 28 tools
+- [Token cost of OpsRev Roofing AI MCP server](https://mcp.pacerai.fit/token-cost/opsrev-roofing-ai/): ~12,873 tokens per turn, 70 tools
+- [Token cost of Radar Tools (radarbg.com) MCP server](https://mcp.pacerai.fit/token-cost/radarbg-radar-tools/): ~97,452 tokens per turn, 187 tools
+- [Token cost of AI Event Pro MCP server](https://mcp.pacerai.fit/token-cost/aieventpro/): ~938 tokens per turn, 8 tools
+- [Token cost of Agent Clean Web Grounding MCP server](https://mcp.pacerai.fit/token-cost/ceadigital-agent-clean-web-grounding/): ~4,147 tokens per turn, 28 tools
+- [Token cost of Nodecraft MCP server](https://mcp.pacerai.fit/token-cost/nodecraft/): ~18,854 tokens per turn, 70 tools
+- [Token cost of SpellBook Finance MCP server](https://mcp.pacerai.fit/token-cost/spellbook-finance/): ~103,792 tokens per turn, 187 tools
+- [Token cost of HeatPulse MCP server](https://mcp.pacerai.fit/token-cost/heatpulse/): ~866 tokens per turn, 8 tools
+- [Token cost of Agent Compliance Notary MCP server](https://mcp.pacerai.fit/token-cost/ceadigital-agent-compliance-notary/): ~4,147 tokens per turn, 28 tools
+- [Token cost of Simafri Suite MCP server](https://mcp.pacerai.fit/token-cost/simafri-professional-email/): ~18,509 tokens per turn, 70 tools
+- [Token cost of Sergio by Serviche MCP server](https://mcp.pacerai.fit/token-cost/serviche-sergio/): ~86,293 tokens per turn, 185 tools
+- [Token cost of AI Deprecations MCP server](https://mcp.pacerai.fit/token-cost/aideprecations-ai-deprecations/): ~843 tokens per turn, 8 tools
+- [Token cost of SwapTitan MCP server](https://mcp.pacerai.fit/token-cost/swaptitan/): ~4,726 tokens per turn, 28 tools
+- [Token cost of Mailgi MCP server](https://mcp.pacerai.fit/token-cost/mailgi/): ~10,002 tokens per turn, 70 tools
+- [Token cost of BorealHost MCP server](https://mcp.pacerai.fit/token-cost/borealhost/): ~35,516 tokens per turn, 184 tools
+- [Token cost of AtexRadio MCP server](https://mcp.pacerai.fit/token-cost/atexradio/): ~584 tokens per turn, 8 tools
+- [Token cost of Coolant MCP server](https://mcp.pacerai.fit/token-cost/coolant/): ~3,819 tokens per turn, 28 tools
+- [Token cost of Audio Delivery Network MCP server](https://mcp.pacerai.fit/token-cost/audiodelivery/): ~14,888 tokens per turn, 69 tools
+- [Token cost of colding MCP server](https://mcp.pacerai.fit/token-cost/colding/): ~96,624 tokens per turn, 184 tools
+- [Token cost of Block Relations MCP server](https://mcp.pacerai.fit/token-cost/blockrelations-agent-access/): ~840 tokens per turn, 8 tools
+- [Token cost of AwardTape MCP server](https://mcp.pacerai.fit/token-cost/awardtape/): ~3,340 tokens per turn, 27 tools
+- [Token cost of TERM MCP server](https://mcp.pacerai.fit/token-cost/term-forum/): ~11,097 tokens per turn, 68 tools
+- [Token cost of rust.wiki MCP server](https://mcp.pacerai.fit/token-cost/wiki-rust-rust-wiki/): ~62,793 tokens per turn, 183 tools
+- [Token cost of Bo Kendell MCP server](https://mcp.pacerai.fit/token-cost/bokendell-portfolio/): ~889 tokens per turn, 8 tools
+- [Token cost of FarsiTools (paid) MCP server](https://mcp.pacerai.fit/token-cost/farsi-tools/): ~3,950 tokens per turn, 27 tools
+- [Token cost of Blixtworks MCP server](https://mcp.pacerai.fit/token-cost/blixtworks-tools/): ~12,135 tokens per turn, 68 tools
+- [Token cost of Physical Capability Cloud MCP server](https://mcp.pacerai.fit/token-cost/network-capability-physical-capability-cloud/): ~34,300 tokens per turn, 182 tools
+- [Token cost of Situation MCP server](https://mcp.pacerai.fit/token-cost/situation/): ~863 tokens per turn, 8 tools
+- [Token cost of qed.bot register MCP server](https://mcp.pacerai.fit/token-cost/bot-qed-register/): ~4,688 tokens per turn, 26 tools
+- [Token cost of Atomadic MCP server](https://mcp.pacerai.fit/token-cost/atomadic/): ~7,806 tokens per turn, 68 tools
+- [Token cost of BAMF.ai MCP server](https://mcp.pacerai.fit/token-cost/bamf/): ~40,727 tokens per turn, 180 tools
+- [Token cost of elite-agentic-platform MCP server](https://mcp.pacerai.fit/token-cost/eliteagenticsolutions-app/): ~772 tokens per turn, 8 tools
+- [Token cost of RoboParts 机器人零部件兼容性 MCP server](https://mcp.pacerai.fit/token-cost/roboparts/): ~3,313 tokens per turn, 26 tools
+- [Token cost of raccha.ai MCP server](https://mcp.pacerai.fit/token-cost/raccha/): ~13,114 tokens per turn, 67 tools
+- [Token cost of Hustle Got Real MCP server](https://mcp.pacerai.fit/token-cost/hustlegotreal/): ~63,527 tokens per turn, 179 tools
+- [Token cost of Elite Agentic Solutions MCP server](https://mcp.pacerai.fit/token-cost/eliteagenticsolutions-eas/): ~931 tokens per turn, 8 tools
+- [Token cost of Actuator MCP server](https://mcp.pacerai.fit/token-cost/actuator/): ~4,444 tokens per turn, 26 tools
+- [Token cost of APIFleet MCP server](https://mcp.pacerai.fit/token-cost/apifleet/): ~10,612 tokens per turn, 67 tools
+- [Token cost of HelpySelf MCP server](https://mcp.pacerai.fit/token-cost/helpyself-tools/): ~78,696 tokens per turn, 178 tools
+- [Token cost of Lumen Ask MCP server](https://mcp.pacerai.fit/token-cost/eliteaiempire-ask/): ~878 tokens per turn, 8 tools
+- [Token cost of CryptoDataAPI MCP server](https://mcp.pacerai.fit/token-cost/cryptodataapi/): ~4,385 tokens per turn, 26 tools
+- [Token cost of socket.help MCP server](https://mcp.pacerai.fit/token-cost/help-socket-socket-help/): ~13,095 tokens per turn, 67 tools
+- [Token cost of Final POS MCP server](https://mcp.pacerai.fit/token-cost/final/): ~64,882 tokens per turn, 177 tools
+- [Token cost of CloudCostAI MCP server](https://mcp.pacerai.fit/token-cost/eliteaiempire-cloudcostai/): ~958 tokens per turn, 8 tools
+- [Token cost of FitsThis MCP server](https://mcp.pacerai.fit/token-cost/fitsthis-shop/): ~3,636 tokens per turn, 26 tools
+- [Token cost of Kivel MCP server](https://mcp.pacerai.fit/token-cost/kivel/): ~13,095 tokens per turn, 67 tools
+- [Token cost of YouSpot MCP server](https://mcp.pacerai.fit/token-cost/youspot/): ~48,621 tokens per turn, 177 tools
+- [Token cost of Emerging Tech Center MCP server](https://mcp.pacerai.fit/token-cost/emergingtechcenter-gigs/): ~920 tokens per turn, 8 tools
+- [Token cost of IGNOREO MCP server](https://mcp.pacerai.fit/token-cost/ignoreo-tools/): ~4,520 tokens per turn, 26 tools
+- [Token cost of Builderlog MCP server](https://mcp.pacerai.fit/token-cost/builderlog-connector/): ~11,460 tokens per turn, 67 tools
+- [Token cost of CodeGene MCP server](https://mcp.pacerai.fit/token-cost/codegene/): ~59,155 tokens per turn, 176 tools
+- [Token cost of Consentio cookie consent MCP server](https://mcp.pacerai.fit/token-cost/consentio/): ~816 tokens per turn, 8 tools
+- [Token cost of Meetful MCP server](https://mcp.pacerai.fit/token-cost/meetful/): ~4,868 tokens per turn, 26 tools
+- [Token cost of Niche of One Network MCP server](https://mcp.pacerai.fit/token-cost/one-nicheof-network/): ~13,214 tokens per turn, 67 tools
+- [Token cost of Neblla MCP server](https://mcp.pacerai.fit/token-cost/neblla/): ~56,997 tokens per turn, 175 tools
+- [Token cost of Isaref MCP server](https://mcp.pacerai.fit/token-cost/isaref/): ~487 tokens per turn, 8 tools
+- [Token cost of pwamart MCP server](https://mcp.pacerai.fit/token-cost/profullstack-pwamart/): ~3,254 tokens per turn, 26 tools
+- [Token cost of catchy-me MCP server](https://mcp.pacerai.fit/token-cost/catchy-me/): ~16,470 tokens per turn, 66 tools
+- [Token cost of OpenData Best Web Intelligence (x402 USDC) MCP server](https://mcp.pacerai.fit/token-cost/best-opendata-x402-web-intelligence/): ~151,531 tokens per turn, 172 tools
+- [Token cost of izHost MCP server](https://mcp.pacerai.fit/token-cost/izhost/): ~483 tokens per turn, 8 tools
+- [Token cost of Vega Developer Utilities MCP server](https://mcp.pacerai.fit/token-cost/vega/): ~3,255 tokens per turn, 26 tools
+- [Token cost of Mewboard MCP server](https://mcp.pacerai.fit/token-cost/mewboard/): ~15,494 tokens per turn, 66 tools
+- [Token cost of Obriym CRM MCP server](https://mcp.pacerai.fit/token-cost/obriym-crm/): ~88,017 tokens per turn, 171 tools
+- [Token cost of The Agent Café MCP server](https://mcp.pacerai.fit/token-cost/jointheagentcafe-agent-cafe/): ~751 tokens per turn, 8 tools
+- [Token cost of XOOMAR market data MCP server](https://mcp.pacerai.fit/token-cost/xoomar/): ~4,377 tokens per turn, 26 tools
+- [Token cost of Onvexia MCP server](https://mcp.pacerai.fit/token-cost/onvexia/): ~11,882 tokens per turn, 66 tools
+- [Token cost of Cosend MCP server](https://mcp.pacerai.fit/token-cost/cosend/): ~98,430 tokens per turn, 164 tools
+- [Token cost of Kahve Tabela MCP server](https://mcp.pacerai.fit/token-cost/kahvetabela-public-read/): ~604 tokens per turn, 8 tools
+- [Token cost of WebLens MCP server](https://mcp.pacerai.fit/token-cost/weblens/): ~4,871 tokens per turn, 26 tools
+- [Token cost of Besidka MCP server](https://mcp.pacerai.fit/token-cost/besidka/): ~19,332 tokens per turn, 65 tools
+- [Token cost of TextKit MCP server](https://mcp.pacerai.fit/token-cost/textkit/): ~42,952 tokens per turn, 161 tools
+- [Token cost of Shruti Kaushik MCP server](https://mcp.pacerai.fit/token-cost/shrutikaushik-research/): ~973 tokens per turn, 8 tools
+- [Token cost of Agent Control MCP server](https://mcp.pacerai.fit/token-cost/agent-control/): ~4,982 tokens per turn, 26 tools
+- [Token cost of OpenHelvetia Gateway MCP server](https://mcp.pacerai.fit/token-cost/swiss-openhelvetia-gateway/): ~10,618 tokens per turn, 65 tools
+- [Token cost of workload.zero MCP server](https://mcp.pacerai.fit/token-cost/de-workloadzero/): ~34,371 tokens per turn, 159 tools
+- [Token cost of Sky and Signs MCP server](https://mcp.pacerai.fit/token-cost/skyandsigns/): ~738 tokens per turn, 8 tools
+- [Token cost of ThirdMade Shelf MCP server](https://mcp.pacerai.fit/token-cost/thirdmade-shelf/): ~2,153 tokens per turn, 26 tools
+- [Token cost of WatchFor MCP server](https://mcp.pacerai.fit/token-cost/watchfor/): ~19,201 tokens per turn, 64 tools
+- [Token cost of BlitzReels Video Editor MCP server](https://mcp.pacerai.fit/token-cost/blitzreels/): ~158,249 tokens per turn, 158 tools
+- [Token cost of Tabular Recipe MCP server](https://mcp.pacerai.fit/token-cost/tabularrecipe-tabular-recipe/): ~886 tokens per turn, 8 tools
+- [Token cost of BotBuy.tw MCP server](https://mcp.pacerai.fit/token-cost/tw-botbuy-marketplace/): ~3,613 tokens per turn, 26 tools
+- [Token cost of Mcp MCP server](https://mcp.pacerai.fit/token-cost/online-x-402/): ~11,117 tokens per turn, 64 tools
+- [Token cost of FilmLab MCP server](https://mcp.pacerai.fit/token-cost/thefilmradar-filmlab/): ~92,162 tokens per turn, 158 tools
+- [Token cost of Rosis Morgenhimmel MCP server](https://mcp.pacerai.fit/token-cost/de-morgenhimmel/): ~738 tokens per turn, 8 tools
+- [Token cost of Analytics Legends MCP server](https://mcp.pacerai.fit/token-cost/analyticslegends-sap-analytics/): ~4,988 tokens per turn, 25 tools
+- [Token cost of Environment & energy MCP server](https://mcp.pacerai.fit/token-cost/si-fourzerotwo-environment/): ~10,903 tokens per turn, 64 tools
+- [Token cost of Spur MCP server](https://mcp.pacerai.fit/token-cost/spur/): ~62,822 tokens per turn, 155 tools
+- [Token cost of Nameholder Domain Intelligence MCP server](https://mcp.pacerai.fit/token-cost/de-nameholder/): ~986 tokens per turn, 8 tools
+- [Token cost of Sunset Strip MCP server](https://mcp.pacerai.fit/token-cost/sunsetstrip-gta6/): ~4,183 tokens per turn, 25 tools
+- [Token cost of GPU Cloud MCP server](https://mcp.pacerai.fit/token-cost/ca-gpucloud-gpu-cloud/): ~15,575 tokens per turn, 63 tools
+- [Token cost of Hook Detector MCP server](https://mcp.pacerai.fit/token-cost/hookdetector/): ~48,687 tokens per turn, 154 tools
+- [Token cost of De 5ch001 MCP server](https://mcp.pacerai.fit/token-cost/de5ch001/): ~728 tokens per turn, 8 tools
+- [Token cost of 好啦体检 MCP server](https://mcp.pacerai.fit/token-cost/cn-ihaola-health-checkup-planner/): ~3,153 tokens per turn, 25 tools
+- [Token cost of Spook SEO MCP server](https://mcp.pacerai.fit/token-cost/spook/): ~7,447 tokens per turn, 63 tools
+- [Token cost of 面灵AI 面试助手 MCP server](https://mcp.pacerai.fit/token-cost/mianling/): ~20,758 tokens per turn, 148 tools
+- [Token cost of RMCP MCP server](https://mcp.pacerai.fit/token-cost/rmcp/): ~782 tokens per turn, 8 tools
+- [Token cost of dVeracity Semantic API MCP server](https://mcp.pacerai.fit/token-cost/dveracity-semantic/): ~4,284 tokens per turn, 25 tools
+- [Token cost of askBrassica MCP server](https://mcp.pacerai.fit/token-cost/plantdatabases-askbrassica/): ~18,867 tokens per turn, 63 tools
+- [Token cost of Sprites Ads MCP server](https://mcp.pacerai.fit/token-cost/sprites-ads/): ~59,224 tokens per turn, 147 tools
+- [Token cost of Web Access Gateway MCP server](https://mcp.pacerai.fit/token-cost/web-access/): ~804 tokens per turn, 8 tools
+- [Token cost of Forum for Agents MCP server](https://mcp.pacerai.fit/token-cost/forum/): ~3,644 tokens per turn, 25 tools
+- [Token cost of DenkOps MCP server](https://mcp.pacerai.fit/token-cost/denkops/): ~10,947 tokens per turn, 62 tools
+- [Token cost of InvoiceParser Pro MCP server](https://mcp.pacerai.fit/token-cost/invoiceparserpro-ipp/): ~63,512 tokens per turn, 147 tools
+- [Token cost of Rasczak Knowledge Commons MCP server](https://mcp.pacerai.fit/token-cost/agent-service/): ~841 tokens per turn, 8 tools
+- [Token cost of Monitor Hub MCP server](https://mcp.pacerai.fit/token-cost/monitorhub/): ~4,569 tokens per turn, 25 tools
+- [Token cost of Tincan MCP server](https://mcp.pacerai.fit/token-cost/tincan/): ~17,463 tokens per turn, 62 tools
+- [Token cost of DataToRAG MCP server](https://mcp.pacerai.fit/token-cost/datatorag-mcp-gateway/): ~48,315 tokens per turn, 146 tools
+- [Token cost of AIAgora MCP server](https://mcp.pacerai.fit/token-cost/agora/): ~906 tokens per turn, 8 tools
+- [Token cost of wx93 MCP server](https://mcp.pacerai.fit/token-cost/profullstack-wx93/): ~3,893 tokens per turn, 25 tools
+- [Token cost of Novence MCP server](https://mcp.pacerai.fit/token-cost/novence/): ~14,226 tokens per turn, 61 tools
+- [Token cost of Gemmein MCP server](https://mcp.pacerai.fit/token-cost/gemmein/): ~44,935 tokens per turn, 146 tools
+- [Token cost of Andrew Wilkinson MCP server](https://mcp.pacerai.fit/token-cost/andrewwilkinson-site/): ~942 tokens per turn, 8 tools
+- [Token cost of The Agent Lodge MCP server](https://mcp.pacerai.fit/token-cost/lodge/): ~2,300 tokens per turn, 25 tools
+- [Token cost of Literess MCP server](https://mcp.pacerai.fit/token-cost/literess/): ~15,950 tokens per turn, 61 tools
+- [Token cost of Vendooly MCP server](https://mcp.pacerai.fit/token-cost/vendooly/): ~52,991 tokens per turn, 146 tools
+- [Token cost of Autosophia Solana Lens MCP server](https://mcp.pacerai.fit/token-cost/autosophia-solana-lens/): ~980 tokens per turn, 8 tools
+- [Token cost of UAI x402 Security Tools MCP server](https://mcp.pacerai.fit/token-cost/uaisystems-x402-security/): ~4,445 tokens per turn, 25 tools
+- [Token cost of MacroView MCP server](https://mcp.pacerai.fit/token-cost/macro-view-macroview/): ~14,552 tokens per turn, 61 tools
+- [Token cost of ShearQuery MCP server](https://mcp.pacerai.fit/token-cost/innergcomplete-shearquery/): ~29,400 tokens per turn, 145 tools
+- [Token cost of fixmyplant.io MCP server](https://mcp.pacerai.fit/token-cost/fixmyplant/): ~952 tokens per turn, 8 tools
+- [Token cost of HTTPfy network & DNS tools MCP server](https://mcp.pacerai.fit/token-cost/httpfy/): ~4,135 tokens per turn, 25 tools
+- [Token cost of WingmanProtocol Agent Gateway MCP server](https://mcp.pacerai.fit/token-cost/wingmanprotocol-agent-gateway/): ~10,344 tokens per turn, 61 tools
+- [Token cost of ScanMalware.com URL Scanner MCP server](https://mcp.pacerai.fit/token-cost/scanmalware/): ~37,079 tokens per turn, 145 tools
+- [Token cost of FUTIA MCP server](https://mcp.pacerai.fit/token-cost/futia-seo/): ~976 tokens per turn, 8 tools
+- [Token cost of Web & domain tools MCP server](https://mcp.pacerai.fit/token-cost/si-fourzerotwo-web/): ~3,953 tokens per turn, 25 tools
+- [Token cost of Bookare MCP server](https://mcp.pacerai.fit/token-cost/bookare/): ~16,347 tokens per turn, 60 tools
+- [Token cost of AgentIndex x402 MCP server](https://mcp.pacerai.fit/token-cost/world-agentindex-x402/): ~26,733 tokens per turn, 145 tools
+- [Token cost of PublicAPIs.io MCP server](https://mcp.pacerai.fit/token-cost/publicapis-directory/): ~946 tokens per turn, 8 tools
+- [Token cost of humancollab MCP server](https://mcp.pacerai.fit/token-cost/humancollab/): ~3,932 tokens per turn, 25 tools
+- [Token cost of ClusterHack MCP server](https://mcp.pacerai.fit/token-cost/clusterhack/): ~14,137 tokens per turn, 60 tools
+- [Token cost of Servers Are Up Cloud & Hybrid Infrastructure (com.serversareup/mcp) MCP server](https://mcp.pacerai.fit/token-cost/serversareup/): ~33,283 tokens per turn, 144 tools
+- [Token cost of TokPort MCP server](https://mcp.pacerai.fit/token-cost/tokport/): ~811 tokens per turn, 8 tools
+- [Token cost of retailbeautyfetch (ai.retailbeautyfetch/retailbeautyfetch) MCP server](https://mcp.pacerai.fit/token-cost/retailbeautyfetch/): ~4,587 tokens per turn, 24 tools
+- [Token cost of Bot Bazaar MCP server](https://mcp.pacerai.fit/token-cost/bot-bazaar/): ~10,963 tokens per turn, 60 tools
+- [Token cost of Servers Are Up Cloud & Hybrid Infrastructure (com.serversareup/mcp) [serversareup.com] MCP server](https://mcp.pacerai.fit/token-cost/serversareup-serversareup/): ~33,283 tokens per turn, 144 tools
+- [Token cost of ALUZZA MARINE MCP server](https://mcp.pacerai.fit/token-cost/jp-aluzza-marine/): ~925 tokens per turn, 8 tools
+- [Token cost of retailbeautyfetch (ai.retailbeautyfetch/retailbeautyfetch) [mcp.retailbeautyfetch.ai] MCP server](https://mcp.pacerai.fit/token-cost/retailbeautyfetch-retailbeautyfetch/): ~4,588 tokens per turn, 24 tools
+- [Token cost of Bryti MCP server](https://mcp.pacerai.fit/token-cost/bryti/): ~19,473 tokens per turn, 59 tools
+- [Token cost of Designers MCP server](https://mcp.pacerai.fit/token-cost/allthepossibles-designers/): ~43,938 tokens per turn, 141 tools
+- [Token cost of Ryan Lindsey MCP server](https://mcp.pacerai.fit/token-cost/me-ryanlindsey-ryanlindsey-me/): ~613 tokens per turn, 8 tools
+- [Token cost of Observatório BR MCP server](https://mcp.pacerai.fit/token-cost/br-observatoriobr-observatorio-br/): ~4,214 tokens per turn, 24 tools
+- [Token cost of UFCalendar Fight API MCP server](https://mcp.pacerai.fit/token-cost/ufcalendar-fight-api/): ~17,003 tokens per turn, 59 tools
+- [Token cost of DJfindr MCP server](https://mcp.pacerai.fit/token-cost/djfindr/): ~29,871 tokens per turn, 141 tools
+- [Token cost of TOLLA Network MCP server](https://mcp.pacerai.fit/token-cost/tolla/): ~996 tokens per turn, 8 tools
+- [Token cost of Renderior MCP server](https://mcp.pacerai.fit/token-cost/renderior/): ~4,948 tokens per turn, 24 tools
+- [Token cost of UpHeron MCP server](https://mcp.pacerai.fit/token-cost/upheron/): ~18,956 tokens per turn, 59 tools
+- [Token cost of SwishrJobs MCP server](https://mcp.pacerai.fit/token-cost/swishrjobs/): ~90,859 tokens per turn, 141 tools
+- [Token cost of CryptoLiveLeak MCP server](https://mcp.pacerai.fit/token-cost/cryptoliveleak-agent-access/): ~842 tokens per turn, 8 tools
+- [Token cost of Ripostiq MCP server](https://mcp.pacerai.fit/token-cost/ripostiq/): ~4,642 tokens per turn, 24 tools
+- [Token cost of Focxle MCP server](https://mcp.pacerai.fit/token-cost/focxle-afos/): ~10,510 tokens per turn, 58 tools
+- [Token cost of OMENZ agent tools MCP server](https://mcp.pacerai.fit/token-cost/omenz-agent-tools/): ~33,569 tokens per turn, 141 tools
+- [Token cost of MyAIContractor MCP server](https://mcp.pacerai.fit/token-cost/myaicontractor/): ~962 tokens per turn, 8 tools
+- [Token cost of PCBBrew MCP server](https://mcp.pacerai.fit/token-cost/pcbbrew/): ~4,836 tokens per turn, 24 tools
+- [Token cost of HeritageDeed Title Search and Property Data MCP server](https://mcp.pacerai.fit/token-cost/heritagedeed-title-search/): ~14,644 tokens per turn, 58 tools
+- [Token cost of Moneda MCP server](https://mcp.pacerai.fit/token-cost/moneda/): ~35,792 tokens per turn, 140 tools
+- [Token cost of MyKidsBook MCP server](https://mcp.pacerai.fit/token-cost/mykidsbook/): ~992 tokens per turn, 8 tools
+- [Token cost of how.is domain & IP intelligence MCP server](https://mcp.pacerai.fit/token-cost/is-how-domain-intel/): ~4,957 tokens per turn, 24 tools
+- [Token cost of Relvato MCP server](https://mcp.pacerai.fit/token-cost/relvato/): ~16,165 tokens per turn, 58 tools
+- [Token cost of Geode MCP server](https://mcp.pacerai.fit/token-cost/geode/): ~37,671 tokens per turn, 138 tools
+- [Token cost of STINKBID MCP server](https://mcp.pacerai.fit/token-cost/stinkbid/): ~918 tokens per turn, 8 tools
+- [Token cost of VerseWorks MCP server](https://mcp.pacerai.fit/token-cost/verseworks/): ~2,139 tokens per turn, 24 tools
+- [Token cost of Mint MCP server](https://mcp.pacerai.fit/token-cost/mcp-mint-gg/): ~18,666 tokens per turn, 58 tools
+- [Token cost of Marketplace MCP server](https://mcp.pacerai.fit/token-cost/feegate-marketplace/): ~26,903 tokens per turn, 137 tools
+- [Token cost of Helsama MCP server](https://mcp.pacerai.fit/token-cost/helsama/): ~791 tokens per turn, 8 tools
+- [Token cost of Press5 launch pad MCP server](https://mcp.pacerai.fit/token-cost/xyz-press5-launch-pad/): ~4,048 tokens per turn, 24 tools
+- [Token cost of Onhand MCP server](https://mcp.pacerai.fit/token-cost/onhand/): ~15,160 tokens per turn, 57 tools
+- [Token cost of 100Hires MCP server](https://mcp.pacerai.fit/token-cost/100hires/): ~20,858 tokens per turn, 136 tools
+- [Token cost of Agentic RL MCP server](https://mcp.pacerai.fit/token-cost/agentic-rl/): ~919 tokens per turn, 8 tools
+- [Token cost of mocop MCP server](https://mcp.pacerai.fit/token-cost/mocop/): ~4,627 tokens per turn, 23 tools
+- [Token cost of draconic21 Daily Agent Signal + x402 Data Tools (com.onrender.draconic21-x402-api/data-tools) [draconic21-x402-api.onrender.com] MCP server](https://mcp.pacerai.fit/token-cost/onrender-draconic21-x402-api-onrender-draconic21-x402-api-da/): ~19,383 tokens per turn, 57 tools
+- [Token cost of SAGOT MCP server](https://mcp.pacerai.fit/token-cost/sagot/): ~28,044 tokens per turn, 136 tools
+- [Token cost of appbuilderai.studio MCP server](https://mcp.pacerai.fit/token-cost/appbuilderai/): ~934 tokens per turn, 8 tools
+- [Token cost of retailgroceryfetch (ai.retailgroceryfetch/retailgroceryfetch) MCP server](https://mcp.pacerai.fit/token-cost/retailgroceryfetch/): ~4,702 tokens per turn, 23 tools
+- [Token cost of Osmanth Agent Hub MCP server](https://mcp.pacerai.fit/token-cost/osmanth-agent-hub/): ~9,405 tokens per turn, 57 tools
+- [Token cost of AthenaHQ MCP server](https://mcp.pacerai.fit/token-cost/athenahq/): ~126,118 tokens per turn, 132 tools
+- [Token cost of El truco del Guardián MCP server](https://mcp.pacerai.fit/token-cost/tech-bestiario-truco/): ~855 tokens per turn, 8 tools
+- [Token cost of retailgroceryfetch (ai.retailgroceryfetch/retailgroceryfetch) [mcp.retailgroceryfetch.ai] MCP server](https://mcp.pacerai.fit/token-cost/retailgroceryfetch-retailgroceryfetch/): ~4,704 tokens per turn, 23 tools
+- [Token cost of Yakalak MCP server](https://mcp.pacerai.fit/token-cost/yakalak/): ~9,554 tokens per turn, 57 tools
+- [Token cost of BusCalc Business Calculators MCP server](https://mcp.pacerai.fit/token-cost/buscalc-calculations/): ~242,414 tokens per turn, 132 tools
+- [Token cost of familyguy.co.uk episode database MCP server](https://mcp.pacerai.fit/token-cost/uk-familyguy-episodes/): ~924 tokens per turn, 8 tools
+- [Token cost of JestSprout Meme Coin & Solana Rug-Check Tools MCP server](https://mcp.pacerai.fit/token-cost/jestsprout/): ~4,704 tokens per turn, 23 tools
+- [Token cost of SolKnife MCP server](https://mcp.pacerai.fit/token-cost/xyz-solknife-toolkit/): ~12,286 tokens per turn, 57 tools
+- [Token cost of Marsell MCP server](https://mcp.pacerai.fit/token-cost/marsell/): ~63,752 tokens per turn, 132 tools
+- [Token cost of UK Data MCP server](https://mcp.pacerai.fit/token-cost/uk-reliness-utilities/): ~994 tokens per turn, 8 tools
+- [Token cost of Haze City MCP server](https://mcp.pacerai.fit/token-cost/city-haze-world/): ~4,406 tokens per turn, 23 tools
+- [Token cost of Agent Rest Stop MCP server](https://mcp.pacerai.fit/token-cost/agentreststop-agent-rest-stop/): ~5,854 tokens per turn, 56 tools
+- [Token cost of pg.ddx.io (io.ddx.pg/archive) MCP server](https://mcp.pacerai.fit/token-cost/ddx-pg-archive/): ~21,283 tokens per turn, 131 tools
+- [Token cost of 0to100 MCP server](https://mcp.pacerai.fit/token-cost/xyz-0to100-mcp-sports/): ~854 tokens per turn, 8 tools
+- [Token cost of The Agent Commons MCP server](https://mcp.pacerai.fit/token-cost/affix-io-agent-commons/): ~3,095 tokens per turn, 23 tools
+- [Token cost of Vertical Marketplace MCP server](https://mcp.pacerai.fit/token-cost/verticalmarketplace-vertical-marketplace/): ~11,634 tokens per turn, 55 tools
+- [Token cost of pg.ddx.io (SSE) MCP server](https://mcp.pacerai.fit/token-cost/ddx-pg-ddx-pg-archive/): ~21,283 tokens per turn, 131 tools
+- [Token cost of Bring Your AI MCP server](https://mcp.pacerai.fit/token-cost/bringyour/): ~877 tokens per turn, 7 tools
+- [Token cost of DEBYTA Agent Check MCP server](https://mcp.pacerai.fit/token-cost/debyta-agent-check/): ~3,934 tokens per turn, 23 tools
+- [Token cost of USASpending.gov MCP server](https://mcp.pacerai.fit/token-cost/1102tools-usaspending-gov/): ~19,615 tokens per turn, 55 tools
+- [Token cost of MoneyTools x402 Precheck MCP server](https://mcp.pacerai.fit/token-cost/moneytools-pay-precheck/): ~28,596 tokens per turn, 130 tools
+- [Token cost of Own Your Mind DeAI assessments MCP server](https://mcp.pacerai.fit/token-cost/ownyourmind-oym-substrate/): ~971 tokens per turn, 7 tools
+- [Token cost of KinetixSEO MCP server](https://mcp.pacerai.fit/token-cost/kinetixseo/): ~4,769 tokens per turn, 23 tools
+- [Token cost of Under Articles MCP server](https://mcp.pacerai.fit/token-cost/underarticles-ua/): ~15,578 tokens per turn, 55 tools
+- [Token cost of x402 agent toolkit MCP server](https://mcp.pacerai.fit/token-cost/pay-precheck/): ~28,596 tokens per turn, 130 tools
+- [Token cost of TypedPull MCP server](https://mcp.pacerai.fit/token-cost/peerfoundry-typedpull/): ~891 tokens per turn, 7 tools
+- [Token cost of Mazza Group AI APIs MCP server](https://mcp.pacerai.fit/token-cost/mazzagrp/): ~2,425 tokens per turn, 23 tools
+- [Token cost of Vermarco MCP server](https://mcp.pacerai.fit/token-cost/vermarco-marketplace/): ~11,634 tokens per turn, 55 tools
+- [Token cost of AceRound AI Interview Copilot MCP server](https://mcp.pacerai.fit/token-cost/aceround/): ~25,275 tokens per turn, 129 tools
+- [Token cost of SentEdge Idea Machine MCP server](https://mcp.pacerai.fit/token-cost/sentedge-idea-machine/): ~875 tokens per turn, 7 tools
+- [Token cost of The Deployer MCP server](https://mcp.pacerai.fit/token-cost/thedploy-deployer/): ~4,639 tokens per turn, 23 tools
+- [Token cost of Mare Liberum · the open sea for agents MCP server](https://mcp.pacerai.fit/token-cost/mareliberum-sea/): ~10,070 tokens per turn, 55 tools
+- [Token cost of Signal8 MCP server](https://mcp.pacerai.fit/token-cost/signal8/): ~76,580 tokens per turn, 126 tools
+- [Token cost of ELIB MCP server](https://mcp.pacerai.fit/token-cost/am-elib-library/): ~997 tokens per turn, 7 tools
+- [Token cost of Věci Obecní MCP server](https://mcp.pacerai.fit/token-cost/cz-veciobecni-veci-obecni/): ~2,967 tokens per turn, 23 tools
+- [Token cost of askPulse MCP server](https://mcp.pacerai.fit/token-cost/plantdatabases-askpulse/): ~16,891 tokens per turn, 55 tools
+- [Token cost of Kellian MCP server](https://mcp.pacerai.fit/token-cost/kellian/): ~164,526 tokens per turn, 126 tools
+- [Token cost of Veliane Discovery Plus MCP server](https://mcp.pacerai.fit/token-cost/veliane/): ~934 tokens per turn, 7 tools
+- [Token cost of GetRun MCP server](https://mcp.pacerai.fit/token-cost/getrun/): ~4,761 tokens per turn, 23 tools
+- [Token cost of PostQuickAI MCP server](https://mcp.pacerai.fit/token-cost/postquickai/): ~15,835 tokens per turn, 54 tools
+- [Token cost of dotsy MCP server](https://mcp.pacerai.fit/token-cost/dotsy/): ~37,381 tokens per turn, 124 tools
+- [Token cost of Datasource Wholesale Background Check API MCP server](https://mcp.pacerai.fit/token-cost/datasourcecorp-wholesale/): ~993 tokens per turn, 7 tools
+- [Token cost of Pollen MCP server](https://mcp.pacerai.fit/token-cost/in-elytron-pollen/): ~3,777 tokens per turn, 23 tools
+- [Token cost of Forge Engine MCP server](https://mcp.pacerai.fit/token-cost/forge/): ~7,855 tokens per turn, 54 tools
+- [Token cost of Rahul D Sarker MCP server](https://mcp.pacerai.fit/token-cost/rahuldsarker-growth-tools/): ~91,440 tokens per turn, 124 tools
+- [Token cost of MarketFrame MCP server](https://mcp.pacerai.fit/token-cost/marketframe/): ~927 tokens per turn, 7 tools
+- [Token cost of Ringler MCP server](https://mcp.pacerai.fit/token-cost/ringler/): ~3,525 tokens per turn, 23 tools
+- [Token cost of Nymwell MCP server](https://mcp.pacerai.fit/token-cost/nymwell/): ~11,613 tokens per turn, 54 tools
+- [Token cost of Cooper Email MCP server](https://mcp.pacerai.fit/token-cost/cooperemail-cooper-email/): ~93,091 tokens per turn, 124 tools
+- [Token cost of Wuai MCP server](https://mcp.pacerai.fit/token-cost/wuai/): ~840 tokens per turn, 7 tools
+- [Token cost of Facet UCP Shopping MCP server](https://mcp.pacerai.fit/token-cost/llc-facet-ucp-shopping/): ~4,275 tokens per turn, 23 tools
+- [Token cost of ScrapeCrate MCP server](https://mcp.pacerai.fit/token-cost/scrapecrate/): ~13,931 tokens per turn, 54 tools
+- [Token cost of ASPERN MCP server](https://mcp.pacerai.fit/token-cost/aspern/): ~133,134 tokens per turn, 123 tools
+- [Token cost of Vaeo AI Discovery Reports MCP server](https://mcp.pacerai.fit/token-cost/au-vaeo-reports/): ~953 tokens per turn, 7 tools
+- [Token cost of Olothea MCP server](https://mcp.pacerai.fit/token-cost/olothea/): ~4,006 tokens per turn, 23 tools
+- [Token cost of TakeMeUp.cv MCP server](https://mcp.pacerai.fit/token-cost/takemeup/): ~12,405 tokens per turn, 54 tools
+- [Token cost of Zoxron MCP server](https://mcp.pacerai.fit/token-cost/zoxron/): ~37,146 tokens per turn, 122 tools
+- [Token cost of Agent Relay MCP server](https://mcp.pacerai.fit/token-cost/ch-greenwave-wall-x-agent-relay/): ~905 tokens per turn, 7 tools
+- [Token cost of VEBHOST MCP server](https://mcp.pacerai.fit/token-cost/vebhost/): ~1,785 tokens per turn, 23 tools
+- [Token cost of Leviathan MCP server](https://mcp.pacerai.fit/token-cost/talmbout-leviathan-community/): ~7,627 tokens per turn, 53 tools
+- [Token cost of Hyperhuman MCP server](https://mcp.pacerai.fit/token-cost/hyperhuman/): ~65,069 tokens per turn, 121 tools
+- [Token cost of Absolute Best Air MCP server](https://mcp.pacerai.fit/token-cost/absolutebestair-hvac/): ~801 tokens per turn, 7 tools
+- [Token cost of On the Register MCP server](https://mcp.pacerai.fit/token-cost/uk-ontheregister-on-the-register/): ~4,116 tokens per turn, 23 tools
+- [Token cost of Mobile Accounting MCP server](https://mcp.pacerai.fit/token-cost/mobileaccounting/): ~16,601 tokens per turn, 53 tools
+- [Token cost of CorpusIQ MCP server](https://mcp.pacerai.fit/token-cost/corpusiq-multi-source/): ~79,833 tokens per turn, 121 tools
+- [Token cost of Text Tools MCP server](https://mcp.pacerai.fit/token-cost/apished-text-tools/): ~864 tokens per turn, 7 tools
+- [Token cost of VITNA MCP server](https://mcp.pacerai.fit/token-cost/xyz-costrinity-vitna-compliance-preflight/): ~3,378 tokens per turn, 23 tools
+- [Token cost of NodeRings MCP server](https://mcp.pacerai.fit/token-cost/noderings/): ~10,209 tokens per turn, 53 tools
+- [Token cost of Sirenic MCP server](https://mcp.pacerai.fit/token-cost/sirenic/): ~96,984 tokens per turn, 119 tools
+- [Token cost of Assetzaar Marketplace MCP server](https://mcp.pacerai.fit/token-cost/assetzaar-marketplace/): ~802 tokens per turn, 7 tools
+- [Token cost of MRK Dubai Property MCP server](https://mcp.pacerai.fit/token-cost/ae-mrk-dubai-property/): ~3,615 tokens per turn, 22 tools
+- [Token cost of OwlChart MCP server](https://mcp.pacerai.fit/token-cost/owlchart/): ~12,619 tokens per turn, 53 tools
+- [Token cost of Vidreno MCP server](https://mcp.pacerai.fit/token-cost/vidreno/): ~41,658 tokens per turn, 118 tools
+- [Token cost of Rooms Agent Pay (sandbox preview) MCP server](https://mcp.pacerai.fit/token-cost/aurmada-rooms-agent-pay/): ~891 tokens per turn, 7 tools
 <!-- token-cost:end -->
